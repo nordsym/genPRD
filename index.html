@@ -1809,6 +1809,30 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             };
 
+            // NEW: Password Reset Request
+            window.handlePasswordReset = async function() {
+                const email = document.getElementById('login-email').value;
+                
+                if (!email || !email.includes('@')) {
+                    alert('⚠️ Ange din email i fältet ovan först');
+                    document.getElementById('login-email').focus();
+                    return;
+                }
+                
+                try {
+                    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+                        redirectTo: 'https://nordsym.github.io/genPRD/?reset=true'
+                    });
+                    
+                    if (error) throw error;
+                    
+                    alert(`✅ Återställningslänk skickad!\n\n📧 Kolla ${email}\n\nKlicka på länken i mailet för att välja nytt lösenord.\n\n🔍 Kolla även skräppost.`);
+                } catch (e) {
+                    console.error('Password reset error:', e);
+                    alert('❌ Kunde inte skicka återställningslänk.\n\nKontrollera att emailen är korrekt.');
+                }
+            };
+
             // FIXED: Explicit confirmation instructions
             window.handleSignup = async (e) => {
                 e.preventDefault();
