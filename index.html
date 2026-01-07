@@ -723,7 +723,8 @@
                     </div>
 
                 </div>
-            </div>
+            </div> <!-- Closes Comparison Grid -->
+            </div> <!-- CRITICAL FIX: Closes max-w-6xl container from line 506 -->
 
             <!-- Spec Expander Content -->
             <div id="spec-content" class="hidden transition-all duration-700 ease-in-out overflow-hidden max-h-0 opacity-0 mb-20 px-6">
@@ -1229,6 +1230,107 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
         </footer>
     </div>
 
+    <!-- ======================== APP VIEW (ADDED) ======================== -->
+    <div id="app-view" class="fixed inset-0 bg-kBg dark:bg-nightBg hidden opacity-0 transition-opacity duration-500 z-50 overflow-hidden flex flex-col">
+        
+        <!-- App Header -->
+        <header class="w-full bg-white/80 dark:bg-nightSurface/80 backdrop-blur-md border-b border-kBorder dark:border-nightBorder z-50 h-16 flex-shrink-0 flex items-center justify-between px-4 md:px-6">
+            <div class="flex items-center gap-4">
+                <button onclick="window.exitApp()" class="w-10 h-10 rounded-full bg-kBg dark:bg-nightBg hover:bg-kBorder transition-colors flex items-center justify-center text-kTextDark dark:text-white shadow-sm border border-kBorder dark:border-nightBorder" title="Tillbaka till start">
+                    <i class="ph-bold ph-arrow-left text-xl"></i>
+                </button>
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[1.5px]">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=d22b3524-f29c-4313-bebb-2863f8c30b91" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-0.5 object-contain">
+                    </div>
+                    <span class="font-bold text-lg dark:text-white hidden md:inline">Gen<span class="text-kBlue">PRD</span></span>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 md:gap-4">
+                <span id="credits-display" class="hidden md:inline-block text-xs font-bold text-kMint bg-kMint/10 px-3 py-1 rounded-full border border-kMint/20">
+                    Laddar credits...
+                </span>
+                
+                <button id="app-theme-toggle" class="w-9 h-9 rounded-full bg-kBg dark:bg-nightBg hover:bg-kBorder transition-colors flex items-center justify-center text-kTextMedium dark:text-white border border-kBorder dark:border-nightBorder">
+                    <i class="ph-fill ph-moon text-lg"></i>
+                </button>
+                
+                <div class="hidden md:flex items-center gap-2 bg-kBg dark:bg-nightBg px-3 py-1.5 rounded-full border border-kBorder dark:border-nightBorder">
+                    <i class="ph-fill ph-user text-kBlue"></i>
+                    <span id="user-email-display" class="text-xs font-bold text-kTextDark dark:text-white max-w-[100px] truncate">Guest</span>
+                </div>
+                
+                <button onclick="window.handleLogout()" class="p-2 text-kTextMedium hover:text-red-500 transition-colors" title="Logga ut">
+                    <i class="ph-bold ph-sign-out text-xl"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- App Container -->
+        <div class="flex flex-1 overflow-hidden relative">
+            
+            <!-- Sidebar: History (Desktop) -->
+            <aside class="hidden md:flex w-72 bg-white/50 dark:bg-nightSurface/50 border-r border-kBorder dark:border-nightBorder flex-col backdrop-blur-sm">
+                <div class="p-4 border-b border-kBorder dark:border-nightBorder bg-white/50 dark:bg-nightSurface/80">
+                    <button onclick="window.newChat()" class="w-full py-3 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                        <i class="ph-bold ph-plus"></i> Ny PRD
+                    </button>
+                </div>
+                
+                <div class="p-3">
+                    <div class="relative">
+                        <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-kTextMedium/50"></i>
+                        <input type="text" id="history-search" placeholder="Sök historik..." class="w-full pl-9 pr-3 py-2 bg-white dark:bg-nightBg border border-kBorder dark:border-nightBorder rounded-lg text-xs font-medium focus:outline-none focus:ring-2 focus:ring-kBlue/50 transition-all dark:text-white placeholder-kTextMedium/50">
+                    </div>
+                </div>
+
+                <div class="flex-1 overflow-y-auto p-3 space-y-1 custom-scrollbar" id="history-content">
+                    <p class="text-center text-kTextMedium/50 text-xs italic mt-4">Inga sparade PRDs än</p>
+                </div>
+            </aside>
+
+            <!-- Main: Chat -->
+            <main class="flex-1 flex flex-col bg-transparent relative z-10 w-full">
+                <!-- Chat Messages -->
+                <div class="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 scroll-smooth custom-scrollbar" id="chat-container">
+                    <!-- Welcome Message -->
+                    <div class="flex gap-4 max-w-3xl mx-auto mt-8">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0 self-start">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=d22b3524-f29c-4313-bebb-2863f8c30b91" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-0.5 object-contain">
+                        </div>
+                        <div class="bg-white dark:bg-nightSurface p-6 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder max-w-2xl">
+                            <h3 class="font-bold text-lg mb-2 text-kTextDark dark:text-white">Hej! Jag är GenPRD. 👋</h3>
+                            <p class="text-kTextMedium dark:text-gray-300 leading-relaxed">
+                                Berätta vad du vill bygga så skapar jag en detaljerad, teknisk specifikation (PRD) redo för implementering. Jag kan också hjälpa dig att iterera på din idé.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Area -->
+                <div class="p-4 md:p-6 bg-gradient-to-t from-kBg via-kBg to-transparent dark:from-nightBg dark:via-nightBg">
+                    <div class="max-w-3xl mx-auto relative">
+                        <div class="absolute -inset-0.5 bg-gradient-to-r from-kBlue to-kPurple rounded-2xl blur opacity-20 transition duration-500"></div>
+                        <div class="relative bg-white dark:bg-nightSurface rounded-2xl shadow-lg border border-kBorder dark:border-nightBorder flex items-end p-2 transition-shadow focus-within:shadow-glow">
+                            <textarea 
+                                id="app-input" 
+                                rows="1" 
+                                class="w-full max-h-40 p-3 bg-transparent border-0 focus:ring-0 resize-none text-kTextDark dark:text-white placeholder-kTextMedium/50 text-base md:text-lg leading-relaxed" 
+                                placeholder="Beskriv din app..."
+                                oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                            ></textarea>
+                            <button onclick="window.sendMessage()" class="p-3 bg-gradient-to-br from-kBlue to-kPurple text-white rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all mb-0.5 mr-0.5 flex-shrink-0">
+                                <i class="ph-bold ph-paper-plane-right text-lg"></i>
+                            </button>
+                        </div>
+                        <p class="text-center text-[10px] text-kTextMedium/40 mt-2 font-medium uppercase tracking-wider">GenPRD Pro v1.0.2</p>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
     <!-- JS Logic -->
     <script>
         const SUPABASE_URL = 'https://hqkoeyclixjyyewqmjam.supabase.co';
@@ -1239,18 +1341,53 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- GLOBAL UI ELEMENTS (Moved Up for Safety) ---
+            const landingView = document.getElementById('landing-view');
+            const appView = document.getElementById('app-view');
+            const appInput = document.getElementById('app-input');
+            const chatContainer = document.getElementById('chat-container');
+
             // --- UI HELPERS FOR MODALS ---
             window.toggleAuthModal = function(show) {
                 const modal = document.getElementById('auth-modal');
                 const content = document.getElementById('auth-modal-content');
-                if (show) { modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }); } 
-                else { modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); }, 300); }
+                if (!modal || !content) return; // Safety check
+
+                if (show) { 
+                    modal.classList.remove('hidden'); 
+                    requestAnimationFrame(() => { 
+                        modal.classList.remove('opacity-0'); 
+                        content.classList.remove('scale-95'); 
+                        content.classList.add('scale-100'); 
+                    }); 
+                } else { 
+                    modal.classList.add('opacity-0'); 
+                    content.classList.remove('scale-100'); 
+                    content.classList.add('scale-95'); 
+                    setTimeout(() => { modal.classList.add('hidden'); }, 300); 
+                }
             };
 
             window.togglePaymentModal = function(show) {
                 const modal = document.getElementById('payment-modal');
-                if (show) { modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.children[0].classList.remove('scale-95'); modal.children[0].classList.add('scale-100'); }); }
-                else { modal.classList.add('opacity-0'); modal.children[0].classList.remove('scale-100'); modal.children[0].classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); }, 300); }
+                if (!modal) return; // Safety check
+                
+                const modalContent = modal.children[0]; // Get the white box inside
+                if (!modalContent) return; // Extra safety check
+
+                if (show) { 
+                    modal.classList.remove('hidden'); 
+                    requestAnimationFrame(() => { 
+                        modal.classList.remove('opacity-0'); 
+                        modalContent.classList.remove('scale-95'); 
+                        modalContent.classList.add('scale-100'); 
+                    }); 
+                } else { 
+                    modal.classList.add('opacity-0'); 
+                    modalContent.classList.remove('scale-100'); 
+                    modalContent.classList.add('scale-95'); 
+                    setTimeout(() => { modal.classList.add('hidden'); }, 300); 
+                }
             };
 
             // --- STRIPE UPGRADE LOGIC ---
@@ -1291,7 +1428,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             const pricePeriod = document.getElementById('price-period');
             const priceSavings = document.getElementById('price-savings');
 
-            if (monthlyBtn && yearlyBtn) {
+            if (monthlyBtn && yearlyBtn && priceAmount && pricePeriod && priceSavings) {
                 monthlyBtn.addEventListener('click', () => {
                     monthlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
                     monthlyBtn.classList.remove('text-kTextMedium', 'hover:text-kBlue');
@@ -1313,8 +1450,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     monthlyBtn.classList.add('text-kTextMedium', 'hover:text-kBlue');
                     
                     // Update Price
-                    // 99 * 9 = 891 kr total per year
-                    // 891 / 12 = 74.25 kr per month
                     priceAmount.textContent = '891 kr';
                     pricePeriod.textContent = '/år';
                     priceSavings.textContent = '💰 Spara 297 kr (25% rabatt)';
@@ -1332,23 +1467,21 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     console.log("Supabase Initialized");
                     
-                    // ÄNDRAT: Auto-login vid email confirmation
+                    // Auto-login logic
                     const hash = window.location.hash;
                     if (hash && (hash.includes('access_token') || hash.includes('type=signup'))) {
-                        // Om vi kommer från email-länken
                         supabase.auth.getSession().then(({ data: { session } }) => {
                             if (session) {
-                                checkSession(); // Uppdatera UI med inloggad user
-                                window.location.hash = ''; // Rensa bort token från URL (snyggare)
-                                window.enterApp(); // Hoppa direkt in i appen (bättre UX)
+                                checkSession(); 
+                                window.location.hash = ''; 
+                                window.enterApp(); 
                             }
                         });
                     } else {
-                        // Vanlig sidladdning
                         checkSession();
                     }
 
-                    fetchLiveStats(); // Fetch public stats on load
+                    fetchLiveStats(); 
                 } else {
                     console.error("Supabase SDK not loaded");
                 }
@@ -1359,30 +1492,24 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             // --- STATS FUNCTION ---
             async function fetchLiveStats() {
                 try {
-                    // Anropa vår nya databas-funktion via RPC
                     const { data, error } = await supabase.rpc('get_landing_stats');
-                    
                     if (error) throw error;
 
                     if (data) {
-                        // Update Builders
                         const buildersEl = document.getElementById('stats-builders');
                         if (buildersEl) {
-                            // ÄNDRAT: Visar nu exakt antal från DB (ingen offset)
                             const displayCount = data.builders || 0; 
                             buildersEl.innerHTML = `${displayCount} <span class="text-sm font-normal text-kTextMedium">byggare</span>`;
                         }
 
-                        // Update PRDs
                         const prdsEl = document.getElementById('stats-generated');
                         if (prdsEl) {
-                            // ÄNDRAT: Visar nu exakt antal från DB (ingen offset)
                             const displayCount = data.prds || 0;
                             prdsEl.innerHTML = `${displayCount} <span class="text-sm font-normal text-kTextMedium">genererade</span>`;
                         }
                     }
                 } catch (err) {
-                    console.warn("Could not fetch live stats:", err);
+                    // Silent fail for stats is fine
                 }
             }
 
@@ -1397,7 +1524,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     await fetchUserCredits();
                 }
 
-                // Listen for auth changes
                 supabase.auth.onAuthStateChange((_event, session) => {
                     currentUser = session?.user || null;
                     updateAuthUI();
@@ -1422,14 +1548,13 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     }
                     updateCreditsDisplay();
                 } catch (e) {
-                    console.log('Error fetching credits or no record yet', e);
+                    console.log('Error fetching credits', e);
                 }
             }
 
             function updateCreditsDisplay() {
                 const display = document.getElementById('credits-display');
                 if (display && currentUser) {
-                    // Hantera PRO (Unlimited)
                     if (userCredits.status === 'pro' || userCredits.status === 'active') {
                         display.textContent = '∞ genereringar (PRO)';
                         display.classList.remove('text-red-400', 'text-kMint');
@@ -1443,7 +1568,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     if (remaining === 0) {
                         display.classList.remove('text-kMint', 'text-orange-400');
                         display.classList.add('text-red-400');
-                        // Optional: Disable input text
                         if (appInput) appInput.placeholder = "Slut på credits. Uppgradera för att fortsätta.";
                     } else if (remaining < 10) {
                         display.textContent += ' (Snart slut!)';
@@ -1461,7 +1585,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 const userEmailDisplay = document.getElementById('user-email-display');
 
                 if (currentUser) {
-                    // Logged In
                     if (navContainer) {
                         navContainer.innerHTML = `
                             <button onclick="window.enterApp()" class="px-5 py-2 rounded-full bg-kBlue/10 text-kBlue font-bold hover:bg-kBlue hover:text-white transition-all shadow-sm border border-kBlue/20">
@@ -1473,7 +1596,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         userEmailDisplay.textContent = currentUser.email;
                     }
                 } else {
-                    // Logged Out
                     if (navContainer) {
                         navContainer.innerHTML = `
                              <button onclick="toggleAuthModal(true)" class="hidden md:inline-block font-semibold text-kBlue hover:text-kPurple transition-colors">Sign in</button>
@@ -1496,12 +1618,14 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     if (error) throw error;
                     
                     toggleAuthModal(false);
-                    window.enterApp(); // Auto-enter app
+                    window.enterApp(); 
                 } catch (error) {
                     alert('Fel email eller lösenord. Försök igen.');
                 } finally {
-                    btn.innerHTML = 'Logga in';
-                    btn.disabled = false;
+                    if(btn) {
+                        btn.innerHTML = 'Logga in';
+                        btn.disabled = false;
+                    }
                 }
             };
 
@@ -1515,7 +1639,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 btn.disabled = true;
 
                 try {
-                    // ÄNDRAT: Lade till options med emailRedirectTo för att tvinga rätt URL
                     const { data, error } = await supabase.auth.signUp({ 
                         email, 
                         password,
@@ -1531,8 +1654,10 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 } catch (error) {
                     alert('Kunde inte skapa konto: ' + error.message);
                 } finally {
-                    btn.innerHTML = 'Skapa konto';
-                    btn.disabled = false;
+                    if(btn) {
+                        btn.innerHTML = 'Skapa konto';
+                        btn.disabled = false;
+                    }
                 }
             };
 
@@ -1545,10 +1670,11 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
             async function fetchHistory() {
                 const historyContent = document.getElementById('history-content');
+                if(!historyContent) return; // Safety
+
                 historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic">Laddar...</p>';
 
                 if (!currentUser) {
-                    // Fallback for Dev Mode (Mock Data)
                     renderMockHistory();
                     return;
                 }
@@ -1572,6 +1698,8 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
             function renderHistoryList(prds) {
                 const historyContent = document.getElementById('history-content');
+                if(!historyContent) return;
+
                 if (prds.length === 0) {
                     historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic">Inga PRDs än. Skapa din första!</p>';
                     return;
@@ -1606,7 +1734,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             }
 
             async function saveToDb(title, prompt, content) {
-                if (!currentUser) return; // Don't save if in Dev Mode/Guest
+                if (!currentUser) return; 
 
                 try {
                     const { error } = await supabase.from('prds').insert({
@@ -1618,13 +1746,14 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     });
 
                     if (error) throw error;
-                    // Refresh history sidebar silently
+                    
+                    // Refresh history
                     const { data } = await supabase
                         .from('prds')
                         .select('id, title, created_at')
                         .order('created_at', { ascending: false });
                     if (data) {
-                        userPRDs = data; // Update local cache
+                        userPRDs = data; 
                         renderHistoryList(data);
                     }
 
@@ -1635,6 +1764,8 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
             window.loadPrdFromDb = async (id) => {
                 const chatContainer = document.getElementById('chat-container');
+                if(!chatContainer) return;
+
                 chatContainer.innerHTML = '<div class="flex items-center justify-center h-full"><i class="ph-bold ph-spinner animate-spin text-3xl text-kBlue"></i></div>';
                 
                 // Highlight active
@@ -1671,33 +1802,35 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                     // 2. AI Message (Content)
                     const encodedContent = encodeURIComponent(data.content);
+                    const htmlContent = marked.parse(data.content); // Use marked!
+
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
                     aiMsg.innerHTML = `
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
                             <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/foxPRDinhand.svg?alt=media&token=3665cc00-1523-4614-9a21-fece3f034020" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
                         </div>
-                        <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
-                            <p class="text-kTextDark dark:text-gray-200 leading-relaxed font-bold mb-2">Sparad PRD laddad ✅</p>
-                            <div class="bg-kBg dark:bg-nightBg p-4 rounded-xl border border-kBorder dark:border-nightBorder font-mono text-sm overflow-x-auto max-h-60 overflow-y-auto mb-4">
-                                <span class="text-kBlue"># ${data.title}</span><br>
-                                ... (Full content hidden for brevity)
+                        <div class="bg-white dark:bg-nightSurface p-6 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full overflow-hidden">
+                            <div class="flex justify-between items-center mb-4 border-b border-kBorder dark:border-nightBorder pb-3">
+                                <div>
+                                    <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">Sparad PRD 📂</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
+                                        <i class="ph-bold ph-file-pdf"></i>
+                                    </button>
+                                    <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
+                                        <i class="ph-bold ph-copy"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex gap-2">
-                                <button onclick="window.downloadMarkdown('${encodedContent}', '${data.title}')" class="px-4 py-2 bg-kBlue/10 text-kBlue hover:bg-kBlue hover:text-white rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
-                                    <i class="ph-bold ph-download-simple"></i> Ladda ner .md
-                                </button>
-                                <button onclick="window.copyToClipboard('${encodedContent}', this)" class="px-4 py-2 bg-kBorder/50 text-kTextMedium hover:bg-kBorder hover:text-kTextDark rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
-                                    <i class="ph-bold ph-copy"></i> Kopiera
-                                </button>
+                            
+                            <div class="prose dark:prose-invert max-w-none text-sm text-kTextDark dark:text-gray-300 prd-content font-sans leading-relaxed">
+                                ${htmlContent}
                             </div>
                         </div>
                     `;
                     chatContainer.appendChild(aiMsg);
-
-                    if (window.innerWidth < 768) {
-                        // Close sidebar on mobile logic if implemented
-                    }
 
                 } catch (err) {
                     chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Kunde inte ladda PRD.</p>';
@@ -1709,7 +1842,8 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             window.switchAuthMode = function(mode) {
                 const loginView = document.getElementById('login-view');
                 const signupView = document.getElementById('signup-view');
-                
+                if(!loginView || !signupView) return; // Safety
+
                 if (mode === 'signup') {
                     loginView.classList.add('hidden');
                     signupView.classList.remove('hidden');
@@ -1722,37 +1856,34 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             // --- Spec Expander Logic ---
             window.toggleSpec = function() {
                 const el = document.getElementById('spec-content');
+                if(!el) return;
+
                 if (el.classList.contains('hidden')) {
                     el.classList.remove('hidden');
-                    // Force reflow for transition
                     void el.offsetWidth;
                     el.classList.remove('max-h-0', 'opacity-0');
-                    el.classList.add('max-h-[5000px]', 'opacity-100'); // Increased max-height for large content
-                    
-                    setTimeout(() => {
-                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    }, 100);
+                    el.classList.add('max-h-[5000px]', 'opacity-100'); 
+                    setTimeout(() => { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
                 } else {
                     el.classList.add('max-h-0', 'opacity-0');
                     el.classList.remove('max-h-[5000px]', 'opacity-100');
-                    
-                    setTimeout(() => {
-                        el.classList.add('hidden');
-                    }, 700);
+                    setTimeout(() => { el.classList.add('hidden'); }, 700);
                 }
             };
 
-            // --- Showcase Segmented Control (Preserved) ---
+            // --- Showcase Segmented Control ---
             window.switchShowcase = function(state) {
                 const indicator = document.getElementById('segment-indicator');
                 const btnWithout = document.querySelector('.segment-btn:nth-child(2)'); 
                 const btnWith = document.querySelector('.segment-btn:nth-child(3)');
-                
                 const visualWithout = document.getElementById('visual-without');
                 const visualWith = document.getElementById('visual-with');
                 const contentWithout = document.getElementById('content-without');
                 const contentWith = document.getElementById('content-with');
                 
+                // SAFETY CHECKS
+                if(!indicator || !btnWithout || !btnWith || !visualWithout || !visualWith || !contentWithout || !contentWith) return;
+
                 if (state === 'without') {
                     indicator.style.left = '4px';
                     indicator.classList.remove('state-good');
@@ -1761,11 +1892,9 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     btnWithout.classList.remove('active-good');
                     btnWith.classList.remove('active-good', 'active-bad');
                     
-                    // Update visuals
                     visualWithout.style.opacity = '1'; visualWithout.style.zIndex = '10'; visualWithout.style.pointerEvents = 'auto';
                     visualWith.style.opacity = '0'; visualWith.style.zIndex = '0'; visualWith.style.pointerEvents = 'none';
                     
-                    // Update content
                     contentWithout.style.opacity = '1'; contentWithout.style.transform = 'translateX(0)'; contentWithout.style.zIndex = '10'; contentWithout.style.pointerEvents = 'auto';
                     contentWith.style.opacity = '0'; contentWith.style.transform = 'translateX(8px)'; contentWith.style.zIndex = '0'; contentWith.style.pointerEvents = 'none';
                     
@@ -1777,11 +1906,9 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     btnWith.classList.remove('active-bad');
                     btnWithout.classList.remove('active-good', 'active-bad');
                     
-                    // Update visuals
                     visualWith.style.opacity = '1'; visualWith.style.zIndex = '10'; visualWith.style.pointerEvents = 'auto';
                     visualWithout.style.opacity = '0'; visualWithout.style.zIndex = '0'; visualWithout.style.pointerEvents = 'none';
                     
-                    // Update content - ÄNDRAT: Nu aktiveras pointerEvents så knappen går att klicka på!
                     contentWith.style.opacity = '1'; contentWith.style.transform = 'translateX(0)'; contentWith.style.zIndex = '10'; contentWith.style.pointerEvents = 'auto';
                     contentWithout.style.opacity = '0'; contentWithout.style.transform = 'translateX(-8px)'; contentWithout.style.zIndex = '0'; contentWithout.style.pointerEvents = 'none';
                 }
@@ -1829,11 +1956,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
             // --- APP LOGIC ---
             
-            const landingView = document.getElementById('landing-view');
-            const appView = document.getElementById('app-view');
-            const appInput = document.getElementById('app-input');
-            const chatContainer = document.getElementById('chat-container');
-
             // --- MOCK DATA (Fallback) ---
             const mockChatHistory = {
                 'chat-1': [
@@ -1845,26 +1967,27 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             
             function renderMockHistory() {
                 const historyContent = document.getElementById('history-content');
-                historyContent.innerHTML = `
-                    <p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic mb-2">Dev Mode (Offline)</p>
-                    <button onclick="loadChat('chat-1')" class="w-full text-left p-3 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors group relative history-item" id="btn-chat-1">
-                         <div class="font-bold text-sm text-kTextDark dark:text-gray-200 truncate pr-4">SaaS Landningssida</div>
-                         <div class="text-xs text-kTextMedium dark:text-gray-500 mt-0.5">Mock Data</div>
-                    </button>
-                `;
+                if(historyContent) {
+                    historyContent.innerHTML = `
+                        <p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic mb-2">Dev Mode (Offline)</p>
+                        <button onclick="loadChat('chat-1')" class="w-full text-left p-3 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors group relative history-item" id="btn-chat-1">
+                             <div class="font-bold text-sm text-kTextDark dark:text-gray-200 truncate pr-4">SaaS Landningssida</div>
+                             <div class="text-xs text-kTextMedium dark:text-gray-500 mt-0.5">Mock Data</div>
+                        </button>
+                    `;
+                }
             }
 
             // Old loadChat for Mock Data compatibility
             window.loadChat = function(chatId) {
+                if(!chatContainer) return;
                 const history = mockChatHistory[chatId];
                 if (!history) return;
                 chatContainer.innerHTML = '';
                 history.forEach(msg => {
-                   // ... (Standard rendering logic omitted for brevity, similar to loadPrdFromDb)
-                   // Just simple re-rendering for mock
                    const div = document.createElement('div');
                    div.className = msg.type === 'user' ? 'flex gap-4 max-w-3xl mx-auto flex-row-reverse' : 'flex gap-4 max-w-3xl mx-auto';
-                   div.innerHTML = `<div class="p-4 bg-gray-100 rounded-lg">${msg.text}</div>`; // Simplified for mock
+                   div.innerHTML = `<div class="p-4 bg-gray-100 rounded-lg">${msg.text}</div>`; 
                    chatContainer.appendChild(div);
                 });
             };
@@ -1896,40 +2019,86 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             };
 
             window.enterApp = function() {
-                landingView.style.opacity = '0';
+                // Förbättrad uppslagning av element
+                let landing = document.getElementById('landing-view');
+                let app = document.getElementById('app-view');
+                
+                // Fallback om getElementById misslyckas (ovanligt men möjligt i vissa miljöer)
+                if (!landing) landing = document.querySelector('#landing-view');
+                if (!app) app = document.querySelector('#app-view');
+                
+                if(!landing || !app) {
+                    console.error("Critical Error: Navigation views not found.", { landing, app });
+                    alert("Ett tekniskt fel uppstod: Kan inte hitta app-vyn. Prova att ladda om sidan.");
+                    return; 
+                }
+
+                console.log("Navigating to App..."); // Debug log
+
+                // Nollställ scroll och transitions
+                window.scrollTo(0, 0);
+                
+                landing.style.opacity = '0';
+                
+                // Använd setTimeout för att säkerställa att transition hinner starta
                 setTimeout(() => {
-                    landingView.classList.add('hidden');
-                    appView.classList.remove('hidden');
-                    requestAnimationFrame(() => { appView.style.opacity = '1'; });
-                    document.body.style.overflow = 'hidden';
+                    landing.classList.add('hidden');
+                    app.classList.remove('hidden');
                     
-                    // Fetch real history if logged in
+                    // Force reflow
+                    void app.offsetWidth;
+                    
+                    requestAnimationFrame(() => { 
+                        app.style.opacity = '1'; 
+                    });
+                    
+                    document.body.style.overflow = 'hidden';
                     fetchHistory();
                 }, 500);
             };
 
             window.enterAppWithPrompt = function() {
-                const prompt = document.getElementById('prd-input').value;
+                const input = document.getElementById('prd-input');
+                if (!input) return;
+                const prompt = input.value;
+                
                 window.enterApp();
+                
                 if (prompt.trim()) {
                     setTimeout(() => {
-                        appInput.value = prompt;
-                        window.sendMessage();
+                        const aiInput = document.getElementById('app-input');
+                        if(aiInput) {
+                            aiInput.value = prompt;
+                            // Anpassa höjden
+                            aiInput.style.height = 'auto';
+                            aiInput.style.height = aiInput.scrollHeight + 'px';
+                            window.sendMessage();
+                        }
                     }, 800);
                 }
             };
 
             window.exitApp = function() {
-                appView.style.opacity = '0';
+                const landing = document.getElementById('landing-view');
+                const app = document.getElementById('app-view');
+                
+                if(!landing || !app) return;
+
+                app.style.opacity = '0';
                 setTimeout(() => {
-                    appView.classList.add('hidden');
-                    landingView.classList.remove('hidden');
-                    requestAnimationFrame(() => { landingView.style.opacity = '1'; });
+                    app.classList.add('hidden');
+                    landing.classList.remove('hidden');
+                    
+                    // Force reflow
+                    void landing.offsetWidth;
+
+                    requestAnimationFrame(() => { landing.style.opacity = '1'; });
                     document.body.style.overflow = '';
                 }, 500);
             };
 
             window.newChat = function() {
+                if(!chatContainer) return;
                 chatContainer.innerHTML = `
                 <div class="flex gap-4 max-w-3xl mx-auto">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
@@ -1941,25 +2110,22 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         </p>
                     </div>
                 </div>`;
-                // Reset placeholder
                 if(appInput) appInput.placeholder = "Beskriv din app...";
             };
 
             window.sendMessage = async function() {
+                if(!appInput || !chatContainer) return;
                 const text = appInput.value.trim();
                 if (!text) return;
                 
-                // CHECK CREDITS
                 if (currentUser) {
                     const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
                     if (!isPro && userCredits.used >= userCredits.limit) {
-                        // ÄNDRAT: Öppna betalningsmodal istället för alert
                         togglePaymentModal(true);
                         return;
                     }
                 }
 
-                // 1. Add User Message
                 const userMsg = document.createElement('div');
                 userMsg.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
                 userMsg.innerHTML = `
@@ -1975,7 +2141,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 chatContainer.appendChild(userMsg);
                 appInput.value = ''; appInput.style.height = 'auto'; chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                // 2. Simulate AI Typing
                 const loadingId = 'loading-' + Date.now();
                 const aiLoading = document.createElement('div'); aiLoading.id = loadingId;
                 aiLoading.className = 'flex gap-4 max-w-3xl mx-auto';
@@ -1988,22 +2153,16 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     </div>`;
                 chatContainer.appendChild(aiLoading); chatContainer.scrollTop = chatContainer.scrollHeight;
 
-                // 3. Response + SAVE TO DB
                 setTimeout(async () => {
                     const loadingEl = document.getElementById(loadingId); if (loadingEl) loadingEl.remove();
 
-                    // Generate Dynamic Content (Markdown)
                     const productName = (text.split(' ')[0].length > 2 ? text.split(' ')[0] : 'App') + 'Spec';
                     const prdMarkdown = `# Product Requirements Document (PRD): ${productName}\n\n## 1. Executive Summary\n**Product:** ${productName}\n**Goal:** ${text}\n\n## 2. Core Features\n- **User Auth:** Secure login/signup via Supabase.\n- **Main Flow:** Optimized for high conversion.\n- **Admin Panel:** Data visualization and user management.\n\n## 3. Tech Stack\n- Frontend: React + Tailwind CSS\n- Backend: Supabase (PostgreSQL)\n- Deployment: Vercel\n\n*Generated by GenPRD*`;
                     
-                    // Render Markdown to HTML using Marked.js
                     const htmlContent = marked.parse(prdMarkdown);
 
-                    // --- SAVE TO SUPABASE ---
                     await saveToDb(productName, text, prdMarkdown);
-                    // ------------------------
 
-                    // INCREMENT CREDITS (Unless PRO)
                     if (currentUser) {
                         const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
                         if (!isPro) {
@@ -2018,7 +2177,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         }
                     }
 
-                    // ÄNDRAT: Uppdatera placeholder för iteration
                     if(appInput) appInput.placeholder = "Vill du förfina något? T.ex. 'Lägg till OAuth login'";
 
                     const encodedContent = encodeURIComponent(prdMarkdown);
@@ -2043,7 +2201,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                                 </div>
                             </div>
                             
-                            <!-- Rendered Markdown Content -->
                             <div class="prose dark:prose-invert max-w-none text-sm text-kTextDark dark:text-gray-300 prd-content font-sans leading-relaxed">
                                 ${htmlContent}
                             </div>
@@ -2053,7 +2210,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }, 2000);
             };
 
-            // Enter on textarea
             if (appInput) {
                 appInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendMessage(); }});
             }
@@ -2063,22 +2219,21 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             const themeIcon = document.getElementById('theme-icon');
             const appThemeToggle = document.getElementById('app-theme-toggle');
             const html = document.documentElement;
-            const themeKey = 'genprd-theme-v1'; // Nyckelbyte för att återställa till Light Mode
+            const themeKey = 'genprd-theme-v1'; 
             
             function setTheme(isDark) {
                 const appIcon = appThemeToggle ? appThemeToggle.querySelector('i') : null;
                 if (isDark) {
                     html.classList.add('dark'); localStorage.setItem(themeKey, 'dark');
-                    themeIcon.classList.remove('ph-moon'); themeIcon.classList.add('ph-sun');
+                    if(themeIcon) { themeIcon.classList.remove('ph-moon'); themeIcon.classList.add('ph-sun'); }
                     if (appIcon) { appIcon.classList.remove('ph-moon'); appIcon.classList.add('ph-sun'); }
                 } else {
                     html.classList.remove('dark'); localStorage.setItem(themeKey, 'light');
-                    themeIcon.classList.remove('ph-sun'); themeIcon.classList.add('ph-moon');
+                    if(themeIcon) { themeIcon.classList.remove('ph-sun'); themeIcon.classList.add('ph-moon'); }
                     if (appIcon) { appIcon.classList.remove('ph-sun'); appIcon.classList.add('ph-moon'); }
                 }
             }
             
-            // Default to Light unless explicitly set to Dark in the new key
             if (localStorage.getItem(themeKey) === 'dark') setTheme(true); else setTheme(false);
             
             if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => setTheme(!html.classList.contains('dark')));
