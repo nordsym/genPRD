@@ -694,11 +694,14 @@
                     <div class="relative bg-white dark:bg-nightSurface p-10 rounded-[35px] shadow-card">
                         <div class="inline-block bg-gradient-to-r from-kBlue to-kPurple text-white text-xs font-bold px-4 py-1.5 rounded-full mb-6">PRO PLAN</div>
                         
-                        <div class="flex items-baseline justify-center gap-1 mb-2">
-                            <span id="price-amount" class="text-6xl font-extrabold tracking-tight">99 kr</span>
-                            <span id="price-period" class="text-kTextMedium font-medium">/månad</span>
+                        <div class="flex flex-col items-center mb-2">
+                            <div class="flex items-baseline justify-center gap-1">
+                                <span id="price-amount" class="text-6xl font-extrabold tracking-tight">99 kr</span>
+                                <span id="price-period" class="text-kTextMedium font-medium">/månad</span>
+                            </div>
+                            <span class="text-sm text-kTextMedium font-medium mt-1">exkl. moms</span>
                         </div>
-                        <div id="price-savings" class="text-sm text-kMint font-bold h-6 mb-8"></div>
+                        <div id="price-savings" class="text-sm text-kMint font-bold h-6 mb-8 text-center"></div>
     
                         <ul class="space-y-4 text-left mb-10 pl-4">
                             <li class="flex items-center gap-3">
@@ -908,7 +911,7 @@
                         </div>
                         <div class="overflow-hidden">
                             <p id="user-email-display" class="text-sm font-bold text-kTextDark dark:text-white truncate max-w-[120px]">Guest</p>
-                            <p class="text-xs text-kMint font-medium">GenPRD PRO</p>
+                            <p class="text-xs text-kMint font-medium" id="credits-display">50 genereringar kvar</p>
                         </div>
                     </div>
                     <button onclick="handleLogout()" class="p-2 text-kTextMedium hover:text-kTextDark dark:hover:text-white transition-colors" title="Logga ut">
@@ -977,10 +980,48 @@
 
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- PRICING LOGIC ---
+            const monthlyBtn = document.getElementById('monthly-btn');
+            const yearlyBtn = document.getElementById('yearly-btn');
+            const priceAmount = document.getElementById('price-amount');
+            const pricePeriod = document.getElementById('price-period');
+            const priceSavings = document.getElementById('price-savings');
+
+            if (monthlyBtn && yearlyBtn) {
+                monthlyBtn.addEventListener('click', () => {
+                    monthlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
+                    monthlyBtn.classList.remove('text-kTextMedium', 'hover:text-kBlue');
+                    
+                    yearlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
+                    yearlyBtn.classList.add('text-kTextMedium', 'hover:text-kBlue');
+                    
+                    // Update Price
+                    priceAmount.textContent = '99 kr';
+                    pricePeriod.textContent = '/månad';
+                    priceSavings.textContent = ''; // Clear savings
+                });
+
+                yearlyBtn.addEventListener('click', () => {
+                    yearlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
+                    yearlyBtn.classList.remove('text-kTextMedium', 'hover:text-kBlue');
+                    
+                    monthlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
+                    monthlyBtn.classList.add('text-kTextMedium', 'hover:text-kBlue');
+                    
+                    // Update Price
+                    // 99 * 9 = 891 kr total per year
+                    // 891 / 12 = 74.25 kr per month
+                    priceAmount.textContent = '891 kr';
+                    pricePeriod.textContent = '/år';
+                    priceSavings.textContent = '💰 Spara 297 kr (25% rabatt)';
+                });
+            }
+
             // --- SUPABASE INIT ---
             let supabase;
             let currentUser = null;
             let userPRDs = [];
+            let userCredits = { used: 0, limit: 50, status: 'free' };
 
             try {
                 if (window.supabase) {
@@ -1001,11 +1042,53 @@
                 currentUser = session?.user || null;
                 updateAuthUI();
                 
+                if (currentUser) {
+                    await fetchUserCredits();
+                }
+
                 // Listen for auth changes
                 supabase.auth.onAuthStateChange((_event, session) => {
                     currentUser = session?.user || null;
                     updateAuthUI();
                 });
+            }
+            
+            async function fetchUserCredits() {
+                if (!currentUser) return;
+                try {
+                    const { data, error } = await supabase
+                        .from('user_credits')
+                        .select('*')
+                        .eq('user_id', currentUser.id)
+                        .single();
+
+                    if (data) {
+                        userCredits = {
+                            used: data.credits_used,
+                            limit: data.credits_limit,
+                            status: data.subscription_status
+                        };
+                    }
+                    updateCreditsDisplay();
+                } catch (e) {
+                    console.log('Error fetching credits or no record yet', e);
+                }
+            }
+
+            function updateCreditsDisplay() {
+                const display = document.getElementById('credits-display');
+                if (display && currentUser) {
+                    const remaining = userCredits.limit - userCredits.used;
+                    display.textContent = `${remaining} genereringar kvar`;
+                    
+                    if (remaining === 0) {
+                        display.classList.remove('text-kMint');
+                        display.classList.add('text-red-400');
+                    } else {
+                        display.classList.add('text-kMint');
+                        display.classList.remove('text-red-400');
+                    }
+                }
             }
 
             function updateAuthUI() {
@@ -1070,7 +1153,7 @@
                     const { data, error } = await supabase.auth.signUp({ email, password });
                     if (error) throw error;
                     
-                    alert('Konto skapat! Kontrollera din email för bekräftelse.');
+                    alert('Konto skapat! ✅\n\nVi har skickat en bekräftelselänk till din email.\nDu måste klicka på länken innan du kan logga in.\n\nKolla även skräppost om du inte ser mailet.');
                     toggleAuthModal(false);
                 } catch (error) {
                     alert('Kunde inte skapa konto: ' + error.message);
@@ -1132,6 +1215,22 @@
                 });
                 historyContent.innerHTML = html;
             }
+            
+            // --- HISTORY SEARCH ---
+            const historySearchInput = document.getElementById('history-search');
+            if (historySearchInput) {
+                historySearchInput.addEventListener('input', (e) => {
+                    const query = e.target.value.toLowerCase().trim();
+                    if (!query) {
+                        renderHistoryList(userPRDs);
+                        return;
+                    }
+                    const filtered = userPRDs.filter(prd => 
+                        (prd.title || '').toLowerCase().includes(query)
+                    );
+                    renderHistoryList(filtered);
+                });
+            }
 
             async function saveToDb(title, prompt, content) {
                 if (!currentUser) return; // Don't save if in Dev Mode/Guest
@@ -1151,7 +1250,10 @@
                         .from('prds')
                         .select('id, title, created_at')
                         .order('created_at', { ascending: false });
-                    if (data) renderHistoryList(data);
+                    if (data) {
+                        userPRDs = data; // Update local cache
+                        renderHistoryList(data);
+                    }
 
                 } catch (err) {
                     console.error("Failed to save PRD:", err);
@@ -1305,7 +1407,7 @@
                 }
             };
 
-            // --- Typewriter Effect (Preserved) ---
+            // --- Typewriter Effect ---
             const inputField = document.getElementById('prd-input');
             const placeholderTexts = [
                 "Bygg en landningssida för en ny SaaS-produkt med prissättning...",
@@ -1318,9 +1420,11 @@
             let charIndex = 0;
             let isDeleting = false;
             let typeSpeed = 50;
+            let typewriterTimeout;
+            let typewriterActive = true;
             
             function typeWriter() {
-                if (!inputField) return;
+                if (!inputField || !typewriterActive) return;
                 const currentText = placeholderTexts[textIndex];
                 if (isDeleting) {
                     inputField.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
@@ -1331,9 +1435,17 @@
                 }
                 if (!isDeleting && charIndex === currentText.length) { isDeleting = true; typeSpeed = 2000; } 
                 else if (isDeleting && charIndex === 0) { isDeleting = false; textIndex = (textIndex + 1) % placeholderTexts.length; typeSpeed = 500; }
-                setTimeout(typeWriter, typeSpeed);
+                typewriterTimeout = setTimeout(typeWriter, typeSpeed);
             }
             typeWriter();
+
+            if (inputField) {
+                inputField.addEventListener('focus', () => {
+                    typewriterActive = false;
+                    clearTimeout(typewriterTimeout);
+                    inputField.placeholder = "Beskriv vad du vill bygga...";
+                });
+            }
 
             // --- APP LOGIC ---
             
@@ -1451,9 +1563,17 @@
                 </div>`;
             };
 
-            window.sendMessage = function() {
+            window.sendMessage = async function() {
                 const text = appInput.value.trim();
                 if (!text) return;
+                
+                // CHECK CREDITS
+                if (currentUser) {
+                    if (userCredits.used >= userCredits.limit) {
+                        alert(`Du har använt ${userCredits.used}/${userCredits.limit} genereringar. Uppgradera till PRO för 200/månad!`);
+                        return;
+                    }
+                }
 
                 // 1. Add User Message
                 const userMsg = document.createElement('div');
@@ -1485,15 +1605,27 @@
                 chatContainer.appendChild(aiLoading); chatContainer.scrollTop = chatContainer.scrollHeight;
 
                 // 3. Response + SAVE TO DB
-                setTimeout(() => {
+                setTimeout(async () => {
                     const loadingEl = document.getElementById(loadingId); if (loadingEl) loadingEl.remove();
 
                     const productName = (text.split(' ')[0].length > 2 ? text.split(' ')[0] : 'App') + 'Spec';
                     const prdContent = `# Product Requirements Document (PRD): ${productName}\n\n## 1. Executive Summary\n**Product:** ${productName}\n**Goal:** ${text}\n\n## 2. Core Features\n- **User Auth:** Secure login/signup via Supabase.\n- **Main Flow:** Optimized for high conversion.\n- **Admin Panel:** Data visualization and user management.\n\n## 3. Tech Stack\n- Frontend: React + Tailwind CSS\n- Backend: Supabase (PostgreSQL)\n- Deployment: Vercel\n\n*Generated by GenPRD*`;
                     
                     // --- SAVE TO SUPABASE ---
-                    saveToDb(productName, text, prdContent);
+                    await saveToDb(productName, text, prdContent);
                     // ------------------------
+
+                    // INCREMENT CREDITS
+                    if (currentUser) {
+                        userCredits.used += 1;
+                        await supabase
+                            .from('user_credits')
+                            .upsert({ 
+                                user_id: currentUser.id, 
+                                credits_used: userCredits.used 
+                            });
+                        updateCreditsDisplay();
+                    }
 
                     const encodedContent = encodeURIComponent(prdContent);
                     const aiMsg = document.createElement('div');
