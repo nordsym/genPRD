@@ -433,12 +433,14 @@
                         <div class="w-8 h-8 rounded-full border-2 border-white dark:border-nightSurface bg-kPink text-white flex items-center justify-center text-xs font-bold">AK</div>
                         <div class="w-8 h-8 rounded-full border-2 border-white dark:border-nightSurface bg-kPurple text-white flex items-center justify-center text-xs font-bold">LS</div>
                     </div>
-                    <span class="font-bold text-xl">47 <span class="text-sm font-normal text-kTextMedium">byggare</span></span>
+                    <!-- ÄNDRAT: Startar på 0 istället för 47 -->
+                    <span class="font-bold text-xl" id="stats-builders">0 <span class="text-sm font-normal text-kTextMedium">byggare</span></span>
                 </div>
 
                 <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
                     <i class="ph-duotone ph-file-text text-3xl mb-1 text-kBlue"></i>
-                    <span class="font-bold text-xl">132 <span class="text-sm font-normal text-kTextMedium">genererade</span></span>
+                    <!-- ÄNDRAT: Startar på 0 istället för 132 -->
+                    <span class="font-bold text-xl" id="stats-generated">0 <span class="text-sm font-normal text-kTextMedium">genererade</span></span>
                 </div>
 
                 <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
@@ -1029,11 +1031,42 @@
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     console.log("Supabase Initialized");
                     checkSession();
+                    fetchLiveStats(); // Fetch public stats on load
                 } else {
                     console.error("Supabase SDK not loaded");
                 }
             } catch (e) {
                 console.error("Supabase Init Error:", e);
+            }
+
+            // --- STATS FUNCTION ---
+            async function fetchLiveStats() {
+                try {
+                    // Anropa vår nya databas-funktion via RPC
+                    const { data, error } = await supabase.rpc('get_landing_stats');
+                    
+                    if (error) throw error;
+
+                    if (data) {
+                        // Update Builders
+                        const buildersEl = document.getElementById('stats-builders');
+                        if (buildersEl) {
+                            // ÄNDRAT: Visar nu exakt antal från DB (ingen offset)
+                            const displayCount = data.builders || 0; 
+                            buildersEl.innerHTML = `${displayCount} <span class="text-sm font-normal text-kTextMedium">byggare</span>`;
+                        }
+
+                        // Update PRDs
+                        const prdsEl = document.getElementById('stats-generated');
+                        if (prdsEl) {
+                            // ÄNDRAT: Visar nu exakt antal från DB (ingen offset)
+                            const displayCount = data.prds || 0;
+                            prdsEl.innerHTML = `${displayCount} <span class="text-sm font-normal text-kTextMedium">genererade</span>`;
+                        }
+                    }
+                } catch (err) {
+                    console.warn("Could not fetch live stats:", err);
+                }
             }
 
             // --- AUTH FUNCTIONS ---
@@ -1151,7 +1184,15 @@
                 btn.disabled = true;
 
                 try {
-                    const { data, error } = await supabase.auth.signUp({ email, password });
+                    // ÄNDRAT: Lade till options med emailRedirectTo för att tvinga rätt URL
+                    const { data, error } = await supabase.auth.signUp({ 
+                        email, 
+                        password,
+                        options: {
+                            emailRedirectTo: 'https://nordsym.github.io/genPRD/'
+                        }
+                    });
+                    
                     if (error) throw error;
                     
                     alert('Konto skapat! ✅\n\nVi har skickat en bekräftelselänk till din email.\nDu måste klicka på länken innan du kan logga in.\n\nKolla även skräppost om du inte ser mailet.');
@@ -1663,20 +1704,24 @@
             const themeIcon = document.getElementById('theme-icon');
             const appThemeToggle = document.getElementById('app-theme-toggle');
             const html = document.documentElement;
+            const themeKey = 'genprd-theme-v1'; // Nyckelbyte för att återställa till Light Mode
             
             function setTheme(isDark) {
                 const appIcon = appThemeToggle ? appThemeToggle.querySelector('i') : null;
                 if (isDark) {
-                    html.classList.add('dark'); localStorage.theme = 'dark';
+                    html.classList.add('dark'); localStorage.setItem(themeKey, 'dark');
                     themeIcon.classList.remove('ph-moon'); themeIcon.classList.add('ph-sun');
                     if (appIcon) { appIcon.classList.remove('ph-moon'); appIcon.classList.add('ph-sun'); }
                 } else {
-                    html.classList.remove('dark'); localStorage.theme = 'light';
+                    html.classList.remove('dark'); localStorage.setItem(themeKey, 'light');
                     themeIcon.classList.remove('ph-sun'); themeIcon.classList.add('ph-moon');
                     if (appIcon) { appIcon.classList.remove('ph-sun'); appIcon.classList.add('ph-moon'); }
                 }
             }
-            if (localStorage.theme === 'dark') setTheme(true); else setTheme(false);
+            
+            // Default to Light unless explicitly set to Dark in the new key
+            if (localStorage.getItem(themeKey) === 'dark') setTheme(true); else setTheme(false);
+            
             if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => setTheme(!html.classList.contains('dark')));
             if (appThemeToggle) appThemeToggle.addEventListener('click', () => setTheme(!html.classList.contains('dark')));
 
