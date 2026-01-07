@@ -1422,15 +1422,24 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             };
 
-            // ÄNDRAT: Ny funktion för att hantera befintlig prenumeration
+            // ÄNDRAT: Hantera prenumeration via Stripe Portal Link
             window.manageSubscription = function() {
-                // Här skulle vi normalt anropa en backend (n8n/Edge Function) för att få en 
-                // billingPortal-länk. För nu visar vi info.
+                // INSTRUKTION:
+                // 1. Gå till Stripe Dashboard -> Settings -> Billing -> Customer Portal
+                // 2. Klicka "Aktivera länk" under "Lansera kundportalen med en länk"
+                // 3. Kopiera länken som ser ut som: https://billing.stripe.com/p/login/....
+                // 4. Klistra in den nedanför:
                 
-                // Exempel på hur man skulle göra med en delbar länk (om du aktiverat det i Stripe):
-                // window.open('https://billing.stripe.com/p/login/DIN_PORTAL_ID', '_blank');
-                
-                alert("Du är redan PRO! 🌟\n\nFör att hantera din prenumeration (uppgradera/avsluta), använd Stripe Customer Portal.\n\n(Backend-integration krävs för automatisk inloggning här).");
+                const portalLink = "https://billing.stripe.com/p/login/cNi3cxdwEdOW1qs95ecMM00"; 
+
+                if (portalLink === "KLISTRA_IN_DIN_STRIPE_LÄNK_HÄR") {
+                    alert("Dev: Du måste klistra in din Stripe Portal-länk i koden (rad ~2380) för att detta ska fungera.");
+                } else {
+                    // Eftersom vi använder "no-code" länken måste användaren fylla i sin e-post hos Stripe för att få access
+                    // Vi skickar med deras email som 'prefilled_email' för att göra det lite smidigare
+                    const emailParam = currentUser ? `?prefilled_email=${encodeURIComponent(currentUser.email)}` : '';
+                    window.open(portalLink + emailParam, '_blank');
+                }
             };
 
             // Check for success URL param
