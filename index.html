@@ -1115,52 +1115,51 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
         <!-- 8. FAQ -->
         <section id="faq" class="py-20">
-             <!-- ... (Content preserved) ... -->
              <div class="max-w-3xl mx-auto px-6">
                 <h2 class="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">Vanliga Frågor <i class="ph-fill ph-chat-circle-dots text-kBlue"></i></h2>
     
                 <div class="space-y-4">
                     <!-- Q1 -->
                     <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
-                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
-                            <span class="font-bold text-lg">Vad räknas som en generering?</span>
-                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none group" aria-expanded="false">
+                            <span class="font-bold text-lg dark:text-white">Vad räknas som en generering?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-all duration-300 group-hover:bg-kBlue/10">
                                 <i class="ph-bold ph-plus faq-icon"></i>
                             </div>
                         </button>
                         <div class="accordion-content bg-white dark:bg-nightSurface px-6">
-                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
-                                Varje gång du klickar 'Generera PRD' eller 'Regenerera' räknas det som en generering. Att spara, redigera och döpa om PRDs använder inga credits.
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400 leading-relaxed">
+                                Varje gång du klickar på "Generera PRD" eller "Regenerera" räknas det som en generering. Att spara, redigera och byta namn på PRDs kostar inga credits.
                             </div>
                         </div>
                     </div>
     
                     <!-- Q2 -->
                     <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
-                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
-                            <span class="font-bold text-lg">Vad händer efter min provperiod?</span>
-                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none group" aria-expanded="false">
+                            <span class="font-bold text-lg dark:text-white">Vad händer efter min provperiod?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-all duration-300 group-hover:bg-kBlue/10">
                                 <i class="ph-bold ph-plus faq-icon"></i>
                             </div>
                         </button>
                         <div class="accordion-content bg-white dark:bg-nightSurface px-6">
-                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
-                                Efter provperioden behöver du välja en plan för att fortsätta generera PRDs. Om du inte väljer en plan får du read-only åtkomst till dina befintliga PRDs.
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400 leading-relaxed">
+                                När din provperiod är slut behöver du välja en plan för att fortsätta generera PRDs. Om du inte väljer en plan behåller du läsåtkomst till dina befintliga PRDs.
                             </div>
                         </div>
                     </div>
     
                     <!-- Q3 -->
                     <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
-                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
-                            <span class="font-bold text-lg">Kan jag byta plan?</span>
-                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none group" aria-expanded="false">
+                            <span class="font-bold text-lg dark:text-white">Kan jag byta plan?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-all duration-300 group-hover:bg-kBlue/10">
                                 <i class="ph-bold ph-plus faq-icon"></i>
                             </div>
                         </button>
                         <div class="accordion-content bg-white dark:bg-nightSurface px-6">
-                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
-                                Absolut! Du kan uppgradera eller nedgradera din plan när som helst från din faktureringspanel.
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400 leading-relaxed">
+                                Jajamen! Du kan uppgradera eller nedgradera din plan när som helst via din faktureringspanel.
                             </div>
                         </div>
                     </div>
@@ -1372,8 +1371,18 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 const modal = document.getElementById('payment-modal');
                 if (!modal) return; // Safety check
                 
-                const modalContent = modal.children[0]; // Get the white box inside
-                if (!modalContent) return; // Extra safety check
+                const modalContent = modal.children[0]; 
+                if (!modalContent) return; 
+
+                // ÄNDRAT: Anpassa innehållet om användaren redan är PRO
+                const isPro = userCredits.status === 'pro';
+                
+                if (show && isPro) {
+                    // Om PRO, visa "Hantera Prenumeration" istället för köp-knappar
+                    // (Enkel hantering genom att byta innehåll dynamiskt eller redirecta direkt)
+                    window.manageSubscription(); 
+                    return; // Öppna inte den vanliga modalen
+                }
 
                 if (show) { 
                     modal.classList.remove('hidden'); 
@@ -1411,6 +1420,17 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     console.error('Stripe error:', error);
                     alert('Något gick fel vid omdirigering till betalning.');
                 }
+            };
+
+            // ÄNDRAT: Ny funktion för att hantera befintlig prenumeration
+            window.manageSubscription = function() {
+                // Här skulle vi normalt anropa en backend (n8n/Edge Function) för att få en 
+                // billingPortal-länk. För nu visar vi info.
+                
+                // Exempel på hur man skulle göra med en delbar länk (om du aktiverat det i Stripe):
+                // window.open('https://billing.stripe.com/p/login/DIN_PORTAL_ID', '_blank');
+                
+                alert("Du är redan PRO! 🌟\n\nFör att hantera din prenumeration (uppgradera/avsluta), använd Stripe Customer Portal.\n\n(Backend-integration krävs för automatisk inloggning här).");
             };
 
             // Check for success URL param
@@ -1736,6 +1756,32 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             }
 
+            // ÄNDRAT: Ny funktion för att byta namn på PRD
+            window.renamePrd = async (e, id, currentTitle) => {
+                e.stopPropagation(); // Förhindra att PRDn laddas när man klickar på pennan
+                const newTitle = prompt("Ange nytt namn för din PRD:", currentTitle);
+                
+                if (newTitle && newTitle.trim() !== "" && newTitle !== currentTitle) {
+                    try {
+                        const { error } = await supabase
+                            .from('prds')
+                            .update({ title: newTitle.trim() })
+                            .eq('id', id);
+
+                        if (error) throw error;
+                        
+                        // Uppdatera listan lokalt för snabbhet
+                        const prdIndex = userPRDs.findIndex(p => p.id === id);
+                        if (prdIndex > -1) userPRDs[prdIndex].title = newTitle.trim();
+                        renderHistoryList(userPRDs);
+                        
+                    } catch (err) {
+                        console.error("Error renaming:", err);
+                        alert("Kunde inte byta namn. Försök igen.");
+                    }
+                }
+            };
+
             function renderHistoryList(prds) {
                 const historyContent = document.getElementById('history-content');
                 if(!historyContent) return;
@@ -1747,11 +1793,17 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                 let html = '';
                 prds.forEach(prd => {
+                    // ÄNDRAT: Lade till rename-knapp
                     html += `
-                        <button onclick="loadPrdFromDb('${prd.id}')" class="w-full text-left p-3 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors group relative history-item" id="btn-${prd.id}">
-                            <div class="font-bold text-sm text-kTextDark dark:text-gray-200 truncate pr-4">${prd.title || 'Namnlös PRD'}</div>
-                            <div class="text-xs text-kTextMedium dark:text-gray-500 mt-0.5">${new Date(prd.created_at).toLocaleDateString()}</div>
-                        </button>
+                        <div class="group relative flex items-center w-full p-2 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors">
+                            <button onclick="loadPrdFromDb('${prd.id}')" class="flex-grow text-left overflow-hidden mr-2">
+                                <div class="font-bold text-sm text-kTextDark dark:text-gray-200 truncate">${prd.title || 'Namnlös PRD'}</div>
+                                <div class="text-xs text-kTextMedium dark:text-gray-500 mt-0.5">${new Date(prd.created_at).toLocaleDateString()}</div>
+                            </button>
+                            <button onclick="renamePrd(event, '${prd.id}', '${prd.title || ''}')" class="p-1.5 text-kTextMedium hover:text-kBlue opacity-0 group-hover:opacity-100 transition-opacity" title="Byt namn">
+                                <i class="ph-bold ph-pencil-simple"></i>
+                            </button>
+                        </div>
                     `;
                 });
                 historyContent.innerHTML = html;
@@ -1802,17 +1854,23 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             }
 
+            // ÄNDRAT: Ny funktion för Regenerate
+            window.regeneratePrd = function(promptText) {
+                // Decode om det behövs, men här skickar vi råsträngen
+                if(appInput) {
+                    appInput.value = promptText; // Sätt input till ursprungliga prompten
+                    window.sendMessage(); // Kör
+                }
+            };
+
             window.loadPrdFromDb = async (id) => {
                 const chatContainer = document.getElementById('chat-container');
                 if(!chatContainer) return;
 
                 chatContainer.innerHTML = '<div class="flex items-center justify-center h-full"><i class="ph-bold ph-spinner animate-spin text-3xl text-kBlue"></i></div>';
                 
-                // Highlight active
-                document.querySelectorAll('.history-item').forEach(btn => btn.classList.remove('bg-kBlue/10', 'dark:bg-nightSurface'));
-                const activeBtn = document.getElementById('btn-' + id);
-                if(activeBtn) activeBtn.classList.add('bg-kBlue/10', 'dark:bg-nightSurface');
-
+                // Highlight active (simple logical highlight, UI highlight handled by hover mostly in new structure)
+                
                 try {
                     const { data, error } = await supabase
                         .from('prds')
@@ -1842,7 +1900,9 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                     // 2. AI Message (Content)
                     const encodedContent = encodeURIComponent(data.content);
-                    const htmlContent = marked.parse(data.content); // Use marked!
+                    // ÄNDRAT: Escape prompt för att kunna användas i JS-anrop
+                    const escapedPrompt = data.prompt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    const htmlContent = marked.parse(data.content); 
 
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
@@ -1856,6 +1916,10 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                                     <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">Sparad PRD 📂</p>
                                 </div>
                                 <div class="flex gap-2">
+                                    <!-- ÄNDRAT: Regenerera-knapp tillagd -->
+                                    <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
+                                        <i class="ph-bold ph-arrows-clockwise"></i>
+                                    </button>
                                     <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
                                         <i class="ph-bold ph-file-pdf"></i>
                                     </button>
@@ -2242,6 +2306,9 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     if(appInput) appInput.placeholder = "Vill du förfina något? T.ex. 'Lägg till OAuth login'";
 
                     const encodedContent = encodeURIComponent(prdMarkdown);
+                    // ÄNDRAT: Escape prompt här också för regenerate-knappen i den nya chat-bubblan
+                    const escapedPrompt = text.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
                     aiMsg.innerHTML = `
@@ -2254,6 +2321,10 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                                     <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">PRD Genererad! 🚀</p>
                                 </div>
                                 <div class="flex gap-2">
+                                    <!-- ÄNDRAT: Regenerera-knapp tillagd -->
+                                    <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
+                                        <i class="ph-bold ph-arrows-clockwise"></i>
+                                    </button>
                                     <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
                                         <i class="ph-bold ph-file-pdf"></i>
                                     </button>
@@ -2300,6 +2371,31 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             
             if (themeToggleBtn) themeToggleBtn.addEventListener('click', () => setTheme(!html.classList.contains('dark')));
             if (appThemeToggle) appThemeToggle.addEventListener('click', () => setTheme(!html.classList.contains('dark')));
+
+            // --- FAQ Accordion Logic ---
+            document.querySelectorAll('.faq-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const iconContainer = btn.querySelector('div');
+                    const icon = btn.querySelector('.faq-icon');
+                    
+                    // Toggle active class on content
+                    content.classList.toggle('active');
+                    
+                    // Toggle icon style
+                    if (content.classList.contains('active')) {
+                        icon.classList.remove('ph-plus');
+                        icon.classList.add('ph-minus');
+                        iconContainer.classList.add('bg-kBlue', 'text-white', 'rotate-180');
+                        iconContainer.classList.remove('bg-kBg', 'dark:bg-nightBg', 'text-kBlue', 'group-hover:bg-kBlue/10');
+                    } else {
+                        icon.classList.add('ph-plus');
+                        icon.classList.remove('ph-minus');
+                        iconContainer.classList.remove('bg-kBlue', 'text-white', 'rotate-180');
+                        iconContainer.classList.add('bg-kBg', 'dark:bg-nightBg', 'text-kBlue', 'group-hover:bg-kBlue/10');
+                    }
+                });
+            });
 
             // --- Mobile Menu ---
             const menuBtn = document.getElementById('mobile-menu-btn');
