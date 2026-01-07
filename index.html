@@ -313,10 +313,10 @@
                     <div>
                         <label class="block text-xs font-bold uppercase text-kTextMedium dark:text-gray-500 mb-1 ml-1">Lösenord</label>
                         <input type="password" id="login-password" required class="w-full px-4 py-3 rounded-xl bg-kBg dark:bg-nightBg border border-kBorder dark:border-nightBorder focus:ring-2 focus:ring-kBlue focus:outline-none dark:text-white transition-all" placeholder="••••••••">
-                        <!-- UPDATED: Added Resend Confirmation link -->
+                        <!-- UPDATED: Added Resend Confirmation link AND Forgot Password handler -->
                         <div class="flex justify-between items-center mt-1">
                             <button type="button" onclick="window.resendConfirmation()" class="text-xs text-kTextMedium hover:text-kBlue transition-colors">Ej fått mail? Skicka igen</button>
-                            <a href="#" class="text-xs text-kBlue hover:text-kPurple font-medium">Glömt lösenord?</a>
+                            <a href="#" onclick="handlePasswordReset(); return false;" class="text-xs text-kBlue hover:text-kPurple font-medium">Glömt lösenord?</a>
                         </div>
                     </div>
                     
@@ -1524,6 +1524,30 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     }
 
                     fetchLiveStats(); 
+
+                    // NEW: Handle Password Reset Flow
+                    const resetParams = new URLSearchParams(window.location.search);
+                    if (resetParams.get('reset') === 'true') {
+                        setTimeout(async () => {
+                            const newPassword = prompt('🔐 Välj nytt lösenord:\n\n(Minst 6 tecken)');
+                            
+                            if (newPassword && newPassword.length >= 6) {
+                                try {
+                                    const { error } = await supabase.auth.updateUser({ password: newPassword });
+                                    if (error) throw error;
+                                    
+                                    alert('✅ Lösenord uppdaterat!\n\nDu kan nu logga in med ditt nya lösenord.');
+                                    window.history.replaceState({}, document.title, window.location.pathname);
+                                } catch (e) {
+                                    console.error('Password update error:', e);
+                                    alert('❌ Kunde inte uppdatera lösenord: ' + e.message);
+                                }
+                            } else if (newPassword !== null) {
+                                alert('⚠️ Lösenordet måste vara minst 6 tecken.');
+                            }
+                        }, 500);
+                    }
+
                 } else {
                     console.error("Supabase SDK not loaded");
                 }
