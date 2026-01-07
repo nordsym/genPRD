@@ -422,6 +422,7 @@
                 </h1>
                 <p class="text-xl text-kTextMedium dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
                     Skriv din produktidé. Få en fokuserad spec som AI-agenter <span class="font-bold text-kTextDark dark:text-white bg-kPink/20 px-2 rounded-md">FAKTISKT</span> kan använda för att bygga din app.
+                    <span class="text-kBlue font-bold block mt-2">Starta din 7-dagars gratis provperiod – 50 PRDs ingår!</span>
                 </p>
 
                 <!-- Input Card -->
@@ -449,7 +450,6 @@
 
         <!-- 3. Why GenPRD -->
         <section class="py-20 bg-white/50 dark:bg-nightSurface/30 backdrop-blur-sm border-y border-kBorder/50 dark:border-nightBorder">
-             <!-- ... (Content preserved) ... -->
              <div class="max-w-6xl mx-auto px-6">
                 <div class="text-center mb-16">
                     <span class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-kBlue/10 text-kBlue text-sm font-bold uppercase tracking-wider mb-4">Varför GenPRD? <i class="ph-fill ph-star"></i></span>
@@ -517,7 +517,6 @@
 
         <!-- 4. GenPRD In Action -->
         <section class="py-20 overflow-hidden">
-             <!-- ... (Content preserved) ... -->
              <div class="max-w-6xl mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-6 flex items-center justify-center gap-3">Bättre AI-byggda appar på under 3 minuter <i class="ph-fill ph-rocket-launch text-kPurple"></i></h2>
                 <p class="text-kTextMedium dark:text-gray-400 mb-12">GenPRD flödar direkt in i ditt favorit AI-verktyg.</p>
@@ -544,7 +543,6 @@
 
         <!-- 5. Features -->
         <section id="features" class="py-20 bg-kBg dark:bg-nightBg relative">
-             <!-- ... (Content preserved) ... -->
              <div class="max-w-6xl mx-auto px-6">
                 <div class="grid md:grid-cols-3 gap-8">
                     <!-- Feature 1 -->
@@ -588,7 +586,6 @@
 
         <!-- 6. Before/After Showcase -->
         <section class="py-20 md:py-28">
-             <!-- ... (Content preserved) ... -->
              <div class="max-w-6xl mx-auto px-6">
                 <div class="text-center mb-12">
                     <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">Samma idé. 10x bättre output <i class="ph-fill ph-palette text-kPink"></i></h2>
@@ -1107,7 +1104,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         <button onclick="if(currentUser) togglePaymentModal(true); else toggleAuthModal(true);" class="w-full py-4 bg-kTextDark dark:bg-white text-white dark:text-nightBg rounded-2xl font-bold text-lg hover:scale-[1.02] active:scale-95 transition-transform shadow-button flex items-center justify-center gap-2">
                             Starta 7-dagars gratis provperiod <i class="ph-fill ph-sparkle"></i>
                         </button>
-                        <p class="text-xs text-kTextMedium mt-4">0 kr idag. Inget betalkort krävs.</p>
+                        <p class="text-xs text-kTextMedium mt-4">Efter trial: Uppgradera eller läsåtkomst</p>
                     </div>
                 </div>
             </div>
@@ -1540,10 +1537,42 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         .single();
 
                     if (data) {
+                        const now = new Date();
+                        let status = data.subscription_status;
+                        let expiresAt = data.trial_expires_at ? new Date(data.trial_expires_at) : null;
+
+                        // 1. Initialize Trial for new/legacy users (status 'free' or missing dates)
+                        if ((status === 'free' || status === 'trial') && !expiresAt) {
+                            const startDate = new Date();
+                            const expiryDate = new Date();
+                            expiryDate.setDate(startDate.getDate() + 7); // 7 days trial
+                            
+                            const { error: updateError } = await supabase.from('user_credits').update({
+                                subscription_status: 'trial',
+                                trial_started_at: startDate.toISOString(),
+                                trial_expires_at: expiryDate.toISOString()
+                            }).eq('user_id', currentUser.id);
+                            
+                            if (!updateError) {
+                                status = 'trial';
+                                expiresAt = expiryDate;
+                            }
+                        }
+
+                        // 2. Check Expiry
+                        if (status === 'trial' && expiresAt && now > expiresAt) {
+                            const { error: expireError } = await supabase.from('user_credits').update({
+                                subscription_status: 'expired'
+                            }).eq('user_id', currentUser.id);
+                            
+                            if (!expireError) status = 'expired';
+                        }
+
                         userCredits = {
                             used: data.credits_used,
                             limit: data.credits_limit,
-                            status: data.subscription_status
+                            status: status,
+                            trial_expires_at: expiresAt
                         };
                     }
                     updateCreditsDisplay();
@@ -1555,27 +1584,35 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             function updateCreditsDisplay() {
                 const display = document.getElementById('credits-display');
                 if (display && currentUser) {
-                    if (userCredits.status === 'pro' || userCredits.status === 'active') {
-                        display.textContent = '∞ genereringar (PRO)';
-                        display.classList.remove('text-red-400', 'text-kMint');
-                        display.classList.add('text-kPurple');
-                        return;
-                    }
+                    // Reset classes
+                    display.className = 'hidden md:inline-block text-xs font-bold px-3 py-1 rounded-full border';
+                    display.onclick = null; // Clear previous handlers
 
-                    const remaining = userCredits.limit - userCredits.used;
-                    display.textContent = `${remaining} genereringar kvar`;
-                    
-                    if (remaining === 0) {
-                        display.classList.remove('text-kMint', 'text-orange-400');
-                        display.classList.add('text-red-400');
-                        if (appInput) appInput.placeholder = "Slut på credits. Uppgradera för att fortsätta.";
-                    } else if (remaining < 10) {
-                        display.textContent += ' (Snart slut!)';
-                        display.classList.remove('text-kMint');
-                        display.classList.add('text-orange-400');
+                    if (userCredits.status === 'pro') {
+                        display.textContent = '∞ genereringar (PRO)';
+                        display.classList.add('text-kPurple', 'bg-kPurple/10', 'border-kPurple/20');
+                    } else if (userCredits.status === 'expired') {
+                        display.textContent = 'Trial slut – Uppgradera';
+                        display.classList.add('text-red-500', 'bg-red-100', 'border-red-200', 'cursor-pointer', 'hover:bg-red-200');
+                        display.onclick = () => togglePaymentModal(true);
                     } else {
-                        display.classList.add('text-kMint');
-                        display.classList.remove('text-red-400', 'text-orange-400');
+                        // Active Trial
+                        const remaining = userCredits.limit - userCredits.used;
+                        let daysLeft = 0;
+                        if (userCredits.trial_expires_at) {
+                            const diffTime = userCredits.trial_expires_at - new Date();
+                            daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            if (daysLeft < 0) daysLeft = 0;
+                        }
+                        
+                        display.textContent = `${remaining} kvar • ${daysLeft}d trial`;
+                        
+                        if (remaining <= 0) {
+                            display.classList.add('text-red-500', 'bg-red-100', 'border-red-200', 'cursor-pointer');
+                            display.onclick = () => togglePaymentModal(true);
+                        } else {
+                            display.classList.add('text-kMint', 'bg-kMint/10', 'border-kMint/20');
+                        }
                     }
                 }
             }
@@ -2102,7 +2139,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 chatContainer.innerHTML = `
                 <div class="flex gap-4 max-w-3xl mx-auto">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/FoxPRDvinkar.svg?alt=media&token=f98a5d70-29ea-4303-b002-3bc4fade6599" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=f98a5d70-29ea-4303-b002-3bc4fade6599" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
                     </div>
                     <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder">
                         <p class="text-kTextDark dark:text-gray-200 leading-relaxed">
@@ -2118,10 +2155,32 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 const text = appInput.value.trim();
                 if (!text) return;
                 
+                // CHECK CREDITS & TRIAL STATUS
                 if (currentUser) {
-                    const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
-                    if (!isPro && userCredits.used >= userCredits.limit) {
+                    const isPro = userCredits.status === 'pro';
+                    const isTrial = userCredits.status === 'trial';
+                    const isExpired = userCredits.status === 'expired';
+                    
+                    // 1. Block if expired
+                    if (!isPro && isExpired) {
                         togglePaymentModal(true);
+                        // Add system message
+                        const sysMsg = document.createElement('div');
+                        sysMsg.className = 'flex justify-center my-4';
+                        sysMsg.innerHTML = `<span class="bg-red-100 text-red-600 px-4 py-2 rounded-full text-xs font-bold shadow-sm">Din trial har gått ut 🎯. Uppgradera för att fortsätta bygga.</span>`;
+                        chatContainer.appendChild(sysMsg);
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
+                        return;
+                    }
+
+                    // 2. Block if trial active but no credits
+                    if (!isPro && isTrial && userCredits.used >= userCredits.limit) {
+                        togglePaymentModal(true);
+                        const sysMsg = document.createElement('div');
+                        sysMsg.className = 'flex justify-center my-4';
+                        sysMsg.innerHTML = `<span class="bg-orange-100 text-orange-600 px-4 py-2 rounded-full text-xs font-bold shadow-sm">Slut på trial-credits. Uppgradera för obegränsad tillgång.</span>`;
+                        chatContainer.appendChild(sysMsg);
+                        chatContainer.scrollTop = chatContainer.scrollHeight;
                         return;
                     }
                 }
@@ -2164,7 +2223,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     await saveToDb(productName, text, prdMarkdown);
 
                     if (currentUser) {
-                        const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
+                        const isPro = userCredits.status === 'pro';
                         if (!isPro) {
                             userCredits.used += 1;
                             await supabase
