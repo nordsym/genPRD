@@ -1030,7 +1030,23 @@
                 if (window.supabase) {
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     console.log("Supabase Initialized");
-                    checkSession();
+                    
+                    // ÄNDRAT: Auto-login vid email confirmation
+                    const hash = window.location.hash;
+                    if (hash && (hash.includes('access_token') || hash.includes('type=signup'))) {
+                        // Om vi kommer från email-länken
+                        supabase.auth.getSession().then(({ data: { session } }) => {
+                            if (session) {
+                                checkSession(); // Uppdatera UI med inloggad user
+                                window.location.hash = ''; // Rensa bort token från URL (snyggare)
+                                window.enterApp(); // Hoppa direkt in i appen (bättre UX)
+                            }
+                        });
+                    } else {
+                        // Vanlig sidladdning
+                        checkSession();
+                    }
+
                     fetchLiveStats(); // Fetch public stats on load
                 } else {
                     console.error("Supabase SDK not loaded");
