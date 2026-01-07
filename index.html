@@ -483,121 +483,118 @@
                 </div>
     
                 <!-- Comparison Grid (Left: Visuals, Right: Copy) -->
-                <div class="grid md:grid-cols-2 gap-8 mb-16 items-stretch relative">
+            <div class="grid md:grid-cols-2 gap-8 mb-16 items-stretch relative">
+                
+                <!-- Left Column: Visuals (Stacked & Absolute for smooth transition) -->
+                <div class="relative bg-gray-100 dark:bg-nightSurface/50 rounded-3xl overflow-hidden border border-kBorder dark:border-nightBorder min-h-[500px] shadow-inner">
                     
-                    <!-- Left Column: Visuals (Stacked & Absolute for smooth transition) -->
-                    <div class="relative bg-gray-100 dark:bg-nightSurface/50 rounded-3xl overflow-hidden border border-kBorder dark:border-nightBorder min-h-[400px] shadow-inner">
-                        
-                        <!-- Visual: Without Spec -->
-                        <div id="visual-without" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-100 scale-100 z-10">
-                            <div class="aspect-[4/3] w-full bg-gray-200 dark:bg-gray-800 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 grayscale shadow-sm">
-                                <div class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center mb-4">
-                                    <i class="ph-fill ph-image text-gray-400 text-3xl"></i>
-                                </div>
-                                <span class="text-gray-400 font-medium">Generisk UI Mockup</span>
+                    <!-- Visual: Without Spec -->
+                    <div id="visual-without" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-100 scale-100 z-10">
+                        <div class="aspect-[4/3] w-full bg-gray-200 dark:bg-gray-800 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 grayscale shadow-sm">
+                            <div class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center mb-4">
+                                <i class="ph-fill ph-image text-gray-400 text-3xl"></i>
                             </div>
-                            <p class="mt-6 text-kTextMedium dark:text-gray-400 font-medium text-center">Video: Agenten gissar sig fram...</p>
+                            <span class="text-gray-400 font-medium">Generisk UI Mockup</span>
                         </div>
-    
-                        <!-- Visual: With FlowSpec -->
-                        <div id="visual-with" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 scale-95 z-0 pointer-events-none">
-                            <div class="aspect-[4/3] w-full bg-gradient-to-br from-kBlue/10 to-kPurple/10 rounded-2xl flex flex-col items-center justify-center border-2 border-kBlue/30 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all shadow-glow">
-                                <div class="absolute inset-0 bg-kBlue/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                <div class="w-20 h-20 rounded-full bg-white dark:bg-nightSurface shadow-soft flex items-center justify-center mb-4 transform group-hover:scale-110 transition-transform text-kBlue">
-                                    <i class="ph-fill ph-play text-3xl ml-1"></i>
-                                </div>
-                                <span class="text-kBlue font-bold">Se Demo (60s)</span>
-                            </div>
-                            <p class="mt-6 text-kBlue font-medium text-center">Video: Agenten bygger en komplett app</p>
-                        </div>
-    
+                        <p class="mt-6 text-kTextMedium dark:text-gray-400 font-medium text-center">Video: Agenten gissar sig fram...</p>
                     </div>
-    
-                    <!-- Right Column: Copy -->
-                    <div class="relative min-h-[400px]">
-                        
-                        <!-- Content: Without Spec -->
-                        <div id="content-without" class="transition-all duration-500 ease-out opacity-100 translate-x-0 absolute inset-0 z-10">
-                            <div class="bg-gray-50 dark:bg-nightBg border border-gray-200 dark:border-gray-700 rounded-3xl p-8 h-full flex flex-col">
-                                <div class="flex items-center gap-3 mb-6">
-                                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
-                                        <i class="ph-bold ph-x-circle text-2xl"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Utan spec</h3>
-                                </div>
-                                
-                                <p class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">Agenten improviserar</p>
-                                <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm">
-                                    Utan tydliga ramar gissar agenten. Du får en ytlig demo som saknar logik och struktur.
-                                </p>
-    
-                                <div class="space-y-4 mt-auto">
-                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                        <span>En enda sida – ingen auth eller routing</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                        <span>In-memory state – inget sparas</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                        <span>Inget databasschema</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
-                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                        <span>Grundläggande funktionellt UI</span>
-                                    </div>
-                                </div>
+
+                    <!-- Visual: With FlowSpec -->
+                    <div id="visual-with" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 scale-95 z-0 pointer-events-none">
+                        <div class="aspect-[4/3] w-full bg-gradient-to-br from-kBlue/10 to-kPurple/10 rounded-2xl flex flex-col items-center justify-center border-2 border-kBlue/30 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all shadow-glow">
+                            <div class="absolute inset-0 bg-kBlue/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                            <div class="w-20 h-20 rounded-full bg-white dark:bg-nightSurface shadow-soft flex items-center justify-center mb-4 transform group-hover:scale-110 transition-transform text-kBlue">
+                                <i class="ph-fill ph-play text-3xl ml-1"></i>
                             </div>
+                            <span class="text-kBlue font-bold">Se Demo (60s)</span>
                         </div>
-    
-                        <!-- Content: With GenPRD -->
-                        <div id="content-with" class="transition-all duration-500 ease-out opacity-0 translate-x-8 absolute inset-0 z-0 pointer-events-none">
-                            <div class="bg-white dark:bg-nightSurface border-2 border-kBlue rounded-3xl p-8 shadow-glow h-full flex flex-col relative overflow-hidden">
-                                <div class="absolute top-0 right-0 bg-kBlue text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 tracking-wider">PRODUCTION READY</div>
-                                
-                                <div class="flex items-center gap-3 mb-6">
-                                    <div class="w-10 h-10 rounded-full bg-kMint/20 text-kMint flex items-center justify-center text-xl">
-                                        <i class="ph-bold ph-check-circle"></i>
-                                    </div>
-                                    <h3 class="text-2xl font-bold text-kTextDark dark:text-white">Med GenPRD</h3>
-                                </div>
-    
-                                <div class="space-y-3 mb-6">
-                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
-                                        <i class="ph-fill ph-lock-key text-kMint text-xl"></i>
-                                        <span class="font-medium">6 sidor med auth + routing</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
-                                        <i class="ph-fill ph-database text-kMint text-xl"></i>
-                                        <span class="font-medium">Databas-schema + RLS</span>
-                                    </div>
-                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
-                                        <i class="ph-fill ph-rocket-launch text-kMint text-xl"></i>
-                                        <span class="font-medium">Landningssida + onboarding</span>
-                                    </div>
-                                </div>
-    
-                                <div class="mt-auto bg-kBg dark:bg-nightBg rounded-lg border border-kBorder dark:border-nightBorder p-3">
-                                    <p class="text-[10px] font-bold text-kTextMedium uppercase mb-1 flex items-center gap-1">
-                                        <i class="ph-bold ph-code"></i> Generated Spec Excerpt:
-                                    </p>
-                                    <code class="font-mono text-xs text-kBlue block">
-                                        - **Schema:** Users, Receipts, Items...<br>
-                                        - **Flow:** Auth -> Dashboard -> Scan...
-                                    </code>
-                                </div>
-                            </div>
-                        </div>
-    
+                        <p class="mt-6 text-kBlue font-medium text-center">Video: Agenten bygger en komplett app</p>
                     </div>
+
+                </div>
+
+                <!-- Right Column: Copy -->
+                <div class="relative min-h-[500px]">
+                    
+                    <!-- Content: Without Spec -->
+                    <div id="content-without" class="transition-all duration-500 ease-out opacity-100 translate-x-0 absolute inset-0 z-10">
+                        <div class="bg-gray-50 dark:bg-nightBg border border-gray-200 dark:border-gray-700 rounded-3xl p-8 h-full flex flex-col">
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                                    <i class="ph-bold ph-x-circle text-2xl"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Utan spec</h3>
+                            </div>
+                            
+                            <p class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">Agenten improviserar</p>
+                            <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm">
+                                Utan tydliga ramar gissar agenten. Du får en ytlig demo som saknar logik och struktur.
+                            </p>
+
+                            <div class="space-y-4 mt-auto">
+                                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                    <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                    <span>En enda sida – ingen auth eller routing</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                    <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                    <span>In-memory state – inget sparas</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                    <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                    <span>Inget databasschema</span>
+                                </div>
+                                <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                    <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                    <span>Grundläggande funktionellt UI</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Content: With GenPRD -->
+                    <div id="content-with" class="transition-all duration-500 ease-out opacity-0 translate-x-8 absolute inset-0 z-0 pointer-events-none">
+                        <div class="bg-white dark:bg-nightSurface border-2 border-kBlue rounded-3xl p-8 shadow-glow h-full flex flex-col relative overflow-hidden">
+                            <div class="absolute top-0 right-0 bg-kBlue text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 tracking-wider">PRODUCTION READY</div>
+                            
+                            <div class="flex items-center gap-3 mb-6">
+                                <div class="w-10 h-10 rounded-full bg-kMint/20 text-kMint flex items-center justify-center text-xl">
+                                    <i class="ph-bold ph-check-circle"></i>
+                                </div>
+                                <h3 class="text-2xl font-bold text-kTextDark dark:text-white">Med GenPRD</h3>
+                            </div>
+
+                            <div class="space-y-3 mb-6 flex-grow">
+                                <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                    <i class="ph-fill ph-lock-key text-kMint text-xl"></i>
+                                    <span class="font-medium text-sm">6 sidor med auth + routing</span>
+                                </div>
+                                <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                    <i class="ph-fill ph-database text-kMint text-xl"></i>
+                                    <span class="font-medium text-sm">7-tabellers Supabase-schema + RLS</span>
+                                </div>
+                                <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                    <i class="ph-fill ph-files text-kMint text-xl"></i>
+                                    <span class="font-medium text-sm">Fillagring + OCR-statusflöde</span>
+                                </div>
+                                <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                    <i class="ph-fill ph-rocket-launch text-kMint text-xl"></i>
+                                    <span class="font-medium text-sm">Landningssida + onboarding</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-auto">
+                                <button onclick="document.getElementById('toggle-spec-btn').click(); setTimeout(() => document.getElementById('spec-content').scrollIntoView({behavior: 'smooth', block: 'start'}), 100);" class="text-xs font-bold text-kBlue hover:text-white hover:bg-kBlue transition-colors flex items-center justify-center gap-2 w-full py-3 px-2 bg-kBlue/10 rounded-xl h-auto min-h-[44px] whitespace-normal text-center">
+                                    Se GenPRD-specen som gjorde detta möjligt <i class="ph-bold ph-arrow-right flex-shrink-0"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
-        </section>
 
-        <!-- 7. Pricing -->
-        <section id="pricing" class="py-20 bg-gradient-to-b from-white to-kBg dark:from-nightSurface dark:to-nightBg">
+            <!-- Spec Expander -->
              <div class="max-w-6xl mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">Enkel, Transparent Prissättning <i class="ph-fill ph-coins text-kPink"></i></h2>
                 <p class="text-kTextMedium dark:text-gray-400 mb-2">Kom igång GRATIS med 50 genereringar. Inget betalkort krävs.</p>
@@ -1329,40 +1326,91 @@
                 }
             });
 
-            // App Theme Toggle
-            const appThemeToggle = document.getElementById('app-theme-toggle');
-            appThemeToggle.addEventListener('click', () => {
-                // Use global theme logic, just trigger the button
-                document.getElementById('theme-toggle').click();
-                
-                // Update local icon
-                const icon = appThemeToggle.querySelector('i');
-                if (document.documentElement.classList.contains('dark')) {
-                    icon.classList.replace('ph-sun', 'ph-moon');
-                } else {
-                    icon.classList.replace('ph-moon', 'ph-sun');
-                }
-            });
+            // --- APP LOGIC END ---
 
-            // History Filter Logic
-            const historySearch = document.getElementById('history-search');
-            const historyList = document.getElementById('history-list');
+            // --- Theme Logic (Centralized & Fixed) ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const appThemeToggle = document.getElementById('app-theme-toggle');
+            const html = document.documentElement;
             
-            historySearch.addEventListener('input', (e) => {
-                const term = e.target.value.toLowerCase();
-                const items = historyList.querySelectorAll('.history-item');
-                
-                items.forEach(item => {
-                    const text = item.querySelector('span').textContent.toLowerCase();
-                    if (text.includes(term)) {
-                        item.classList.remove('hidden');
-                        item.classList.add('flex');
-                    } else {
-                        item.classList.add('hidden');
-                        item.classList.remove('flex');
+            function setTheme(isDark) {
+                // Get App Icon reference dynamically
+                const appIcon = appThemeToggle ? appThemeToggle.querySelector('i') : null;
+
+                if (isDark) {
+                    html.classList.add('dark');
+                    localStorage.theme = 'dark';
+                    
+                    // Update Landing Icon (Moon -> Sun)
+                    themeIcon.classList.remove('ph-moon');
+                    themeIcon.classList.add('ph-sun');
+                    
+                    // Update App Icon (Moon -> Sun)
+                    if (appIcon) {
+                        appIcon.classList.remove('ph-moon');
+                        appIcon.classList.add('ph-sun');
                     }
+                } else {
+                    html.classList.remove('dark');
+                    localStorage.theme = 'light';
+                    
+                    // Update Landing Icon (Sun -> Moon)
+                    themeIcon.classList.remove('ph-sun');
+                    themeIcon.classList.add('ph-moon');
+                    
+                    // Update App Icon (Sun -> Moon)
+                    if (appIcon) {
+                        appIcon.classList.remove('ph-sun');
+                        appIcon.classList.add('ph-moon');
+                    }
+                }
+            }
+
+            // Check Preference (Default to Light)
+            if (localStorage.theme === 'dark') {
+                setTheme(true);
+            } else {
+                setTheme(false);
+            }
+
+            // Bind Landing Page Toggle
+            if (themeToggleBtn) {
+                themeToggleBtn.addEventListener('click', () => {
+                    setTheme(!html.classList.contains('dark'));
                 });
-            });
+            }
+
+            // Bind App View Toggle
+            if (appThemeToggle) {
+                appThemeToggle.addEventListener('click', () => {
+                    setTheme(!html.classList.contains('dark'));
+                });
+            }
+
+            // --- Mobile Menu ---
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const menuLinks = menu ? menu.querySelectorAll('a') : [];
+
+            function toggleMenu(show) {
+                if (!menu) return;
+                if (show) {
+                    menu.classList.remove('translate-x-full');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    menu.classList.add('translate-x-full');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            if (menuBtn) menuBtn.addEventListener('click', () => toggleMenu(true));
+            if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => toggleMenu(false));
+            
+            if (menuLinks.length > 0) {
+                menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
+            }
 
         });
     </script>
