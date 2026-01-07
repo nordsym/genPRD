@@ -1805,6 +1805,10 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 supabase.auth.onAuthStateChange((_event, session) => {
                     currentUser = session?.user || null;
                     updateAuthUI();
+                    // ÄNDRAT: Hämta credits direkt vid inloggning/statusändring
+                    if (currentUser) {
+                        fetchUserCredits();
+                    }
                 });
             }
             
