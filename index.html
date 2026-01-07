@@ -1602,27 +1602,34 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                 const btn = event.currentTarget; // Hämta knappen som klickades
                 const originalContent = btn.innerHTML;
-                btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-xl"></i> Laddar Stripe...';
+                btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-xl"></i> Vidarebefordrar...';
                 btn.disabled = true;
 
-                try {
-                    const { error } = await stripe.redirectToCheckout({
-                        lineItems: [{ price: priceId, quantity: 1 }],
-                        mode: 'subscription',
-                        successUrl: 'https://nordsym.github.io/genPRD/?success=true',
-                        cancelUrl: 'https://nordsym.github.io/genPRD/?canceled=true',
-                        customerEmail: currentUser.email
-                    });
+                // MAPPING: Pris-ID -> Din Payment Link
+                const paymentLinks = {
+                    'price_1Sn00IRtJYK3aJTq9gtj9vAs': 'https://buy.stripe.com/3cI7sN8ck7qy9WY2GQcMM06', // Årlig
+                    'price_1Sn00IRtJYK3aJTqt1Fjbx4V': 'https://buy.stripe.com/bJedRbgIQdOW8SUdlucMM07'  // Månadsvis
+                };
 
-                    if (error) {
-                        console.error('Stripe error:', error);
-                        alert('Stripe Error: ' + error.message);
-                        btn.innerHTML = originalContent;
-                        btn.disabled = false;
-                    }
+                const baseUrl = paymentLinks[priceId];
+
+                if (!baseUrl) {
+                    alert("Tekniskt fel: Kunde inte hitta betallänken för denna plan.");
+                    btn.innerHTML = originalContent;
+                    btn.disabled = false;
+                    return;
+                }
+
+                try {
+                    // Konstruera URL med förifylld email för att matcha användaren i n8n/Supabase
+                    const finalUrl = `${baseUrl}?prefilled_email=${encodeURIComponent(currentUser.email)}&client_reference_id=${currentUser.id}`;
+                    
+                    // Redirect direkt
+                    window.location.href = finalUrl;
+
                 } catch (e) {
                     console.error('Redirect error:', e);
-                    alert('Något gick fel vid omdirigering: ' + e.message);
+                    alert('Något gick fel: ' + e.message);
                     btn.innerHTML = originalContent;
                     btn.disabled = false;
                 }
