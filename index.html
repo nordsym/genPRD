@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="sv" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GenPRD - AI-redo specs på sekunder</title>
+    <meta name="description" content="Bygg bättre appar snabbare med GenPRD. Från idé till PRD på sekunder.">
+    
+    <!-- Fonts: Outfit (Playful & Modern) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Icons: Phosphor -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                    },
+                    colors: {
+                        // Kawaii Palette Light
+                        kBlue: '#6B9FFF',
+                        kPurple: '#B19CD9',
+                        kPink: '#FFB5BA',
+                        kMint: '#A8E6CF',
+                        kBg: '#FAFAFF', // Light purple tint
+                        kSurface: '#FFFFFF',
+                        kTextDark: '#2D3142',
+                        kTextMedium: '#6B7280',
+                        kBorder: '#E8E4F3',
+                        
+                        // Dreamy Night Palette (Dark Mode)
+                        nightBg: '#1A1B2E',
+                        nightSurface: '#242642',
+                        nightBorder: '#3E4166',
+                        nightText: '#EAEAF4'
+                    },
+                    borderRadius: {
+                        'xl': '1rem',
+                        '2xl': '1.5rem',
+                        '3xl': '2rem',
+                        'blob': '40% 60% 70% 30% / 40% 50% 60% 50%',
+                    },
+                    boxShadow: {
+                        'soft': '0 10px 25px -5px rgba(107, 159, 255, 0.15), 0 8px 10px -6px rgba(107, 159, 255, 0.1)',
+                        'glow': '0 0 20px rgba(177, 156, 217, 0.4)',
+                        'button': '0 4px 14px 0 rgba(107, 159, 255, 0.39)',
+                        'card': '0 8px 30px rgba(0,0,0,0.04)',
+                    },
+                    animation: {
+                        'float': 'float 6s ease-in-out infinite',
+                        'float-delayed': 'float 6s ease-in-out 3s infinite',
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'sparkle': 'sparkle 2s ease-in-out infinite',
+                        'blob': 'blob 7s infinite',
+                        'cursor': 'cursor .75s step-end infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-20px)' },
+                        },
+                        sparkle: {
+                            '0%, 100%': { opacity: '1', transform: 'scale(1)' },
+                            '50%': { opacity: '0.5', transform: 'scale(0.8)' },
+                        },
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        cursor: {
+                            '0%, 100%': { borderRightColor: 'transparent' },
+                            '50%': { borderRightColor: 'currentColor' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            /* Kawaii Softness */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: background-color 0.5s ease, color 0.5s ease;
+        }
+
+        /* Apple-style Segmented Control */
+        .segmented-control {
+            background-color: rgba(229, 231, 235, 0.6); /* gray-200 with opacity */
+            padding: 4px;
+            border-radius: 12px;
+            display: inline-flex;
+            position: relative;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.05);
+        }
+        .dark .segmented-control {
+            background-color: rgba(36, 38, 66, 0.8); /* nightSurface */
+        }
+        
+        .segment-indicator {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            border-radius: 8px;
+            background-color: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1), 0 4px 8px rgba(0,0,0,0.05);
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Slower, smoother transition */
+            z-index: 1;
+        }
+        .dark .segment-indicator {
+            background-color: #3E4166;
+        }
+
+        /* Color states for indicator */
+        .segment-indicator.state-bad {
+            background-color: #FEE2E2; /* Red-100 */
+        }
+        .dark .segment-indicator.state-bad {
+            background-color: #7F1D1D; /* Red-900 */
+        }
+        
+        .segment-indicator.state-good {
+            background-color: #D1FAE5; /* Emerald-100 */
+        }
+        .dark .segment-indicator.state-good {
+            background-color: #064E3B; /* Emerald-900 */
+        }
+
+        .segment-btn {
+            position: relative;
+            z-index: 2;
+            padding: 6px 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #6B7280;
+            transition: color 0.3s ease;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        .segment-btn.active-bad {
+            color: #EF4444; /* Red-500 */
+        }
+        .segment-btn.active-good {
+            color: #10B981; /* Emerald-500 */
+        }
+        .dark .segment-btn.active-bad {
+            color: #FCA5A5; /* Red-300 */
+        }
+        .dark .segment-btn.active-good {
+            color: #6EE7B7; /* Emerald-300 */
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: #E8E4F3;
+            border-radius: 20px;
+            border: 3px solid transparent;
+            background-clip: content-box;
+        }
+        .dark ::-webkit-scrollbar-thumb {
+            background-color: #3E4166;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background-color: #B19CD9;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #6B9FFF 0%, #B19CD9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        /* Floating Background Orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            z-index: -1;
+        }
+
+        /* Card Hover Lift */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px -5px rgba(107, 159, 255, 0.2);
+        }
+
+        /* Accordion Animation */
+        .accordion-content {
+            transition: grid-template-rows 0.4s ease-out;
+            display: grid;
+            grid-template-rows: 0fr;
+        }
+        .accordion-content > div {
+            overflow: hidden;
+        }
+        .accordion-content.active {
+            grid-template-rows: 1fr;
+        }
+    </style>
+</head>
+<body class="bg-kBg text-kTextDark dark:bg-nightBg dark:text-nightText overflow-x-hidden selection:bg-kPink selection:text-white">
+
+    <!-- Background Orbs (Decorative - Shared) -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden pointer-events-none z-0">
+        <div class="orb w-96 h-96 bg-kBlue/30 top-[-10%] left-[-10%] animate-blob"></div>
+        <div class="orb w-96 h-96 bg-kPurple/30 bottom-[10%] right-[-5%] animate-blob animation-delay-2000"></div>
+        <div class="orb w-72 h-72 bg-kPink/20 top-[40%] left-[20%] animate-blob animation-delay-4000"></div>
+    </div>
+
+    <!-- ======================== LANDING VIEW ======================== -->
+    <div id="landing-view" class="transition-opacity duration-500 ease-in-out">
+        <!-- 1. Navigation -->
+        <nav class="fixed w-full top-0 z-50 backdrop-blur-md bg-white/70 dark:bg-nightBg/80 border-b border-kBorder dark:border-nightBorder transition-colors duration-300">
+            <div class="max-w-6xl mx-auto px-6 h-20 flex justify-between items-center">
+                
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] shadow-soft group-hover:scale-110 transition-transform duration-300">
+                        <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" alt="GenPRD Avatar" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                    </div>
+                    <span class="font-bold text-xl tracking-tight dark:text-white group-hover:text-kBlue transition-colors">GenPRD</span>
+                </a>
+
+                <!-- Desktop Links -->
+                <div class="hidden md:flex items-center gap-8 font-medium text-kTextMedium dark:text-gray-300">
+                    <a href="#" class="hover:text-kBlue transition-colors hover:-translate-y-0.5 inline-block">Hem</a>
+                    <a href="#features" class="hover:text-kBlue transition-colors hover:-translate-y-0.5 inline-block">Features</a>
+                    <a href="#pricing" class="hover:text-kBlue transition-colors hover:-translate-y-0.5 inline-block">Priser</a>
+                    <a href="#faq" class="hover:text-kBlue transition-colors hover:-translate-y-0.5 inline-block">FAQ</a>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex items-center gap-4">
+                    <button id="theme-toggle" class="w-10 h-10 rounded-full bg-kBg dark:bg-nightSurface text-kTextMedium dark:text-kPink hover:bg-kPink/10 hover:text-kPink transition-all flex items-center justify-center shadow-sm">
+                        <i id="theme-icon" class="ph-fill ph-moon text-xl"></i>
+                    </button>
+                    
+                    <!-- DEV SHORTCUT (RESTORED) -->
+                    <button onclick="window.enterApp()" class="hidden md:inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-kPurple bg-kPurple/10 hover:bg-kPurple/20 rounded-full border border-kPurple/20 transition-all">
+                        Dev: Pro Login 🔓
+                    </button>
+                    
+                    <a href="#" class="hidden md:inline-block font-semibold text-kBlue hover:text-kPurple transition-colors">Sign in</a>
+                    
+                    <!-- Mobile Menu Btn -->
+                    <button id="mobile-menu-btn" class="md:hidden w-10 h-10 rounded-full bg-white dark:bg-nightSurface shadow-sm flex items-center justify-center text-kTextDark dark:text-white">
+                        <i class="ph ph-list text-2xl"></i>
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Mobile Menu Overlay -->
+        <div id="mobile-menu" class="fixed inset-0 z-40 bg-white/95 dark:bg-nightBg/95 backdrop-blur-lg transform translate-x-full transition-transform duration-300 flex flex-col items-center justify-center gap-8 md:hidden">
+            <button id="close-menu-btn" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-kBg dark:bg-nightSurface flex items-center justify-center">
+                <i class="ph ph-x text-2xl"></i>
+            </button>
+            <!-- DEV SHORTCUT MOBILE -->
+            <button onclick="window.enterApp()" class="px-6 py-2 text-sm font-bold text-kPurple bg-kPurple/10 rounded-full">Dev: Pro Login 🔓</button>
+            
+            <a href="#" class="text-2xl font-bold hover:text-kBlue">Hem</a>
+            <a href="#features" class="text-2xl font-bold hover:text-kBlue">Features</a>
+            <a href="#pricing" class="text-2xl font-bold hover:text-kBlue">Priser</a>
+            <a href="#faq" class="text-2xl font-bold hover:text-kBlue">FAQ</a>
+            <a href="#generate" class="px-8 py-3 bg-gradient-to-r from-kBlue to-kPurple text-white rounded-full font-bold shadow-glow text-xl flex items-center gap-2">Kom igång <i class="ph-fill ph-sparkle"></i></a>
+        </div>
+
+        <!-- 2. Hero Section -->
+        <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-visible z-10">
+            <div class="max-w-4xl mx-auto text-center relative">
+                <!-- Floating Icons -->
+                <i class="ph-fill ph-sparkle text-kPink text-3xl absolute top-0 left-[10%] animate-sparkle"></i>
+                <i class="ph-fill ph-star-four text-kBlue text-2xl absolute -top-10 right-[15%] animate-sparkle animation-delay-1000"></i>
+
+                <h1 class="text-5xl md:text-7xl font-extrabold mb-6 tracking-tight leading-[1.1]">
+                    AI-redo specs <br />
+                    <span class="gradient-text flex items-center justify-center gap-3">på sekunder <i class="ph-fill ph-shooting-star text-kPurple"></i></span>
+                </h1>
+                <p class="text-xl text-kTextMedium dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Skriv din produktidé. Få en fokuserad spec som AI-agenter <span class="font-bold text-kTextDark dark:text-white bg-kPink/20 px-2 rounded-md">FAKTISKT</span> kan använda för att bygga din app.
+                </p>
+
+                <!-- Input Card -->
+                <div class="relative max-w-3xl mx-auto group z-20" id="generate">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-kBlue to-kPink rounded-[20px] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+                    <div class="relative bg-white dark:bg-nightSurface rounded-[20px] shadow-card p-2 ring-1 ring-kBorder dark:ring-nightBorder">
+                        <textarea 
+                            id="prd-input"
+                            class="w-full h-40 p-5 resize-none outline-none text-kTextDark dark:text-white placeholder-kTextMedium/50 bg-transparent text-lg rounded-2xl"
+                            placeholder=""
+                            maxlength="10000"
+                        ></textarea>
+                        
+                        <div class="flex justify-between items-center px-4 pb-2">
+                            <span id="char-count" class="text-xs font-bold text-kTextMedium/70 bg-kBg dark:bg-nightBg px-2 py-1 rounded-full">0 / 10,000</span>
+                            <button onclick="window.enterAppWithPrompt()" class="bg-gradient-to-r from-kBlue to-kPurple text-white font-bold py-3 px-8 rounded-full shadow-button hover:shadow-glow hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                                <span>Generera PRD</span>
+                                <i class="ph-bold ph-magic-wand"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Why GenPRD -->
+        <section class="py-20 bg-white/50 dark:bg-nightSurface/30 backdrop-blur-sm border-y border-kBorder/50 dark:border-nightBorder">
+             <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center mb-16">
+                    <span class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-kBlue/10 text-kBlue text-sm font-bold uppercase tracking-wider mb-4">Varför GenPRD? <i class="ph-fill ph-star"></i></span>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Ship-ready specs på sekunder</h2>
+                    <p class="text-kTextMedium dark:text-gray-400 max-w-2xl mx-auto">Inget PM-fluff. Bara vad du (och din AI) behöver för att bygga direkt.</p>
+                </div>
+
+                <!-- Live Counters -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+                <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
+                    <div class="flex items-center gap-2 mb-1">
+                        <span class="relative flex h-3 w-3">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-kMint opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-3 w-3 bg-kMint"></span>
+                        </span>
+                        <span class="text-xs font-bold text-kTextMedium uppercase tracking-wide">Status</span>
+                    </div>
+                    <span class="font-semibold text-sm">Uppdateras live</span>
+                </div>
+
+                <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
+                    <div class="flex -space-x-2 mb-2">
+                        <div class="w-8 h-8 rounded-full border-2 border-white dark:border-nightSurface bg-kBlue text-white flex items-center justify-center text-xs font-bold">JD</div>
+                        <div class="w-8 h-8 rounded-full border-2 border-white dark:border-nightSurface bg-kPink text-white flex items-center justify-center text-xs font-bold">AK</div>
+                        <div class="w-8 h-8 rounded-full border-2 border-white dark:border-nightSurface bg-kPurple text-white flex items-center justify-center text-xs font-bold">LS</div>
+                    </div>
+                    <span class="font-bold text-xl">47 <span class="text-sm font-normal text-kTextMedium">byggare</span></span>
+                </div>
+
+                <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
+                    <i class="ph-duotone ph-file-text text-3xl mb-1 text-kBlue"></i>
+                    <span class="font-bold text-xl">132 <span class="text-sm font-normal text-kTextMedium">genererade</span></span>
+                </div>
+
+                <div class="bg-white dark:bg-nightSurface p-4 rounded-2xl shadow-soft flex flex-col items-center justify-center hover-lift border border-kBorder/50 dark:border-nightBorder">
+                    <i class="ph-duotone ph-hourglass-high text-3xl mb-1 text-kPurple"></i>
+                    <span class="font-bold text-xl">∞ <span class="text-sm font-normal text-kTextMedium">timmar sparade</span></span>
+                </div>
+            </div>
+
+            <!-- Testimonial -->
+            <div class="max-w-3xl mx-auto relative group">
+                <div class="absolute inset-0 bg-gradient-to-r from-kBlue/20 to-kPurple/20 rounded-[30px] transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
+                <div class="relative bg-white dark:bg-nightSurface p-8 md:p-10 rounded-[30px] shadow-card flex flex-col md:flex-row items-center gap-8 text-center md:text-left border border-kBorder dark:border-nightBorder">
+                    <div class="w-20 h-20 flex-shrink-0 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[3px]">
+                        <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-2xl text-kPurple">
+                            <i class="ph-fill ph-user text-3xl"></i>
+                        </div>
+                    </div>
+                    <div>
+                        <p class="text-lg md:text-xl font-medium leading-relaxed mb-4">
+                            "GenPRD gjorde det enkelt att omvandla mina prompts till detaljerade specs. Det fångade edge cases och hjälpte mig skapa appar med mindre debugging. Ren magi! <i class="ph-fill ph-sparkle text-kBlue inline align-middle"></i>"
+                        </p>
+                        <div>
+                            <span class="block font-bold text-transparent bg-clip-text bg-gradient-to-r from-kBlue to-kPurple">@alex_builds</span>
+                            <span class="text-sm text-kTextMedium">Produktbyggare</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+             </div>
+        </section>
+
+        <!-- 4. GenPRD In Action -->
+        <section class="py-20 overflow-hidden">
+             <div class="max-w-6xl mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-6 flex items-center justify-center gap-3">Bättre AI-byggda appar på under 3 minuter <i class="ph-fill ph-rocket-launch text-kPurple"></i></h2>
+                <p class="text-kTextMedium dark:text-gray-400 mb-12">GenPRD flödar direkt in i ditt favorit AI-verktyg.</p>
+                
+                <div class="flex flex-wrap justify-center gap-6">
+                    <!-- Tool Badges -->
+                    <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
+                        <i class="ph-fill ph-heart-straight text-[#FF4F00]"></i> Lovable
+                    </div>
+                    <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
+                        <i class="ph-fill ph-cursor-click text-black dark:text-white"></i> Cursor
+                    </div>
+                    <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
+                        <i class="ph-fill ph-code text-[#D97757]"></i> Claude Code
+                    </div>
+                    <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
+                        <i class="ph-fill ph-wind text-[#3B82F6]"></i> Windsurf
+                    </div>
+                    <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
+                        <i class="ph-fill ph-lightning text-[#F59E0B]"></i> Bolt
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Features -->
+        <section id="features" class="py-20 bg-kBg dark:bg-nightBg relative">
+             <div class="max-w-6xl mx-auto px-6">
+                <div class="grid md:grid-cols-3 gap-8">
+                    <!-- Feature 1 -->
+                    <div class="bg-white dark:bg-nightSurface p-8 rounded-3xl shadow-soft hover-lift border border-kBorder/50 dark:border-nightBorder relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-kBlue/10 rounded-bl-[100px] -mr-4 -mt-4 transition-all group-hover:bg-kBlue/20"></div>
+                        <div class="w-14 h-14 bg-blue-50 dark:bg-blue-900/20 rounded-2xl flex items-center justify-center text-3xl mb-6 text-kBlue">
+                            <i class="ph-fill ph-lightning"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Inga tidslinjer, inget fluff</h3>
+                        <p class="text-kTextMedium dark:text-gray-400 leading-relaxed">
+                            Skippa "Fas 1"-tramset. AI bygger på timmar, så vi fokuserar på det som spelar roll: exakta specifikationer.
+                        </p>
+                    </div>
+    
+                    <!-- Feature 2 -->
+                    <div class="bg-white dark:bg-nightSurface p-8 rounded-3xl shadow-soft hover-lift border border-kBorder/50 dark:border-nightBorder relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-kPink/10 rounded-bl-[100px] -mr-4 -mt-4 transition-all group-hover:bg-kPink/20"></div>
+                        <div class="w-14 h-14 bg-pink-50 dark:bg-pink-900/20 rounded-2xl flex items-center justify-center text-3xl mb-6 text-kPink">
+                            <i class="ph-fill ph-target"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Exakta tekniska detaljer</h3>
+                        <p class="text-kTextMedium dark:text-gray-400 leading-relaxed">
+                            Färger i hex-koder. Storlekar i pixlar. User flows steg-för-steg. Allt en AI-agent behöver för att börja koda.
+                        </p>
+                    </div>
+    
+                    <!-- Feature 3 -->
+                    <div class="bg-white dark:bg-nightSurface p-8 rounded-3xl shadow-soft hover-lift border border-kBorder/50 dark:border-nightBorder relative overflow-hidden group">
+                        <div class="absolute top-0 right-0 w-24 h-24 bg-kPurple/10 rounded-bl-[100px] -mr-4 -mt-4 transition-all group-hover:bg-kPurple/20"></div>
+                        <div class="w-14 h-14 bg-purple-50 dark:bg-purple-900/20 rounded-2xl flex items-center justify-center text-3xl mb-6 text-kPurple">
+                            <i class="ph-fill ph-magic-wand"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-3">Resultat på sekunder</h3>
+                        <p class="text-kTextMedium dark:text-gray-400 leading-relaxed">
+                            Det som brukade ta timmar av skrivande tar nu sekunder. Din idé till implementeringsredo PRD.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Before/After Showcase -->
+        <section class="py-20 md:py-28">
+             <div class="max-w-6xl mx-auto px-6">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">Samma idé. 10x bättre output <i class="ph-fill ph-palette text-kPink"></i></h2>
+                    <p class="text-kTextMedium dark:text-gray-400">Samma prompt. Olika instruktioner.</p>
+                </div>
+    
+                <!-- The Prompt -->
+                <div class="max-w-2xl mx-auto bg-white dark:bg-nightSurface border-2 border-kBlue/20 dark:border-kBlue/10 rounded-2xl p-6 text-center mb-12 shadow-lg relative">
+                    <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-kBlue text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Prompten</div>
+                    <p class="text-xl font-medium">"En kvitto-scanner som delar räkningar med vänner"</p>
+                </div>
+    
+                <!-- Apple-Style Toggle -->
+                <div class="flex justify-center mb-10">
+                    <div class="segmented-control p-1 rounded-xl bg-gray-100 dark:bg-nightSurface border border-gray-200 dark:border-nightBorder">
+                        <div id="segment-indicator" class="segment-indicator state-bad" style="width: 140px; left: 4px;"></div>
+                        <button class="segment-btn active-bad w-[140px]" onclick="switchShowcase('without')">Utan spec</button>
+                        <button class="segment-btn w-[140px]" onclick="switchShowcase('with')">Med GenPRD</button>
+                    </div>
+                </div>
+    
+                <!-- Comparison Grid (Left: Visuals, Right: Copy) -->
+                <div class="grid md:grid-cols-2 gap-8 mb-16 items-stretch relative">
+                    
+                    <!-- Left Column: Visuals (Stacked & Absolute for smooth transition) -->
+                    <div class="relative bg-gray-100 dark:bg-nightSurface/50 rounded-3xl overflow-hidden border border-kBorder dark:border-nightBorder min-h-[400px] shadow-inner">
+                        
+                        <!-- Visual: Without Spec -->
+                        <div id="visual-without" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-100 scale-100 z-10">
+                            <div class="aspect-[4/3] w-full bg-gray-200 dark:bg-gray-800 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 grayscale shadow-sm">
+                                <div class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center mb-4">
+                                    <i class="ph-fill ph-image text-gray-400 text-3xl"></i>
+                                </div>
+                                <span class="text-gray-400 font-medium">Generisk UI Mockup</span>
+                            </div>
+                            <p class="mt-6 text-kTextMedium dark:text-gray-400 font-medium text-center">Video: Agenten gissar sig fram...</p>
+                        </div>
+    
+                        <!-- Visual: With FlowSpec -->
+                        <div id="visual-with" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 scale-95 z-0 pointer-events-none">
+                            <div class="aspect-[4/3] w-full bg-gradient-to-br from-kBlue/10 to-kPurple/10 rounded-2xl flex flex-col items-center justify-center border-2 border-kBlue/30 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all shadow-glow">
+                                <div class="absolute inset-0 bg-kBlue/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                                <div class="w-20 h-20 rounded-full bg-white dark:bg-nightSurface shadow-soft flex items-center justify-center mb-4 transform group-hover:scale-110 transition-transform text-kBlue">
+                                    <i class="ph-fill ph-play text-3xl ml-1"></i>
+                                </div>
+                                <span class="text-kBlue font-bold">Se Demo (60s)</span>
+                            </div>
+                            <p class="mt-6 text-kBlue font-medium text-center">Video: Agenten bygger en komplett app</p>
+                        </div>
+    
+                    </div>
+    
+                    <!-- Right Column: Copy -->
+                    <div class="relative min-h-[400px]">
+                        
+                        <!-- Content: Without Spec -->
+                        <div id="content-without" class="transition-all duration-500 ease-out opacity-100 translate-x-0 absolute inset-0 z-10">
+                            <div class="bg-gray-50 dark:bg-nightBg border border-gray-200 dark:border-gray-700 rounded-3xl p-8 h-full flex flex-col">
+                                <div class="flex items-center gap-3 mb-6">
+                                    <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
+                                        <i class="ph-bold ph-x-circle text-2xl"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Utan spec</h3>
+                                </div>
+                                
+                                <p class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">Agenten improviserar</p>
+                                <p class="text-gray-500 dark:text-gray-400 mb-8 leading-relaxed text-sm">
+                                    Utan tydliga ramar gissar agenten. Du får en ytlig demo som saknar logik och struktur.
+                                </p>
+    
+                                <div class="space-y-4 mt-auto">
+                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                        <span>En enda sida – ingen auth eller routing</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                        <span>In-memory state – inget sparas</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                        <span>Inget databasschema</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
+                                        <i class="ph-bold ph-x text-red-400 text-lg"></i>
+                                        <span>Grundläggande funktionellt UI</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+    
+                        <!-- Content: With GenPRD -->
+                        <div id="content-with" class="transition-all duration-500 ease-out opacity-0 translate-x-8 absolute inset-0 z-0 pointer-events-none">
+                            <div class="bg-white dark:bg-nightSurface border-2 border-kBlue rounded-3xl p-8 shadow-glow h-full flex flex-col relative overflow-hidden">
+                                <div class="absolute top-0 right-0 bg-kBlue text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 tracking-wider">PRODUCTION READY</div>
+                                
+                                <div class="flex items-center gap-3 mb-6">
+                                    <div class="w-10 h-10 rounded-full bg-kMint/20 text-kMint flex items-center justify-center text-xl">
+                                        <i class="ph-bold ph-check-circle"></i>
+                                    </div>
+                                    <h3 class="text-2xl font-bold text-kTextDark dark:text-white">Med GenPRD</h3>
+                                </div>
+    
+                                <div class="space-y-3 mb-6">
+                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                        <i class="ph-fill ph-lock-key text-kMint text-xl"></i>
+                                        <span class="font-medium">6 sidor med auth + routing</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                        <i class="ph-fill ph-database text-kMint text-xl"></i>
+                                        <span class="font-medium">Databas-schema + RLS</span>
+                                    </div>
+                                    <div class="flex items-center gap-3 bg-kBg dark:bg-nightBg p-3 rounded-xl border border-kBorder dark:border-nightBorder">
+                                        <i class="ph-fill ph-rocket-launch text-kMint text-xl"></i>
+                                        <span class="font-medium">Landningssida + onboarding</span>
+                                    </div>
+                                </div>
+    
+                                <div class="mt-auto bg-kBg dark:bg-nightBg rounded-lg border border-kBorder dark:border-nightBorder p-3">
+                                    <p class="text-[10px] font-bold text-kTextMedium uppercase mb-1 flex items-center gap-1">
+                                        <i class="ph-bold ph-code"></i> Generated Spec Excerpt:
+                                    </p>
+                                    <code class="font-mono text-xs text-kBlue block">
+                                        - **Schema:** Users, Receipts, Items...<br>
+                                        - **Flow:** Auth -> Dashboard -> Scan...
+                                    </code>
+                                </div>
+                            </div>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Pricing -->
+        <section id="pricing" class="py-20 bg-gradient-to-b from-white to-kBg dark:from-nightSurface dark:to-nightBg">
+             <div class="max-w-6xl mx-auto px-6 text-center">
+                <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">Enkel, Transparent Prissättning <i class="ph-fill ph-coins text-kPink"></i></h2>
+                <p class="text-kTextMedium dark:text-gray-400 mb-2">Kom igång GRATIS med 50 genereringar. Inget betalkort krävs.</p>
+                <p class="text-sm text-kTextMedium dark:text-gray-500 mb-12">Alla funktioner ingår från start.</p>
+    
+                <!-- Toggle -->
+                <div class="flex items-center justify-center gap-4 mb-12 bg-white dark:bg-nightSurface inline-flex p-1.5 rounded-full border border-kBorder dark:border-nightBorder shadow-sm">
+                    <button id="monthly-btn" class="px-6 py-2 rounded-full font-bold text-white bg-kBlue shadow-sm transition-all">Månadsvis</button>
+                    <button id="yearly-btn" class="px-6 py-2 rounded-full font-bold text-kTextMedium hover:text-kBlue transition-all flex items-center gap-2">
+                        Årsvis <span class="text-[10px] bg-kPink text-white px-2 py-0.5 rounded-full">3 mån gratis</span>
+                    </button>
+                </div>
+    
+                <!-- Card -->
+                <div class="max-w-md mx-auto relative group">
+                    <div class="absolute -inset-2 bg-gradient-to-tr from-kBlue via-kPurple to-kPink rounded-[40px] blur opacity-40 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="relative bg-white dark:bg-nightSurface p-10 rounded-[35px] shadow-card">
+                        <div class="inline-block bg-gradient-to-r from-kBlue to-kPurple text-white text-xs font-bold px-4 py-1.5 rounded-full mb-6">PRO PLAN</div>
+                        
+                        <div class="flex items-baseline justify-center gap-1 mb-2">
+                            <span id="price-amount" class="text-6xl font-extrabold tracking-tight">99 kr</span>
+                            <span id="price-period" class="text-kTextMedium font-medium">/månad</span>
+                        </div>
+                        <div id="price-savings" class="text-sm text-kMint font-bold h-6 mb-8"></div>
+    
+                        <ul class="space-y-4 text-left mb-10 pl-4">
+                            <li class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-kMint/20 flex items-center justify-center text-kMint text-xs font-bold">
+                                    <i class="ph-bold ph-check"></i>
+                                </div>
+                                <span class="font-medium">200 PRD-genereringar per månad</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-kMint/20 flex items-center justify-center text-kMint text-xs font-bold">
+                                    <i class="ph-bold ph-check"></i>
+                                </div>
+                                <span class="font-medium">Full tillgång till alla features</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-kMint/20 flex items-center justify-center text-kMint text-xs font-bold">
+                                    <i class="ph-bold ph-check"></i>
+                                </div>
+                                <span class="font-medium">PRDs sparade för evigt</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-kMint/20 flex items-center justify-center text-kMint text-xs font-bold">
+                                    <i class="ph-bold ph-check"></i>
+                                </div>
+                                <span class="font-medium">Exportera till Markdown</span>
+                            </li>
+                            <li class="flex items-center gap-3">
+                                <div class="w-6 h-6 rounded-full bg-kMint/20 flex items-center justify-center text-kMint text-xs font-bold">
+                                    <i class="ph-bold ph-check"></i>
+                                </div>
+                                <span class="font-medium">Bifoga bilder till din prompt</span>
+                            </li>
+                        </ul>
+    
+                        <button class="w-full py-4 bg-kTextDark dark:bg-white text-white dark:text-nightBg rounded-2xl font-bold text-lg hover:scale-[1.02] active:scale-95 transition-transform shadow-button flex items-center justify-center gap-2">
+                            Starta 7-dagars gratis provperiod <i class="ph-fill ph-sparkle"></i>
+                        </button>
+                        <p class="text-xs text-kTextMedium mt-4">0 kr idag. Inget betalkort krävs.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 8. FAQ -->
+        <section id="faq" class="py-20">
+             <div class="max-w-3xl mx-auto px-6">
+                <h2 class="text-3xl font-bold text-center mb-12 flex items-center justify-center gap-3">Vanliga Frågor <i class="ph-fill ph-chat-circle-dots text-kBlue"></i></h2>
+    
+                <div class="space-y-4">
+                    <!-- Q1 -->
+                    <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
+                            <span class="font-bold text-lg">Vad räknas som en generering?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                                <i class="ph-bold ph-plus faq-icon"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content bg-white dark:bg-nightSurface px-6">
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
+                                Varje gång du klickar 'Generera PRD' eller 'Regenerera' räknas det som en generering. Att spara, redigera och döpa om PRDs använder inga credits.
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Q2 -->
+                    <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
+                            <span class="font-bold text-lg">Vad händer efter min provperiod?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                                <i class="ph-bold ph-plus faq-icon"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content bg-white dark:bg-nightSurface px-6">
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
+                                Efter provperioden behöver du välja en plan för att fortsätta generera PRDs. Om du inte väljer en plan får du read-only åtkomst till dina befintliga PRDs.
+                            </div>
+                        </div>
+                    </div>
+    
+                    <!-- Q3 -->
+                    <div class="bg-white dark:bg-nightSurface rounded-2xl border border-kBorder dark:border-nightBorder overflow-hidden shadow-sm">
+                        <button class="faq-btn w-full flex items-center justify-between p-6 text-left focus:outline-none" aria-expanded="false">
+                            <span class="font-bold text-lg">Kan jag byta plan?</span>
+                            <div class="w-8 h-8 rounded-full bg-kBg dark:bg-nightBg flex items-center justify-center text-kBlue transition-transform duration-300">
+                                <i class="ph-bold ph-plus faq-icon"></i>
+                            </div>
+                        </button>
+                        <div class="accordion-content bg-white dark:bg-nightSurface px-6">
+                            <div class="pb-6 text-kTextMedium dark:text-gray-400">
+                                Absolut! Du kan uppgradera eller nedgradera din plan när som helst från din faktureringspanel.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 9. Final CTA -->
+        <section class="py-24 text-center px-6 relative overflow-hidden">
+             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-kBlue/5 pointer-events-none"></div>
+             <div class="max-w-2xl mx-auto relative z-10">
+                 <h2 class="text-4xl md:text-5xl font-extrabold mb-8 flex items-center justify-center gap-3">Redo att bygga något riktigt? <i class="ph-fill ph-rocket-launch text-kPurple"></i></h2>
+                 <a href="#generate" class="inline-flex items-center gap-2 bg-gradient-to-r from-kBlue to-kPurple text-white text-xl font-bold py-5 px-12 rounded-full shadow-button hover:shadow-glow hover:-translate-y-1 hover:scale-105 transition-all duration-300">
+                     Generera din egen PRD <i class="ph-fill ph-sparkle"></i>
+                 </a>
+             </div>
+        </section>
+
+        <!-- 10. Footer -->
+        <footer class="bg-kBg dark:bg-nightSurface pt-16 pb-8 border-t border-kBorder dark:border-nightBorder">
+             <div class="max-w-6xl mx-auto px-6">
+                <div class="grid md:grid-cols-4 gap-12 mb-12">
+                    <div class="md:col-span-2">
+                        <div class="flex items-center gap-2 font-bold text-xl mb-4 group">
+                            <div class="w-8 h-8 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px]">
+                                <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightBg p-0.5 object-contain">
+                            </div>
+                            GenPRD
+                        </div>
+                        <p class="text-kTextMedium dark:text-gray-400 text-sm max-w-xs">
+                            Byggt för byggare som använder AI för att bygga 
+                            <span class="inline-flex items-baseline transform translate-y-0.5">
+                                <i class="ph-fill ph-heart text-kPurple ml-1"></i>
+                            </span>
+                        </p>
+                    </div>
+                    
+                    <div>
+                        <h4 class="font-bold mb-4">Produkt</h4>
+                        <ul class="space-y-2 text-sm text-kTextMedium dark:text-gray-400">
+                            <li><a href="#" class="hover:text-kBlue transition-colors">Hem</a></li>
+                            <li><a href="#pricing" class="hover:text-kBlue transition-colors">Prissättning</a></li>
+                            <li><a href="#generate" class="hover:text-kBlue transition-colors">Generera</a></li>
+                            <li><a href="#" class="hover:text-kBlue transition-colors">Changelog</a></li>
+                        </ul>
+                    </div>
+    
+                    <div>
+                        <h4 class="font-bold mb-4">Support</h4>
+                        <ul class="space-y-2 text-sm text-kTextMedium dark:text-gray-400">
+                            <li><a href="#" class="hover:text-kBlue transition-colors">Hjälpcenter</a></li>
+                            <li><a href="mailto:hej@genprd.se" class="hover:text-kBlue transition-colors">hej@genprd.se</a></li>
+                            <li><a href="#" class="hover:text-kBlue transition-colors">@nordsym_ab</a></li>
+                        </ul>
+                    </div>
+                </div>
+    
+                <div class="border-t border-kBorder dark:border-nightBorder pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-kTextMedium dark:text-gray-500">
+                    <p>&copy; 2026 GenPRD • Byggt av NordSym AB</p>
+                    <div class="flex gap-6">
+                        <a href="#" class="hover:text-kTextDark dark:hover:text-white transition-colors">Privacy</a>
+                        <a href="#" class="hover:text-kTextDark dark:hover:text-white transition-colors">Terms</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ======================== APP VIEW (Pro Mode) ======================== -->
+    <div id="app-view" class="hidden h-screen flex flex-col md:flex-row bg-kBg dark:bg-nightBg overflow-hidden transition-opacity duration-500 ease-in-out opacity-0">
+        
+        <!-- Sidebar -->
+        <aside class="w-full md:w-72 bg-white/80 dark:bg-nightSurface/80 border-r border-kBorder dark:border-nightBorder flex flex-col backdrop-blur-md z-20">
+            <!-- Sidebar Header -->
+            <div class="h-20 flex items-center px-6 border-b border-kBorder dark:border-nightBorder">
+                <a href="#" onclick="window.exitApp()" class="flex items-center gap-2 group">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px]">
+                        <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-0.5 object-contain">
+                    </div>
+                    <span class="font-bold text-lg dark:text-white group-hover:text-kBlue transition-colors">GenPRD <span class="text-xs bg-kPurple text-white px-1.5 py-0.5 rounded-md ml-1 align-top">PRO</span></span>
+                </a>
+            </div>
+
+            <!-- New Chat Button -->
+            <div class="p-4 pb-2">
+                <button onclick="window.newChat()" class="w-full flex items-center justify-center gap-2 bg-kBlue hover:bg-kPurple text-white font-bold py-3 rounded-xl shadow-button transition-all hover:scale-[1.02]">
+                    <i class="ph-bold ph-plus"></i> Ny PRD
+                </button>
+            </div>
+
+            <!-- History Search -->
+            <div class="px-4 pb-2">
+                <div class="relative group">
+                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-kTextMedium/50 group-focus-within:text-kBlue transition-colors"></i>
+                    <input type="text" id="history-search" placeholder="Sök historik..." class="w-full pl-9 pr-3 py-2 bg-kBg dark:bg-nightBg border border-kBorder dark:border-nightBorder rounded-lg text-sm text-kTextDark dark:text-white placeholder-kTextMedium/50 focus:outline-none focus:border-kBlue focus:ring-1 focus:ring-kBlue/50 transition-all">
+                </div>
+            </div>
+
+            <!-- History List -->
+            <div class="flex-grow overflow-y-auto px-4 pb-4 space-y-1" id="history-list">
+                <p class="px-2 py-2 text-xs font-bold text-kTextMedium dark:text-gray-500 uppercase tracking-wider sticky top-0 bg-white/80 dark:bg-nightSurface/80 backdrop-blur-md z-10">Tidigare</p>
+                <p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic">Inga tidigare PRDs än</p>
+            </div>
+
+            <!-- Sidebar Footer (User) -->
+            <div class="p-4 border-t border-kBorder dark:border-nightBorder">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px]">
+                            <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple">
+                                <i class="ph-fill ph-user text-xl"></i>
+                            </div>
+                        </div>
+                        <div>
+                            <p class="text-sm font-bold text-kTextDark dark:text-white">Dev User</p>
+                            <p class="text-xs text-kMint font-medium">GenPRD PRO</p>
+                        </div>
+                    </div>
+                    <button onclick="window.exitApp()" class="p-2 text-kTextMedium hover:text-kTextDark dark:hover:text-white transition-colors" title="Logga ut">
+                        <i class="ph-bold ph-sign-out text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content (Chat) -->
+        <main class="flex-grow flex flex-col h-full relative z-10">
+            <!-- App Header (Mobile Only / Context) -->
+            <div class="h-16 md:h-20 flex items-center justify-between px-6 border-b border-kBorder dark:border-nightBorder bg-white/50 dark:bg-nightBg/50 backdrop-blur-sm">
+                <h2 class="text-xl font-bold dark:text-white flex items-center gap-2">
+                    <i class="ph-fill ph-sparkle text-kPurple"></i> Generera PRD
+                </h2>
+                <!-- Theme Toggle (App) -->
+                <button id="app-theme-toggle" class="p-2 rounded-full hover:bg-kBorder/50 text-kTextMedium dark:text-white transition-colors">
+                    <i class="ph-fill ph-moon text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Chat Area -->
+            <div id="chat-container" class="flex-grow overflow-y-auto p-6 space-y-6 scroll-smooth">
+                <!-- Welcome Message -->
+                <div class="flex gap-4 max-w-3xl mx-auto">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                        <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                    </div>
+                    <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder">
+                        <p class="text-kTextDark dark:text-gray-200 leading-relaxed">
+                            Hej! Jag är GenPRD. 👋 <br><br>
+                            Berätta vad du vill bygga så skapar jag en detaljerad, teknisk specifikation (PRD) redo för implementering.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-6 pb-8 bg-gradient-to-t from-kBg to-transparent dark:from-nightBg">
+                <div class="max-w-3xl mx-auto relative group">
+                    <div class="absolute -inset-0.5 bg-gradient-to-r from-kBlue to-kPurple rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
+                    <div class="relative bg-white dark:bg-nightSurface rounded-2xl shadow-lg border border-kBorder dark:border-nightBorder flex items-end p-2">
+                        <textarea 
+                            id="app-input" 
+                            rows="1" 
+                            class="w-full max-h-40 p-3 bg-transparent border-0 focus:ring-0 resize-none text-kTextDark dark:text-white placeholder-kTextMedium/50" 
+                            placeholder="Beskriv din app..."
+                            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
+                        ></textarea>
+                        <button onclick="window.sendMessage()" class="p-3 bg-kBlue hover:bg-kPurple text-white rounded-xl transition-colors shadow-button mb-0.5 mr-0.5 flex-shrink-0">
+                            <i class="ph-bold ph-paper-plane-right"></i>
+                        </button>
+                    </div>
+                    <p class="text-center text-xs text-kTextMedium/50 mt-2">GenPRD Pro v1.0.2</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- Showcase Segmented Control ---
+            window.switchShowcase = function(state) {
+                const indicator = document.getElementById('segment-indicator');
+                const btnWithout = document.querySelector('.segment-btn:nth-child(2)'); // First button
+                const btnWith = document.querySelector('.segment-btn:nth-child(3)'); // Second button
+                
+                const visualWithout = document.getElementById('visual-without');
+                const visualWith = document.getElementById('visual-with');
+                const contentWithout = document.getElementById('content-without');
+                const contentWith = document.getElementById('content-with');
+                
+                if (state === 'without') {
+                    // Move indicator to left (Without)
+                    indicator.style.left = '4px';
+                    indicator.style.width = '140px';
+                    indicator.classList.remove('state-good');
+                    indicator.classList.add('state-bad');
+                    
+                    // Update button states
+                    btnWithout.classList.add('active-bad');
+                    btnWithout.classList.remove('active-good');
+                    btnWith.classList.remove('active-good', 'active-bad');
+                    
+                    // Show Without content, hide With
+                    visualWithout.style.opacity = '1';
+                    visualWithout.style.transform = 'scale(1)';
+                    visualWithout.style.zIndex = '10';
+                    visualWithout.style.pointerEvents = 'auto';
+                    
+                    visualWith.style.opacity = '0';
+                    visualWith.style.transform = 'scale(0.95)';
+                    visualWith.style.zIndex = '0';
+                    visualWith.style.pointerEvents = 'none';
+                    
+                    contentWithout.style.opacity = '1';
+                    contentWithout.style.transform = 'translateX(0)';
+                    contentWithout.style.zIndex = '10';
+                    contentWithout.style.pointerEvents = 'auto';
+                    
+                    contentWith.style.opacity = '0';
+                    contentWith.style.transform = 'translateX(8px)';
+                    contentWith.style.zIndex = '0';
+                    contentWith.style.pointerEvents = 'none';
+                    
+                } else if (state === 'with') {
+                    // Move indicator to right (With)
+                    indicator.style.left = '148px';
+                    indicator.style.width = '140px';
+                    indicator.classList.remove('state-bad');
+                    indicator.classList.add('state-good');
+                    
+                    // Update button states
+                    btnWith.classList.add('active-good');
+                    btnWith.classList.remove('active-bad');
+                    btnWithout.classList.remove('active-good', 'active-bad');
+                    
+                    // Show With content, hide Without
+                    visualWith.style.opacity = '1';
+                    visualWith.style.transform = 'scale(1)';
+                    visualWith.style.zIndex = '10';
+                    visualWith.style.pointerEvents = 'auto';
+                    
+                    visualWithout.style.opacity = '0';
+                    visualWithout.style.transform = 'scale(0.95)';
+                    visualWithout.style.zIndex = '0';
+                    visualWithout.style.pointerEvents = 'none';
+                    
+                    contentWith.style.opacity = '1';
+                    contentWith.style.transform = 'translateX(0)';
+                    contentWith.style.zIndex = '10';
+                    contentWith.style.pointerEvents = 'auto';
+                    
+                    contentWithout.style.opacity = '0';
+                    contentWithout.style.transform = 'translateX(-8px)';
+                    contentWithout.style.zIndex = '0';
+                    contentWithout.style.pointerEvents = 'none';
+                }
+            };
+
+            // --- Typewriter Effect ---
+            const inputField = document.getElementById('prd-input');
+            const placeholderTexts = [
+                "Bygg en landningssida för en ny SaaS-produkt med prissättning...",
+                "En app för att spåra vanor och gamifiera livet med vänner...",
+                "Ett internt verktyg för lagerhantering och orderläggning...",
+                "En marknadsplats för begagnade kursböcker med chattfunktion..."
+            ];
+            
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typeSpeed = 50;
+            
+            function typeWriter() {
+                if (!inputField) return;
+                
+                const currentText = placeholderTexts[textIndex];
+                
+                if (isDeleting) {
+                    inputField.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
+                    charIndex--;
+                    typeSpeed = 30; // Faster deleting
+                } else {
+                    inputField.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
+                    charIndex++;
+                    typeSpeed = 50 + Math.random() * 50; // Random typing speed
+                }
+                
+                if (!isDeleting && charIndex === currentText.length) {
+                    // Finished typing sentence
+                    isDeleting = true;
+                    typeSpeed = 2000; // Pause at end
+                } else if (isDeleting && charIndex === 0) {
+                    // Finished deleting sentence
+                    isDeleting = false;
+                    textIndex = (textIndex + 1) % placeholderTexts.length;
+                    typeSpeed = 500; // Pause before next
+                }
+                
+                setTimeout(typeWriter, typeSpeed);
+            }
+            
+            // Start typewriter
+            typeWriter();
+
+            // --- APP LOGIC START ---
+            
+            const landingView = document.getElementById('landing-view');
+            const appView = document.getElementById('app-view');
+            const appInput = document.getElementById('app-input');
+            const chatContainer = document.getElementById('chat-container');
+
+            // --- MOCK DATA FOR HISTORY ---
+            const mockChatHistory = {
+                'chat-1': [
+                    { type: 'ai', text: 'Hej! Jag är GenPRD. 👋 \n\nBerätta vad du vill bygga så skapar jag en detaljerad, teknisk specifikation (PRD) redo för implementering.' },
+                    { type: 'user', text: 'Jag behöver en landningssida för min nya SaaS-tjänst. Den ska ha en pricing-sektion, testimonials och en waitlist.' },
+                    { type: 'ai', text: 'Uppfattat! Här är ett utkast för din SaaS-landningssida:\n\n**Product:** AI SaaS Landing\n**Goal:** Drive conversions to waitlist.\n\n### Core Sections\n1. **Hero:** Value prop + Email capture.\n2. **Features:** 3-column grid highlighting USP.\n3. **Pricing:** Monthly/Yearly toggle.\n4. **Testimonials:** Social proof carousell.' }
+                ],
+                'chat-2': [
+                    { type: 'ai', text: 'Hej! Jag är GenPRD. 👋 \n\nVad bygger vi idag?' },
+                    { type: 'user', text: 'En app för att scanna kvitton och dela notan med vänner.' },
+                    { type: 'ai', text: 'Klassiker! Här är en robust specifikation för "SplitBill":\n\n### Tech Stack\n- Frontend: React Native / Flutter\n- Backend: Supabase\n- OCR: Google Cloud Vision API\n\n### User Flow\n1. User takes photo -> OCR processes -> Items listed.\n2. User selects items -> Assigns to Friend.\n3. App calculates total per person.' }
+                ],
+                'chat-3': [
+                    { type: 'ai', text: 'Redo för nästa projekt! Vad har du i tankarna?' },
+                    { type: 'user', text: 'Ett CRM-system specifikt för fastighetsmäklare.' },
+                    { type: 'ai', text: 'Spännande nisch. Här är en PRD för "EstateCRM":\n\n### Data Models\n- **Properties:** Address, Price, Photos, Status.\n- **Leads:** Name, Contact, Interest Level, Budget.\n- **Viewings:** Calendar events linking Lead + Property.\n\n### Key Features\n- Automated follow-up emails.\n- Pipeline view (Kanban) for leads.' }
+                ],
+                'chat-4': [
+                    { type: 'ai', text: 'Hej! Vad bygger vi?' },
+                    { type: 'user', text: 'En dashboard för e-handel som visar försäljning i realtid.' },
+                    { type: 'ai', text: 'Realtidsdata är nyckeln. Här är specen:\n\n### Dashboard Widgets\n- **Live Revenue:** Ticker via WebSocket.\n- **Top Products:** Bar chart (Chart.js).\n- **Recent Orders:** Table with status badges.\n\n### Backend Requirements\n- Webhook listener for Stripe/Shopify events.\n- Redis for caching live stats.' }
+                ],
+                'chat-5': [
+                    { type: 'ai', text: 'Hej! Hur kan jag hjälpa dig?' },
+                    { type: 'user', text: 'En AI-bot för kundtjänst som kan svara på frågor om våra produkter.' },
+                    { type: 'ai', text: 'Här är planen för "SupportBot":\n\n### Architecture\n- **LLM:** OpenAI GPT-4o via API.\n- **Knowledge Base:** Vector DB (Pinecone) with product docs.\n\n### Fallback Logic\n- If confidence < 80% -> Escalate to human agent via Slack integration.' }
+                ]
+            };
+
+            window.loadChat = function(chatId) {
+                const history = mockChatHistory[chatId];
+                if (!history) return;
+
+                // 1. Clear Chat
+                chatContainer.innerHTML = '';
+
+                // 2. Render History
+                history.forEach(msg => {
+                    const msgDiv = document.createElement('div');
+                    if (msg.type === 'user') {
+                        msgDiv.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
+                        msgDiv.innerHTML = `
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px] flex-shrink-0">
+                                <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple">
+                                    <i class="ph-fill ph-user text-xl"></i>
+                                </div>
+                            </div>
+                            <div class="bg-kBlue text-white p-5 rounded-2xl rounded-tr-none shadow-soft">
+                                <p class="leading-relaxed">${msg.text.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        `;
+                    } else {
+                        msgDiv.className = 'flex gap-4 max-w-3xl mx-auto';
+                        msgDiv.innerHTML = `
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                                <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                            </div>
+                            <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
+                                <p class="leading-relaxed text-kTextDark dark:text-gray-200">${msg.text.replace(/\n/g, '<br>')}</p>
+                            </div>
+                        `;
+                    }
+                    chatContainer.appendChild(msgDiv);
+                });
+
+                // 3. Scroll to bottom
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // 4. Update Active State in Sidebar
+                document.querySelectorAll('.history-item').forEach(btn => {
+                    btn.classList.remove('bg-kBlue/10', 'dark:bg-nightSurface');
+                    // Remove active styling logic if needed, or add specialized active class
+                });
+                const activeBtn = document.getElementById('btn-' + chatId);
+                if (activeBtn) {
+                    activeBtn.classList.add('bg-kBlue/10', 'dark:bg-nightSurface');
+                }
+                
+                // On mobile, close menu if open (not relevant here but good practice)
+            };
+
+            window.enterApp = function() {
+                // Fade out Landing
+                landingView.style.opacity = '0';
+                
+                setTimeout(() => {
+                    landingView.classList.add('hidden');
+                    appView.classList.remove('hidden');
+                    // Slight delay to allow display:block to render before opacity transition
+                    requestAnimationFrame(() => {
+                        appView.style.opacity = '1';
+                    });
+                    document.body.style.overflow = 'hidden'; // App feel
+                }, 500);
+            };
+
+            window.enterAppWithPrompt = function() {
+                const prompt = document.getElementById('prd-input').value;
+                window.enterApp();
+                if (prompt.trim()) {
+                    setTimeout(() => {
+                        appInput.value = prompt;
+                        window.sendMessage();
+                    }, 800); // Wait for transition
+                }
+            };
+
+            window.exitApp = function() {
+                appView.style.opacity = '0';
+                
+                setTimeout(() => {
+                    appView.classList.add('hidden');
+                    landingView.classList.remove('hidden');
+                    requestAnimationFrame(() => {
+                        landingView.style.opacity = '1';
+                    });
+                    document.body.style.overflow = ''; // Restore scroll
+                }, 500);
+            };
+
+            window.newChat = function() {
+                chatContainer.innerHTML = `
+                <div class="flex gap-4 max-w-3xl mx-auto">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                        <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                    </div>
+                    <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder">
+                        <p class="text-kTextDark dark:text-gray-200 leading-relaxed">
+                            Ny session startad. Vad bygger vi härnäst? ✨
+                        </p>
+                    </div>
+                </div>`;
+            };
+
+            window.sendMessage = function() {
+                const text = appInput.value.trim();
+                if (!text) return;
+
+                // 1. Add User Message
+                const userMsg = document.createElement('div');
+                userMsg.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
+                userMsg.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px] flex-shrink-0">
+                        <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple">
+                            <i class="ph-fill ph-user text-xl"></i>
+                        </div>
+                    </div>
+                    <div class="bg-kBlue text-white p-5 rounded-2xl rounded-tr-none shadow-soft">
+                        <p class="leading-relaxed">${text.replace(/\n/g, '<br>')}</p>
+                    </div>
+                `;
+                chatContainer.appendChild(userMsg);
+                appInput.value = '';
+                appInput.style.height = 'auto'; // Reset height
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // 2. Simulate AI Typing
+                const loadingId = 'loading-' + Date.now();
+                const aiLoading = document.createElement('div');
+                aiLoading.id = loadingId;
+                aiLoading.className = 'flex gap-4 max-w-3xl mx-auto';
+                aiLoading.innerHTML = `
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                        <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                    </div>
+                    <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder flex items-center gap-2">
+                        <div class="w-2 h-2 bg-kBlue rounded-full animate-bounce"></div>
+                        <div class="w-2 h-2 bg-kPurple rounded-full animate-bounce delay-100"></div>
+                        <div class="w-2 h-2 bg-kPink rounded-full animate-bounce delay-200"></div>
+                    </div>
+                `;
+                chatContainer.appendChild(aiLoading);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+
+                // 3. Simulate Response (Timeout)
+                setTimeout(() => {
+                    const loadingEl = document.getElementById(loadingId);
+                    if (loadingEl) loadingEl.remove();
+
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
+                    aiMsg.innerHTML = `
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                            <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                        </div>
+                        <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
+                            <p class="text-kTextDark dark:text-gray-200 leading-relaxed font-bold mb-2">PRD Genererad! 🚀</p>
+                            <p class="text-kTextMedium dark:text-gray-400 mb-4">Här är ett utkast baserat på din beskrivning:</p>
+                            <div class="bg-kBg dark:bg-nightBg p-4 rounded-xl border border-kBorder dark:border-nightBorder font-mono text-sm overflow-x-auto">
+                                <span class="text-kBlue"># Executive Summary</span><br>
+                                <strong>Product:</strong> ${text.split(' ')[0] || 'App'}<br>
+                                <strong>Goal:</strong> ${text.substring(0, 50)}...
+                            </div>
+                            <div class="mt-4 flex gap-2">
+                                <button class="px-4 py-2 bg-kBlue/10 text-kBlue hover:bg-kBlue hover:text-white rounded-lg transition-colors text-sm font-bold">Ladda ner .md</button>
+                                <button class="px-4 py-2 bg-kBorder/50 text-kTextMedium hover:bg-kBorder hover:text-kTextDark rounded-lg transition-colors text-sm font-bold">Kopiera</button>
+                            </div>
+                        </div>
+                    `;
+                    chatContainer.appendChild(aiMsg);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 2000);
+            };
+
+            // Enter on textarea sends message
+            appInput.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    window.sendMessage();
+                }
+            });
+
+            // App Theme Toggle
+            const appThemeToggle = document.getElementById('app-theme-toggle');
+            appThemeToggle.addEventListener('click', () => {
+                // Use global theme logic, just trigger the button
+                document.getElementById('theme-toggle').click();
+                
+                // Update local icon
+                const icon = appThemeToggle.querySelector('i');
+                if (document.documentElement.classList.contains('dark')) {
+                    icon.classList.replace('ph-sun', 'ph-moon');
+                } else {
+                    icon.classList.replace('ph-moon', 'ph-sun');
+                }
+            });
+
+            // History Filter Logic
+            const historySearch = document.getElementById('history-search');
+            const historyList = document.getElementById('history-list');
+            
+            historySearch.addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                const items = historyList.querySelectorAll('.history-item');
+                
+                items.forEach(item => {
+                    const text = item.querySelector('span').textContent.toLowerCase();
+                    if (text.includes(term)) {
+                        item.classList.remove('hidden');
+                        item.classList.add('flex');
+                    } else {
+                        item.classList.add('hidden');
+                        item.classList.remove('flex');
+                    }
+                });
+            });
+
+            // --- APP LOGIC END ---
+
+            // --- Theme Logic (Existing) ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const themeIcon = document.getElementById('theme-icon');
+            const html = document.documentElement;
+            
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark');
+                    themeIcon.classList.replace('ph-moon', 'ph-sun');
+                    // App icon update
+                    const appIcon = document.getElementById('app-theme-toggle')?.querySelector('i');
+                    if(appIcon) appIcon.classList.replace('ph-moon', 'ph-sun');
+                    localStorage.theme = 'dark';
+                } else {
+                    html.classList.remove('dark');
+                    themeIcon.classList.replace('ph-sun', 'ph-moon');
+                    // App icon update
+                    const appIcon = document.getElementById('app-theme-toggle')?.querySelector('i');
+                    if(appIcon) appIcon.classList.replace('ph-sun', 'ph-moon');
+                    localStorage.theme = 'light';
+                }
+            }
+
+            // Check Preference (Default to Light)
+            if (localStorage.theme === 'dark') {
+                setTheme(true);
+            } else {
+                setTheme(false);
+            }
+
+            themeToggleBtn.addEventListener('click', () => {
+                setTheme(!html.classList.contains('dark'));
+            });
+
+            // --- Mobile Menu ---
+            const menuBtn = document.getElementById('mobile-menu-btn');
+            const closeMenuBtn = document.getElementById('close-menu-btn');
+            const menu = document.getElementById('mobile-menu');
+            const menuLinks = menu.querySelectorAll('a');
+
+            function toggleMenu(show) {
+                if (show) {
+                    menu.classList.remove('translate-x-full');
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    menu.classList.add('translate-x-full');
+                    document.body.style.overflow = '';
+                }
+            }
+
+            menuBtn.addEventListener('click', () => toggleMenu(true));
+            closeMenuBtn.addEventListener('click', () => toggleMenu(false));
+            menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
+
+            // --- Character Counter ---
+            const prdInput = document.getElementById('prd-input');
+            const charCount = document.getElementById('char-count');
+            const MAX = 10000;
+
+            if (prdInput) {
+                prdInput.addEventListener('input', () => {
+                    const len = prdInput.value.length;
+                    charCount.textContent = `${len.toLocaleString()} / ${MAX.toLocaleString()}`;
+                    if (len > MAX * 0.9) charCount.classList.add('text-kPink');
+                    else charCount.classList.remove('text-kPink');
+                });
+            }
+
+            // --- Pricing Toggle ---
+            const monthlyBtn = document.getElementById('monthly-btn');
+            const yearlyBtn = document.getElementById('yearly-btn');
+            const priceAmount = document.getElementById('price-amount');
+            const priceSavings = document.getElementById('price-savings');
+            
+            function setPricing(isYearly) {
+                if (isYearly) {
+                    yearlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
+                    yearlyBtn.classList.remove('text-kTextMedium');
+                    monthlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
+                    monthlyBtn.classList.add('text-kTextMedium');
+                    priceAmount.textContent = '75 kr';
+                    priceSavings.textContent = 'Du sparar 288 kr/år';
+                } else {
+                    monthlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
+                    monthlyBtn.classList.remove('text-kTextMedium');
+                    yearlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
+                    yearlyBtn.classList.add('text-kTextMedium');
+                    priceAmount.textContent = '99 kr';
+                    priceSavings.textContent = '';
+                }
+            }
+
+            monthlyBtn.addEventListener('click', () => setPricing(false));
+            yearlyBtn.addEventListener('click', () => setPricing(true));
+
+            // --- FAQ Accordion ---
+            const faqBtns = document.querySelectorAll('.faq-btn');
+            faqBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const content = btn.nextElementSibling;
+                    const icon = btn.querySelector('.faq-icon');
+                    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
+
+                    // Reset others
+                    faqBtns.forEach(other => {
+                        if (other !== btn) {
+                            other.setAttribute('aria-expanded', 'false');
+                            other.nextElementSibling.classList.remove('active');
+                            other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
+                        }
+                    });
+
+                    // Toggle current
+                    btn.setAttribute('aria-expanded', !isExpanded);
+                    content.classList.toggle('active');
+                    icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(45deg)';
+                });
+            });
+
+        });
+    </script>
+</body>
+</html>
