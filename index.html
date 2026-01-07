@@ -1068,9 +1068,9 @@
                     if (msg.type === 'user') {
                         msgDiv.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
                         msgDiv.innerHTML = `
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px] flex-shrink-0">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px] flex-shrink-0">
                                 <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple">
-                                    <i class="ph-fill ph-user text-xl"></i>
+                                    <i class="ph-fill ph-user text-2xl"></i>
                                 </div>
                             </div>
                             <div class="bg-kBlue text-white p-5 rounded-2xl rounded-tr-none shadow-soft">
@@ -1080,8 +1080,8 @@
                     } else {
                         msgDiv.className = 'flex gap-4 max-w-3xl mx-auto';
                         msgDiv.innerHTML = `
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
-                                <img src="https://raw.githubusercontent.com/nordsym/NordSym-Logga/refs/heads/main/Va%CC%8Agdrake.svg" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                            <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                                <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=d22b3524-f29c-4313-bebb-2863f8c30b91" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
                             </div>
                             <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
                                 <p class="leading-relaxed text-kTextDark dark:text-gray-200">${msg.text.replace(/\n/g, '<br>')}</p>
@@ -1097,14 +1097,76 @@
                 // 4. Update Active State in Sidebar
                 document.querySelectorAll('.history-item').forEach(btn => {
                     btn.classList.remove('bg-kBlue/10', 'dark:bg-nightSurface');
-                    // Remove active styling logic if needed, or add specialized active class
                 });
                 const activeBtn = document.getElementById('btn-' + chatId);
                 if (activeBtn) {
                     activeBtn.classList.add('bg-kBlue/10', 'dark:bg-nightSurface');
                 }
                 
-                // On mobile, close menu if open (not relevant here but good practice)
+                // If on mobile, close sidebar (simulated by just ensuring view is correct)
+                if (window.innerWidth < 768) {
+                    // Optional: logic to auto-close sidebar on mobile selection
+                }
+            };
+
+            // --- DOWNLOAD & COPY LOGIC ---
+            window.downloadMarkdown = function(encodedContent, filename) {
+                try {
+                    const text = decodeURIComponent(encodedContent);
+                    const blob = new Blob([text], { type: 'text/markdown' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = (filename || 'GenPRD-Spec') + '.md';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                } catch (e) {
+                    console.error("Download failed:", e);
+                    alert("Kunde inte ladda ner filen. Försök igen.");
+                }
+            };
+
+            window.copyToClipboard = function(encodedContent, btnElement) {
+                const text = decodeURIComponent(encodedContent);
+                const originalHTML = btnElement.innerHTML; // Save icon+text
+
+                const showSuccess = () => {
+                    btnElement.innerHTML = '<i class="ph-bold ph-check"></i> Kopierat!';
+                    btnElement.classList.add('bg-kMint/20', 'text-kMint');
+                    setTimeout(() => {
+                        btnElement.innerHTML = originalHTML;
+                        btnElement.classList.remove('bg-kMint/20', 'text-kMint');
+                    }, 2000);
+                };
+
+                // Fallback method: execCommand ('copy') works better in iframes/restrictions
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                
+                // Ensure textarea is not visible but part of DOM
+                textArea.style.position = "fixed";
+                textArea.style.left = "-9999px";
+                textArea.style.top = "0";
+                document.body.appendChild(textArea);
+                
+                textArea.focus();
+                textArea.select();
+
+                try {
+                    const successful = document.execCommand('copy');
+                    if (successful) {
+                        showSuccess();
+                    } else {
+                        console.error('Fallback copy failed.');
+                        alert('Kunde inte kopiera automatiskt. Texten är markerad.');
+                    }
+                } catch (err) {
+                    console.error('Fallback copy error', err);
+                }
+
+                document.body.removeChild(textArea);
             };
 
             window.enterApp = function() {
@@ -1165,7 +1227,7 @@
                 const text = appInput.value.trim();
                 if (!text) return;
 
-                // 1. Add User Message (Using Icon, not Fox)
+                // 1. Add User Message (Using Icon)
                 const userMsg = document.createElement('div');
                 userMsg.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
                 userMsg.innerHTML = `
@@ -1207,6 +1269,28 @@
                     const loadingEl = document.getElementById(loadingId);
                     if (loadingEl) loadingEl.remove();
 
+                    // Generate Dynamic Content
+                    const productName = (text.split(' ')[0].length > 2 ? text.split(' ')[0] : 'App') + 'Spec';
+                    const prdContent = `# Product Requirements Document (PRD): ${productName}
+
+## 1. Executive Summary
+**Product:** ${productName}
+**Goal:** ${text}
+
+## 2. Core Features
+- **User Auth:** Secure login/signup via Supabase.
+- **Main Flow:** Optimized for high conversion.
+- **Admin Panel:** Data visualization and user management.
+
+## 3. Tech Stack
+- Frontend: React + Tailwind CSS
+- Backend: Supabase (PostgreSQL)
+- Deployment: Vercel
+
+*Generated by GenPRD*`;
+                    
+                    const encodedContent = encodeURIComponent(prdContent);
+
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
                     aiMsg.innerHTML = `
@@ -1217,14 +1301,18 @@
                         <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
                             <p class="text-kTextDark dark:text-gray-200 leading-relaxed font-bold mb-2">PRD Genererad! 🚀</p>
                             <p class="text-kTextMedium dark:text-gray-400 mb-4">Här är ett utkast baserat på din beskrivning:</p>
-                            <div class="bg-kBg dark:bg-nightBg p-4 rounded-xl border border-kBorder dark:border-nightBorder font-mono text-sm overflow-x-auto">
+                            <div class="bg-kBg dark:bg-nightBg p-4 rounded-xl border border-kBorder dark:border-nightBorder font-mono text-sm overflow-x-auto max-h-60 overflow-y-auto mb-4">
                                 <span class="text-kBlue"># Executive Summary</span><br>
-                                <strong>Product:</strong> ${text.split(' ')[0] || 'App'}<br>
-                                <strong>Goal:</strong> ${text.substring(0, 50)}...
+                                <strong>Product:</strong> ${productName}<br>
+                                <strong>Goal:</strong> ${text.substring(0, 60)}...
                             </div>
-                            <div class="mt-4 flex gap-2">
-                                <button class="px-4 py-2 bg-kBlue/10 text-kBlue hover:bg-kBlue hover:text-white rounded-lg transition-colors text-sm font-bold">Ladda ner .md</button>
-                                <button class="px-4 py-2 bg-kBorder/50 text-kTextMedium hover:bg-kBorder hover:text-kTextDark rounded-lg transition-colors text-sm font-bold">Kopiera</button>
+                            <div class="flex gap-2">
+                                <button onclick="window.downloadMarkdown('${encodedContent}', '${productName}')" class="px-4 py-2 bg-kBlue/10 text-kBlue hover:bg-kBlue hover:text-white rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
+                                    <i class="ph-bold ph-download-simple"></i> Ladda ner .md
+                                </button>
+                                <button onclick="window.copyToClipboard('${encodedContent}', this)" class="px-4 py-2 bg-kBorder/50 text-kTextMedium hover:bg-kBorder hover:text-kTextDark rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
+                                    <i class="ph-bold ph-copy"></i> Kopiera
+                                </button>
                             </div>
                         </div>
                     `;
@@ -1273,127 +1361,6 @@
                         item.classList.add('hidden');
                         item.classList.remove('flex');
                     }
-                });
-            });
-
-            // --- APP LOGIC END ---
-
-            // --- Theme Logic (Existing) ---
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const html = document.documentElement;
-            
-            function setTheme(isDark) {
-                if (isDark) {
-                    html.classList.add('dark');
-                    themeIcon.classList.replace('ph-moon', 'ph-sun');
-                    // App icon update
-                    const appIcon = document.getElementById('app-theme-toggle')?.querySelector('i');
-                    if(appIcon) appIcon.classList.replace('ph-moon', 'ph-sun');
-                    localStorage.theme = 'dark';
-                } else {
-                    html.classList.remove('dark');
-                    themeIcon.classList.replace('ph-sun', 'ph-moon');
-                    // App icon update
-                    const appIcon = document.getElementById('app-theme-toggle')?.querySelector('i');
-                    if(appIcon) appIcon.classList.replace('ph-sun', 'ph-moon');
-                    localStorage.theme = 'light';
-                }
-            }
-
-            // Check Preference (Default to Light)
-            if (localStorage.theme === 'dark') {
-                setTheme(true);
-            } else {
-                setTheme(false);
-            }
-
-            themeToggleBtn.addEventListener('click', () => {
-                setTheme(!html.classList.contains('dark'));
-            });
-
-            // --- Mobile Menu ---
-            const menuBtn = document.getElementById('mobile-menu-btn');
-            const closeMenuBtn = document.getElementById('close-menu-btn');
-            const menu = document.getElementById('mobile-menu');
-            const menuLinks = menu.querySelectorAll('a');
-
-            function toggleMenu(show) {
-                if (show) {
-                    menu.classList.remove('translate-x-full');
-                    document.body.style.overflow = 'hidden';
-                } else {
-                    menu.classList.add('translate-x-full');
-                    document.body.style.overflow = '';
-                }
-            }
-
-            menuBtn.addEventListener('click', () => toggleMenu(true));
-            closeMenuBtn.addEventListener('click', () => toggleMenu(false));
-            menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
-
-            // --- Character Counter ---
-            const prdInput = document.getElementById('prd-input');
-            const charCount = document.getElementById('char-count');
-            const MAX = 10000;
-
-            if (prdInput) {
-                prdInput.addEventListener('input', () => {
-                    const len = prdInput.value.length;
-                    charCount.textContent = `${len.toLocaleString()} / ${MAX.toLocaleString()}`;
-                    if (len > MAX * 0.9) charCount.classList.add('text-kPink');
-                    else charCount.classList.remove('text-kPink');
-                });
-            }
-
-            // --- Pricing Toggle ---
-            const monthlyBtn = document.getElementById('monthly-btn');
-            const yearlyBtn = document.getElementById('yearly-btn');
-            const priceAmount = document.getElementById('price-amount');
-            const priceSavings = document.getElementById('price-savings');
-            
-            function setPricing(isYearly) {
-                if (isYearly) {
-                    yearlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
-                    yearlyBtn.classList.remove('text-kTextMedium');
-                    monthlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
-                    monthlyBtn.classList.add('text-kTextMedium');
-                    priceAmount.textContent = '75 kr';
-                    priceSavings.textContent = 'Du sparar 288 kr/år';
-                } else {
-                    monthlyBtn.classList.add('bg-kBlue', 'text-white', 'shadow-sm');
-                    monthlyBtn.classList.remove('text-kTextMedium');
-                    yearlyBtn.classList.remove('bg-kBlue', 'text-white', 'shadow-sm');
-                    yearlyBtn.classList.add('text-kTextMedium');
-                    priceAmount.textContent = '99 kr';
-                    priceSavings.textContent = '';
-                }
-            }
-
-            monthlyBtn.addEventListener('click', () => setPricing(false));
-            yearlyBtn.addEventListener('click', () => setPricing(true));
-
-            // --- FAQ Accordion ---
-            const faqBtns = document.querySelectorAll('.faq-btn');
-            faqBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    const content = btn.nextElementSibling;
-                    const icon = btn.querySelector('.faq-icon');
-                    const isExpanded = btn.getAttribute('aria-expanded') === 'true';
-
-                    // Reset others
-                    faqBtns.forEach(other => {
-                        if (other !== btn) {
-                            other.setAttribute('aria-expanded', 'false');
-                            other.nextElementSibling.classList.remove('active');
-                            other.querySelector('.faq-icon').style.transform = 'rotate(0deg)';
-                        }
-                    });
-
-                    // Toggle current
-                    btn.setAttribute('aria-expanded', !isExpanded);
-                    content.classList.toggle('active');
-                    icon.style.transform = isExpanded ? 'rotate(0deg)' : 'rotate(45deg)';
                 });
             });
 
