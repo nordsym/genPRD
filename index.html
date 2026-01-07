@@ -1170,12 +1170,22 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 <p class="text-kTextMedium dark:text-gray-400 mb-2">Kom igång GRATIS med 50 genereringar. Inget betalkort krävs.</p>
                 <p class="text-sm text-kTextMedium dark:text-gray-500 mb-12">Alla funktioner ingår från start.</p>
     
-                <!-- Toggle -->
-                <div class="flex items-center justify-center gap-4 mb-12 bg-white dark:bg-nightSurface inline-flex p-1.5 rounded-full border border-kBorder dark:border-nightBorder shadow-sm">
-                    <button id="monthly-btn" class="px-6 py-2 rounded-full font-bold text-white bg-kBlue shadow-sm transition-all">Månadsvis</button>
-                    <button id="yearly-btn" class="px-6 py-2 rounded-full font-bold text-kTextMedium hover:text-kBlue transition-all flex items-center gap-2">
-                        Årsvis <span class="text-[10px] bg-kPink text-white px-2 py-0.5 rounded-full">3 mån gratis</span>
-                    </button>
+                <!-- Toggle with Floating Promo -->
+                <div class="relative inline-block mb-12">
+                    <!-- Floating Copy & Arrow -->
+                    <div class="absolute left-full top-1/2 -translate-y-1/2 ml-4 flex items-center gap-2 z-20 pointer-events-none hidden md:flex">
+                        <i class="ph-fill ph-arrow-left text-kPink text-2xl animate-pulse-slow"></i>
+                        <span class="text-[11px] font-bold text-white bg-kPink px-3 py-1.5 rounded-xl shadow-sm transform rotate-3 whitespace-nowrap border border-white/20">
+                            3 månader gratis!
+                        </span>
+                    </div>
+
+                    <div class="flex items-center justify-center gap-2 bg-white dark:bg-nightSurface p-1.5 rounded-full border border-kBorder dark:border-nightBorder shadow-sm relative z-10">
+                        <button id="monthly-btn" class="px-6 py-2 rounded-full font-bold text-white bg-kBlue shadow-sm transition-all">Månadsvis</button>
+                        <button id="yearly-btn" class="px-6 py-2 rounded-full font-bold text-kTextMedium hover:text-kBlue transition-all">
+                            Årsvis
+                        </button>
+                    </div>
                 </div>
     
                 <!-- Card -->
