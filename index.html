@@ -9,6 +9,12 @@
     
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Stripe.js -->
+    <script src="https://js.stripe.com/v3/"></script>
+
+    <!-- Marked.js (För Markdown rendering) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <!-- Fonts: Outfit (Playful & Modern) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -234,6 +240,50 @@
         <div class="orb w-72 h-72 bg-kPink/20 top-[40%] left-[20%] animate-blob animation-delay-4000"></div>
     </div>
 
+    <!-- ======================== PAYMENT MODAL (New) ======================== -->
+    <div id="payment-modal" class="fixed inset-0 z-[70] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300">
+        <div class="bg-white dark:bg-nightSurface p-8 rounded-3xl shadow-card max-w-lg w-full mx-4 relative transform scale-95 transition-transform duration-300 border border-kBorder dark:border-nightBorder">
+            <button onclick="togglePaymentModal(false)" class="absolute top-4 right-4 text-kTextMedium hover:text-kTextDark dark:text-gray-400 dark:hover:text-white transition-colors"><i class="ph-bold ph-x text-xl"></i></button>
+            
+            <div class="text-center mb-8">
+                <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-kBlue/10 text-kBlue mb-4">
+                    <i class="ph-fill ph-rocket-launch text-3xl"></i>
+                </div>
+                <h3 class="text-2xl font-bold dark:text-white mb-2">Uppgradera till Pro 🚀</h3>
+                <p class="text-kTextMedium dark:text-gray-400">Få 200 genereringar i månaden och bygg snabbare.</p>
+            </div>
+
+            <div class="space-y-4">
+                <!-- Annual Plan -->
+                <button onclick="handleUpgrade('price_1Sn00IRtJYK3aJTq9gtj9vAs')" class="w-full group relative flex items-center justify-between p-4 rounded-2xl border-2 border-kBlue bg-kBlue/5 hover:bg-kBlue/10 transition-all text-left">
+                    <div class="absolute -top-3 right-4 bg-kMint text-nightBg text-[10px] font-bold px-2 py-0.5 rounded-full">Spara 25%</div>
+                    <div>
+                        <span class="block font-bold text-lg text-kTextDark dark:text-white">Årlig Plan</span>
+                        <span class="text-sm text-kTextMedium">1114 kr / år</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-kBlue text-white flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-bold ph-arrow-right"></i>
+                    </div>
+                </button>
+
+                <!-- Monthly Plan -->
+                <button onclick="handleUpgrade('price_1Sn00IRtJYK3aJTqt1Fjbx4V')" class="w-full flex items-center justify-between p-4 rounded-2xl border border-kBorder dark:border-nightBorder hover:border-kBlue hover:bg-kBg dark:hover:bg-nightBg transition-all text-left">
+                    <div>
+                        <span class="block font-bold text-lg text-kTextDark dark:text-white">Månadsvis</span>
+                        <span class="text-sm text-kTextMedium">124 kr / månad</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-kBorder/50 text-kTextMedium flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <i class="ph-bold ph-arrow-right"></i>
+                    </div>
+                </button>
+            </div>
+            
+            <p class="text-center text-xs text-kTextMedium mt-6 flex items-center justify-center gap-1">
+                <i class="ph-fill ph-lock-key"></i> Säkra betalningar via Stripe
+            </p>
+        </div>
+    </div>
+
     <!-- ======================== AUTH MODAL ======================== -->
     <div id="auth-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center bg-black/50 backdrop-blur-sm opacity-0 transition-opacity duration-300">
         <div class="bg-white dark:bg-nightSurface p-8 rounded-3xl shadow-card max-w-md w-full mx-4 relative transform scale-95 transition-transform duration-300 border border-kBorder dark:border-nightBorder" id="auth-modal-content">
@@ -333,11 +383,6 @@
                         <i id="theme-icon" class="ph-fill ph-moon text-xl"></i>
                     </button>
                     
-                    <!-- DEV SHORTCUT (RESTORED) -->
-                    <button onclick="window.enterApp()" class="hidden md:inline-flex items-center gap-2 px-4 py-2 text-xs font-bold text-kPurple bg-kPurple/10 hover:bg-kPurple/20 rounded-full border border-kPurple/20 transition-all">
-                        Dev: Pro Login 🔓
-                    </button>
-                    
                     <!-- DYNAMIC AUTH BUTTON -->
                     <div id="nav-auth-container">
                         <button onclick="toggleAuthModal(true)" class="hidden md:inline-block font-semibold text-kBlue hover:text-kPurple transition-colors">Sign in</button>
@@ -356,8 +401,6 @@
             <button id="close-menu-btn" class="absolute top-6 right-6 w-10 h-10 rounded-full bg-kBg dark:bg-nightSurface flex items-center justify-center">
                 <i class="ph ph-x text-2xl"></i>
             </button>
-            <!-- DEV SHORTCUT MOBILE -->
-            <button onclick="window.enterApp()" class="px-6 py-2 text-sm font-bold text-kPurple bg-kPurple/10 rounded-full">Dev: Pro Login 🔓</button>
             
             <a href="#" class="text-2xl font-bold hover:text-kBlue">Hem</a>
             <a href="#features" class="text-2xl font-bold hover:text-kBlue">Features</a>
@@ -366,8 +409,8 @@
             <button onclick="toggleAuthModal(true); toggleMenu(false);" class="px-8 py-3 bg-gradient-to-r from-kBlue to-kPurple text-white rounded-full font-bold shadow-glow text-xl flex items-center gap-2">Logga in <i class="ph-fill ph-sign-in"></i></button>
         </div>
 
-        <!-- 2. Hero Section -->
-        <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-visible z-10">
+        <!-- 2. Hero Section (Updated ID Location) -->
+        <section class="relative pt-32 pb-20 md:pt-48 md:pb-32 px-6 overflow-visible z-10" id="generate">
             <div class="max-w-4xl mx-auto text-center relative">
                 <!-- Floating Icons -->
                 <i class="ph-fill ph-sparkle text-kPink text-3xl absolute top-0 left-[10%] animate-sparkle"></i>
@@ -382,7 +425,7 @@
                 </p>
 
                 <!-- Input Card -->
-                <div class="relative max-w-3xl mx-auto group z-20" id="generate">
+                <div class="relative max-w-3xl mx-auto group z-20">
                     <div class="absolute -inset-1 bg-gradient-to-r from-kBlue to-kPink rounded-[20px] blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
                     <div class="relative bg-white dark:bg-nightSurface rounded-[20px] shadow-card p-2 ring-1 ring-kBorder dark:ring-nightBorder">
                         <textarea 
@@ -454,7 +497,9 @@
                 <div class="absolute inset-0 bg-gradient-to-r from-kBlue/20 to-kPurple/20 rounded-[30px] transform rotate-1 group-hover:rotate-2 transition-transform duration-300"></div>
                 <div class="relative bg-white dark:bg-nightSurface p-8 md:p-10 rounded-[30px] shadow-card flex flex-col md:flex-row items-center gap-8 text-center md:text-left border border-kBorder dark:border-nightBorder">
                     <div class="w-20 h-20 flex-shrink-0 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[3px]">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/FoxPRDvinkar.svg?alt=media&token=f98a5d70-29ea-4303-b002-3bc4fade6599" alt="User Avatar" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                        <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1">
+                            <div class="w-full h-full rounded-full bg-kBlue text-white flex items-center justify-center text-2xl font-bold">AB</div>
+                        </div>
                     </div>
                     <div>
                         <p class="text-lg md:text-xl font-medium leading-relaxed mb-4">
@@ -559,9 +604,12 @@
                 <!-- Apple-Style Toggle -->
                 <div class="flex justify-center mb-10">
                     <div class="segmented-control p-1 rounded-xl bg-gray-100 dark:bg-nightSurface border border-gray-200 dark:border-nightBorder">
-                        <div id="segment-indicator" class="segment-indicator state-bad" style="width: 140px; left: 4px;"></div>
-                        <button class="segment-btn active-bad w-[140px]" onclick="switchShowcase('without')">Utan spec</button>
-                        <button class="segment-btn w-[140px]" onclick="switchShowcase('with')">Med GenPRD</button>
+                        <!-- ÄNDRAT: state-good och left: 148px för att starta på höger sida -->
+                        <div id="segment-indicator" class="segment-indicator state-good" style="width: 140px; left: 148px;"></div>
+                        <!-- ÄNDRAT: Text till "Utan GenPRD", tog bort active-bad klassen -->
+                        <button class="segment-btn w-[140px]" onclick="switchShowcase('without')">Utan GenPRD</button>
+                        <!-- ÄNDRAT: Lade till active-good klassen -->
+                        <button class="segment-btn active-good w-[140px]" onclick="switchShowcase('with')">Med GenPRD</button>
                     </div>
                 </div>
     
@@ -571,8 +619,8 @@
                 <!-- Left Column: Visuals (Stacked & Absolute for smooth transition) -->
                 <div class="relative bg-gray-100 dark:bg-nightSurface/50 rounded-3xl overflow-hidden border border-kBorder dark:border-nightBorder min-h-[500px] shadow-inner">
                     
-                    <!-- Visual: Without Spec -->
-                    <div id="visual-without" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-100 scale-100 z-10">
+                    <!-- Visual: Without Spec (ÄNDRAT: Dold som standard) -->
+                    <div id="visual-without" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 scale-95 z-0 pointer-events-none">
                         <div class="aspect-[4/3] w-full bg-gray-200 dark:bg-gray-800 rounded-2xl flex flex-col items-center justify-center border-2 border-dashed border-gray-300 dark:border-gray-600 grayscale shadow-sm">
                             <div class="w-16 h-16 rounded-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center mb-4">
                                 <i class="ph-fill ph-image text-gray-400 text-3xl"></i>
@@ -582,8 +630,8 @@
                         <p class="mt-6 text-kTextMedium dark:text-gray-400 font-medium text-center">Video: Agenten gissar sig fram...</p>
                     </div>
 
-                    <!-- Visual: With FlowSpec -->
-                    <div id="visual-with" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-0 scale-95 z-0 pointer-events-none">
+                    <!-- Visual: With FlowSpec (ÄNDRAT: Visad som standard) -->
+                    <div id="visual-with" class="absolute inset-0 flex flex-col items-center justify-center p-8 transition-all duration-500 ease-out opacity-100 scale-100 z-10 pointer-events-auto">
                         <div class="aspect-[4/3] w-full bg-gradient-to-br from-kBlue/10 to-kPurple/10 rounded-2xl flex flex-col items-center justify-center border-2 border-kBlue/30 relative overflow-hidden group cursor-pointer hover:shadow-lg transition-all shadow-glow">
                             <div class="absolute inset-0 bg-kBlue/5 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                             <div class="w-20 h-20 rounded-full bg-white dark:bg-nightSurface shadow-soft flex items-center justify-center mb-4 transform group-hover:scale-110 transition-transform text-kBlue">
@@ -599,14 +647,14 @@
                 <!-- Right Column: Copy -->
                 <div class="relative min-h-[500px]">
                     
-                    <!-- Content: Without Spec -->
-                    <div id="content-without" class="transition-all duration-500 ease-out opacity-100 translate-x-0 absolute inset-0 z-10">
+                    <!-- Content: Without Spec (ÄNDRAT: Dold som standard) -->
+                    <div id="content-without" class="transition-all duration-500 ease-out opacity-0 -translate-x-8 absolute inset-0 z-0 pointer-events-none">
                         <div class="bg-gray-50 dark:bg-nightBg border border-gray-200 dark:border-gray-700 rounded-3xl p-8 h-full flex flex-col">
                             <div class="flex items-center gap-3 mb-6">
                                 <div class="w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/30 flex items-center justify-center text-red-500">
                                     <i class="ph-bold ph-x-circle text-2xl"></i>
                                 </div>
-                                <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Utan spec</h3>
+                                <h3 class="text-2xl font-bold text-gray-500 dark:text-gray-400">Utan GenPRD</h3>
                             </div>
                             
                             <p class="text-lg font-bold text-gray-600 dark:text-gray-300 mb-2">Agenten improviserar</p>
@@ -635,8 +683,8 @@
                         </div>
                     </div>
 
-                    <!-- Content: With GenPRD -->
-                    <div id="content-with" class="transition-all duration-500 ease-out opacity-0 translate-x-8 absolute inset-0 z-0 pointer-events-none">
+                    <!-- Content: With GenPRD (ÄNDRAT: Visad som standard) -->
+                    <div id="content-with" class="transition-all duration-500 ease-out opacity-100 translate-x-0 absolute inset-0 z-10 pointer-events-auto">
                         <div class="bg-white dark:bg-nightSurface border-2 border-kBlue rounded-3xl p-8 shadow-glow h-full flex flex-col relative overflow-hidden">
                             <div class="absolute top-0 right-0 bg-kBlue text-white text-[10px] font-bold px-3 py-1 rounded-bl-xl z-10 tracking-wider">PRODUCTION READY</div>
                             
@@ -667,8 +715,8 @@
                             </div>
 
                             <div class="mt-auto">
-                                <button onclick="document.getElementById('toggle-spec-btn').click(); setTimeout(() => document.getElementById('spec-content').scrollIntoView({behavior: 'smooth', block: 'start'}), 100);" class="text-xs font-bold text-kBlue hover:text-white hover:bg-kBlue transition-colors flex items-center justify-center gap-2 w-full py-3 px-2 bg-kBlue/10 rounded-xl h-auto min-h-[44px] whitespace-normal text-center">
-                                    Se GenPRD-specen som gjorde detta möjligt <i class="ph-bold ph-arrow-right flex-shrink-0"></i>
+                                <button onclick="window.toggleSpec()" class="text-xs font-bold text-kBlue hover:text-white hover:bg-kBlue transition-colors flex items-center justify-center gap-2 w-full py-3 px-2 bg-kBlue/10 rounded-xl h-auto min-h-[44px] whitespace-normal text-center">
+                                    Se GenPRD-specen som gjorde detta möjligt <i class="ph-bold ph-arrow-down flex-shrink-0"></i>
                                 </button>
                             </div>
                         </div>
@@ -677,7 +725,323 @@
                 </div>
             </div>
 
-            <!-- Spec Expander -->
+            <!-- Spec Expander Content -->
+            <div id="spec-content" class="hidden transition-all duration-700 ease-in-out overflow-hidden max-h-0 opacity-0 mb-20 px-6">
+                <div class="max-w-5xl mx-auto">
+                    
+                    <!-- VISUAL CUE: Prompt -> Result (Redesigned) -->
+                    <div class="flex flex-col items-center justify-center mb-8 space-y-4 pt-4">
+                        <!-- Input Bubble -->
+                        <div class="relative bg-white dark:bg-nightSurface rounded-2xl rounded-bl-none shadow-glow p-6 max-w-lg w-full border border-kBorder dark:border-nightBorder transform transition-transform hover:scale-[1.02]">
+                            <div class="absolute -top-3 left-6 bg-gradient-to-r from-kBlue to-kPurple text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
+                                <i class="ph-bold ph-lightbulb"></i> Input: Din Idé
+                            </div>
+                            <p class="text-xl font-medium text-kTextDark dark:text-white leading-relaxed">
+                                "En kvitto-scanner som delar räkningar med vänner"
+                            </p>
+                        </div>
+                        
+                        <!-- Arrow -->
+                        <div class="h-10 flex items-center justify-center">
+                            <div class="w-px h-full bg-gradient-to-b from-kBorder to-transparent dark:from-nightBorder"></div>
+                            <div class="absolute bg-white dark:bg-nightBg p-2 rounded-full border border-kBorder dark:border-nightBorder text-kPurple shadow-sm animate-bounce">
+                                <i class="ph-bold ph-arrow-down text-xl"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PRD Window (Themed) -->
+                    <div class="bg-white dark:bg-[#1e1e1e] text-kTextDark dark:text-[#d4d4d4] rounded-2xl shadow-2xl border border-kBorder dark:border-gray-800 overflow-hidden font-mono text-sm text-left relative group transition-colors duration-500">
+                        <!-- Close Button -->
+                        <button onclick="window.toggleSpec()" class="absolute top-3 right-4 text-kTextMedium dark:text-gray-500 hover:text-kTextDark dark:hover:text-white transition-colors z-10 p-1">
+                            <i class="ph-bold ph-x text-lg"></i>
+                        </button>
+
+                        <!-- Window Bar -->
+                        <div class="bg-gray-50 dark:bg-[#2d2d2d] px-4 py-3 flex items-center justify-between border-b border-kBorder dark:border-black/20 transition-colors duration-500">
+                            <div class="flex gap-2">
+                                <div class="w-3 h-3 rounded-full bg-[#ff5f56] border border-black/10"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10"></div>
+                            </div>
+                            <div class="text-xs text-kTextMedium dark:text-gray-500 font-medium font-sans flex items-center gap-2">
+                                <i class="ph-fill ph-file-text text-kBlue"></i> ReceiptSplit_PRD.md
+                            </div>
+                            <div class="w-10"></div>
+                        </div>
+                        
+                        <!-- Content -->
+                        <div class="p-8 h-[600px] overflow-y-auto custom-scrollbar bg-white dark:bg-[#1e1e1e] transition-colors duration-500">
+                            <pre class="whitespace-pre-wrap font-mono text-xs md:text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+ReceiptSplit — Product Requirements Document
+
+## 1) Summary
+ReceiptSplit is a web app for authenticated users to scan or upload receipts, automatically extract line items, and split costs among friends with precise shares. It targets friend groups, roommates, or colleagues who need an audited, editable split from photographed receipts. Core value: reduce manual entry by converting receipt images into editable items and shareable payment splits.
+
+## 2) Tech Stack
+- Framework: Next.js 15 App Router (React)
+- Database: Supabase PostgreSQL
+- Auth: Supabase Auth (email + magic link)
+- Styling: Tailwind CSS + shadcn/ui
+- Key libs: Tesseract.js (OCR), Zod (validation), React Hook Form (forms), dayjs (dates)
+- Deployment: Vercel
+
+## 3) User Roles
+- Authenticated User
+  - Permissions: create receipts, upload images, edit extracted items, create groups, invite friends (by email), assign shares, finalize splits, generate share links (read-only).
+- No anonymous access. All actions require login.
+
+## 4) Data Model
+
+Entities:
+
+1) User
+- id: uuid (primary)
+- email: string (unique, required)
+- display_name: string (nullable, default = user's email local part)
+- avatar_url: string (nullable)
+- created_at: timestamp (default now)
+
+2) Group
+- id: uuid (primary)
+- name: string (required)
+- owner_user_id: uuid (foreign -> User.id)
+- created_at: timestamp (default now)
+- is_private: boolean (default true)
+
+Relationships: User 1—* Group via membership
+
+3) GroupMember
+- id: uuid (primary)
+- group_id: uuid (foreign -> Group.id)
+- user_id: uuid (foreign -> User.id)
+- role: enum('member','admin') (default 'member')
+- created_at: timestamp (default now)
+
+Relationships: Group 1—* GroupMember; User 1—* GroupMember
+
+4) Receipt
+- id: uuid (primary)
+- user_id: uuid (foreign -> User.id) — creator/uploader
+- group_id: uuid (foreign -> Group.id) nullable
+- original_image_url: string (required)
+- merchant: string (nullable)
+- total_amount_cents: integer (nullable)
+- currency: string (3-letter ISO, default 'USD')
+- date: date (nullable)
+- ocr_status: enum('pending','complete','failed') (default 'pending')
+- created_at: timestamp (default now)
+
+Relationships: Receipt 1—* Item; Receipt 1—* Share
+
+5) Item
+- id: uuid (primary)
+- receipt_id: uuid (foreign -> Receipt.id)
+- description: string (required)
+- quantity: integer (default 1)
+- unit_price_cents: integer (required)
+- total_price_cents: integer (computed: quantity * unit_price_cents)
+- tag: string (nullable)
+- position_index: integer (order on receipt; default 0)
+
+Relationships: Receipt 1—* Item
+
+6) Share
+- id: uuid (primary)
+- receipt_id: uuid (foreign -> Receipt.id)
+- item_id: uuid (foreign -> Item.id) nullable — if null, row-level share for receipt-level fee/tax
+- payer_user_id: uuid (foreign -> User.id) — who paid at checkout
+- participant_user_id: uuid (foreign -> User.id) — who owes
+- share_type: enum('percentage','fixed_cents','equal') (required)
+- share_value: integer (if percentage -> 0-100; if fixed_cents -> cents; if equal -> integer count)
+- amount_cents: integer (computed) — final owed cents after calculation and rounding
+- settled: boolean (default false)
+
+Relationships: Receipt 1—* Share; Item 1—* Share (optional)
+
+7) Adjustment
+- id: uuid (primary)
+- receipt_id: uuid (foreign -> Receipt.id)
+- description: string (e.g., 'Tax', 'Tip')
+- amount_cents: integer (can be positive or negative)
+- split_method: enum('by_share','per_person_equal') (default 'by_share')
+
+Notes:
+- All monetary fields stored in integer cents. No floating points.
+- Computed fields are computed on write and stored for audit; recomputed on edits.
+
+## 5) Core Features
+
+Feature A: Upload & OCR Receipt
+- User Flow:
+  1. User clicks "Upload receipt" button on dashboard.
+  2. File chooser appears; user selects image or PDF (single page).
+  3. UI shows image preview and "Run OCR" primary button.
+  4. User clicks "Run OCR".
+  5. App sends image to server; server persists Receipt with ocr_status='pending' and returns receipt id.
+  6. Server processes OCR via Tesseract.js headless worker; extracts merchant, date, total, and line items.
+  7. On success, server sets ocr_status='complete' and returns parsed items; frontend displays editable list.
+  8. On OCR fail, server sets ocr_status='failed' and frontend shows error state with manual entry option.
+
+- UI Copy & Colors:
+  - Upload CTA: "Upload receipt" (button background #0A84FF, text #FFFFFF)
+  - Run OCR CTA: "Run OCR" (button background #0A84FF, text #FFFFFF)
+  - OCR progress: "Scanning receipt…" (text #1F2937)
+  - OCR success headline: "Receipt scanned — edit items" (#111827)
+  - Manual entry CTA: "Manually add item" (button border #0A84FF, text #0A84FF)
+- Error & Empty States:
+  - OCR fail message: "We couldn't read this receipt. Tap 'Manually add item' to enter items yourself." (error text #B00020)
+  - Upload invalid file type: "Unsupported file type. Upload JPG, PNG, or PDF." (error text #B00020)
+- Acceptance Checks:
+  - ✓ Uploading a valid image creates a Receipt with ocr_status pending.
+  - ✓ Successful OCR updates receipt.ocr_status to 'complete' and returns at least merchant or total or items.
+  - ✓ Failed OCR sets ocr_status to 'failed' and shows manual entry CTA.
+
+Feature B: Edit Items & Adjustments
+- User Flow:
+  1. After OCR complete or manual receipt creation, user sees a list: each row shows description, quantity, unit price, total.
+  2. User clicks an item field to edit inline; edits validated on blur.
+  3. User can click "Add item" to append a new row.
+  4. User can add adjustments via "Add adjustment" with description and amount.
+  5. User clicks "Save items" to persist edits.
+
+- UI Copy & Colors:
+  - Headline: "Edit items" (#111827)
+  - Table headers: "Item", "Qty", "Unit price", "Total" (#6B7280)
+  - Add item button: "+ Add item" (text #0A84FF, outline #0A84FF)
+  - Save button: "Save items" (button background #0066CC, text #FFFFFF)
+  - Adjustment label: "Add adjustment" (text #111827)
+- Error & Empty States:
+  - Empty items: "No items found. Add items to split this bill." with "+ Add item" CTA (#6B7280)
+  - Validation: "Quantity must be at least 1." (error #B00020)
+  - Validation: "Unit price must be greater than 0." (error #B00020)
+- Acceptance Checks:
+  - ✓ Adding an item persists one Item record with correct computed total_price_cents.
+  - ✓ Invalid quantity or price shows validation error and blocks save.
+  - ✓ Adjustments persist as Adjustment rows linked to receipt.
+
+Feature C: Create Split & Assign Shares
+- User Flow:
+  1. From receipt page, user clicks "Split with friends".
+  2. Modal opens with two tabs: "By item" and "By person".
+  3. User selects participants by typing friend email (autocomplete from Group members or users) and clicking "Add".
+  4. For "By item": for each item row, user clicks participant checkboxes or selects percentages per participant. For equal split, click "Split equally".
+  5. For "By person": user can add fixed amounts or percentages per person for entire receipt.
+  6. User clicks "Preview split".
+  7. Preview shows each participant's amount in dollars and cents and rounding adjustments.
+  8. User clicks "Finalize split" which creates Share rows with computed amount_cents.
+  9. App marks payer as the uploader by default; user can change payer via dropdown labeled "Who paid?" (options: participant list).
+  10. After finalizing, shareable read-only link button appears: "Copy share link".
+
+- UI Copy & Colors:
+  - CTA: "Split with friends" (button background #0A84FF, text #FFFFFF)
+  - Modal title: "Split receipt" (#111827)
+  - Tab labels: "By item", "By person" (#6B7280)
+  - Participant add placeholder: "Enter email to add" (input border #D1D5DB)
+  - Buttons: "Preview split" (background #FFD60A, text #111827), "Finalize split" (background #0066CC, text #FFFFFF)
+  - Copy link button: "Copy share link" (background #F3F4F6, text #111827)
+- Error & Empty States:
+  - No participants: "Add at least one person to split this receipt." (error #B00020)
+  - Share rounding conflict: "Rounding caused a 1-cent mismatch. Verify participant amounts." (warning #FF8C00)
+- Acceptance Checks:
+  - ✓ Adding participants and choosing split method computes total of all share.amount_cents equal to receipt total + adjustments.
+  - ✓ Preview displays per-participant cents with rounding detail.
+  - ✓ Finalize creates Share rows with correct payer and settled=false.
+
+Feature D: Share & Accept
+- User Flow:
+  1. After finalize, user copies share link and sends to participants.
+  2. Recipient opens link; if not logged in, must log in. After login, they see a read-only page with "Your amount" and an "Accept" button.
+  3. Recipient clicks "Accept" to mark their share as acknowledged; this sets share.accepted = true (additional boolean stored).
+  4. Payer can mark individual shares as "Settled" after confirming payment (button "Mark settled").
+
+- UI Copy & Colors:
+  - Read-only CTA: "Accept" (button background #10B981, text #FFFFFF)
+  - Payer settle CTA: "Mark settled" (button background #0A84FF, text #FFFFFF)
+  - Share page headline: "You owe $X.XX" (#111827)
+- Error & Empty States:
+  - If user opens link for a share that does not exist: "This split link is invalid or expired." (error #B00020)
+  - If user not authorized to view group: "You must be a member to view this split. Request access from the payer." (error #B00020)
+- Acceptance Checks:
+  - ✓ Share link resolves to correct receipt and participant amount for logged-in user.
+  - ✓ Clicking "Accept" sets share.accepted=true and updates UI to "Accepted".
+
+Feature E: Receipt & Share History
+- User Flow:
+  1. Dashboard lists receipts created by user with merchant, date, total, and split status.
+  2. Clicking a receipt opens details with items, adjustments, participants and settled status.
+  3. User filters by "Unsettled" or "All".
+
+- UI Copy & Colors:
+  - Dashboard heading: "Your receipts" (#111827)
+  - Filters: "All", "Unsettled" (button active background #0A84FF, inactive #F3F4F6)
+  - Empty dashboard: "No receipts yet. Upload your first receipt." CTA: "Upload receipt" (#0A84FF)
+- Error & Empty States:
+  - Dashboard load fail: "Couldn't load your receipts. Tap 'Retry' to try again." with "Retry" button (#0A84FF)
+- Acceptance Checks:
+  - ✓ Dashboard lists created receipts sorted by created_at descending.
+  - ✓ Filters change list accordingly without console errors.
+
+## 6) UI/UX
+
+Color palette (use all):
+- Primary blue: #0A84FF — primary buttons, links
+- Accent blue: #0066CC — prominent actions like "Save items" and "Finalize"
+- Success green: #10B981 — accept/positive confirmations
+- Danger red: #B00020 — errors, validation messages
+- Warning amber: #FF8C00 — rounding or non-fatal warnings
+- Neutral dark text: #111827 — primary headings
+- Neutral mid text: #6B7280 — secondary text
+- Background: #F8FAFC — page background
+- Surface: #FFFFFF — cards and modals
+- Muted: #F3F4F6 — inactive controls
+
+Typography:
+- Inter, 16px base, 20px H3, 24px H2, 32px H1. Line-height 1.4. Use 500 weight for headings, 400 for body.
+
+Layout notes:
+- Mobile-first single column; dashboard shows list cards full width.
+- Desktop: receipts list left column 360px, detail pane right column flexible.
+- Modals centered with max-width 720px, background overlay #00000080.
+
+## 7) Out of Scope (V1)
+- Automatic payment collection or wallets (no payment processing).
+- Multi-currency split conversions (all receipts use single currency per receipt; no FX).
+- Shared group permissions beyond member/admin (no role hierarchy changes).
+- Recurring receipts/subscriptions.
+- Mobile native apps; only web app supported.
+- OCR human review queue and paid verification service.
+- Automatic merchant categorization beyond merchant name extraction.
+- Receipt merging/duplicate detection.
+- Bank integrations or direct bill pay links.
+
+## 8) Success Criteria (Testable Checklist)
+- ✓ A logged-in user can upload an image and create a Receipt record with ocr_status 'pending'.
+- ✓ OCR process sets ocr_status to 'complete' and returns editable Item records OR sets 'failed' and shows manual entry CTA.
+- ✓ User can add/edit/delete items and adjustments; totals update and persist with cents accuracy.
+- ✓ User can add participants, preview split with cents-level breakdown, and finalize creating Share rows whose summed amount_cents equals receipt total + adjustments.
+- ✓ Share link opens to authenticated recipient showing correct amount and enabling "Accept" which sets accepted=true.
+- ✓ Dashboard lists receipts and filters without console errors; empty dashboard shows "No receipts yet. Upload your first receipt." with CTA.
+- ✓ All validation errors show specified messages in #B00020 and block invalid saves.
+- ✓ UI uses specified colors for corresponding elements (primary buttons #0A84FF, success #10B981, danger #B00020, background #F8FAFC, text #111827).
+
+TBD: OCR fallback behavior for multi-page PDFs — should the app process only first page or all pages? Please confirm desired behavior.
+                            </pre>
+                        </div>
+                    </div>
+
+                    <!-- NEW CTA SECTION -->
+                    <div class="text-center mt-10">
+                         <h3 class="text-2xl font-bold mb-6 flex items-center justify-center gap-2">
+                            Redo att bygga något riktigt? <i class="ph-fill ph-rocket-launch text-kPurple"></i>
+                        </h3>
+                        <a href="#generate" onclick="window.toggleSpec()" class="inline-flex items-center gap-2 bg-gradient-to-r from-kBlue to-kPurple text-white text-lg font-bold py-4 px-8 rounded-full shadow-button hover:shadow-glow hover:-translate-y-1 transition-all duration-300">
+                            Generera din egen PRD <i class="ph-fill ph-sparkle"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
              <div class="max-w-6xl mx-auto px-6 text-center">
                 <h2 class="text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-3">Enkel, Transparent Prissättning <i class="ph-fill ph-coins text-kPink"></i></h2>
                 <p class="text-kTextMedium dark:text-gray-400 mb-2">Kom igång GRATIS med 50 genereringar. Inget betalkort krävs.</p>
@@ -739,7 +1103,7 @@
                             </li>
                         </ul>
     
-                        <button class="w-full py-4 bg-kTextDark dark:bg-white text-white dark:text-nightBg rounded-2xl font-bold text-lg hover:scale-[1.02] active:scale-95 transition-transform shadow-button flex items-center justify-center gap-2">
+                        <button onclick="if(currentUser) togglePaymentModal(true); else toggleAuthModal(true);" class="w-full py-4 bg-kTextDark dark:bg-white text-white dark:text-nightBg rounded-2xl font-bold text-lg hover:scale-[1.02] active:scale-95 transition-transform shadow-button flex items-center justify-center gap-2">
                             Starta 7-dagars gratis provperiod <i class="ph-fill ph-sparkle"></i>
                         </button>
                         <p class="text-xs text-kTextMedium mt-4">0 kr idag. Inget betalkort krävs.</p>
@@ -865,124 +1229,61 @@
         </footer>
     </div>
 
-    <!-- ======================== APP VIEW (Pro Mode) ======================== -->
-    <div id="app-view" class="hidden h-screen flex flex-col md:flex-row bg-kBg dark:bg-nightBg overflow-hidden transition-opacity duration-500 ease-in-out opacity-0">
-        
-        <!-- Sidebar -->
-        <aside class="w-full md:w-72 bg-white/80 dark:bg-nightSurface/80 border-r border-kBorder dark:border-nightBorder flex flex-col backdrop-blur-md z-20">
-            <!-- Sidebar Header -->
-            <div class="h-20 flex items-center px-6 border-b border-kBorder dark:border-nightBorder">
-                <a href="#" onclick="window.exitApp()" class="flex items-center gap-2 group">
-                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px]">
-                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=d22b3524-f29c-4313-bebb-2863f8c30b91" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-0.5 object-contain">
-                    </div>
-                    <span class="font-bold text-lg dark:text-white transition-colors">Gen<span class="text-kBlue">PRD</span> <span class="text-xs bg-kPurple text-white px-1.5 py-0.5 rounded-md ml-1 align-top">PRO</span></span>
-                </a>
-            </div>
-
-            <!-- New Chat Button -->
-            <div class="p-4 pb-2">
-                <button onclick="window.newChat()" class="w-full flex items-center justify-center gap-2 bg-kBlue hover:bg-kPurple text-white font-bold py-3 rounded-xl shadow-button transition-all hover:scale-[1.02]">
-                    <i class="ph-bold ph-plus"></i> Ny PRD
-                </button>
-            </div>
-
-            <!-- History Search -->
-            <div class="px-4 pb-2">
-                <div class="relative group">
-                    <i class="ph-bold ph-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-kTextMedium/50 group-focus-within:text-kBlue transition-colors"></i>
-                    <input type="text" id="history-search" placeholder="Sök historik..." class="w-full pl-9 pr-3 py-2 bg-kBg dark:bg-nightBg border border-kBorder dark:border-nightBorder rounded-lg text-sm text-kTextDark dark:text-white placeholder-kTextMedium/50 focus:outline-none focus:border-kBlue focus:ring-1 focus:ring-kBlue/50 transition-all">
-                </div>
-            </div>
-
-            <!-- History List -->
-            <div class="flex-grow overflow-y-auto px-4 pb-4 space-y-1" id="history-list">
-                <p class="px-2 py-2 text-xs font-bold text-kTextMedium dark:text-gray-500 uppercase tracking-wider sticky top-0 bg-white/80 dark:bg-nightSurface/80 backdrop-blur-md z-10">Tidigare</p>
-                <div id="history-content" class="space-y-1">
-                     <p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic">Laddar historik...</p>
-                </div>
-            </div>
-
-            <!-- Sidebar Footer (User) -->
-            <div class="p-4 border-t border-kBorder dark:border-nightBorder">
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px]">
-                            <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple overflow-hidden">
-                                <i class="ph-fill ph-user text-xl" id="user-avatar-icon"></i>
-                            </div>
-                        </div>
-                        <div class="overflow-hidden">
-                            <p id="user-email-display" class="text-sm font-bold text-kTextDark dark:text-white truncate max-w-[120px]">Guest</p>
-                            <p class="text-xs text-kMint font-medium" id="credits-display">50 genereringar kvar</p>
-                        </div>
-                    </div>
-                    <button onclick="handleLogout()" class="p-2 text-kTextMedium hover:text-kTextDark dark:hover:text-white transition-colors" title="Logga ut">
-                        <i class="ph-bold ph-sign-out text-xl"></i>
-                    </button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main Content (Chat) -->
-        <main class="flex-grow flex flex-col h-full relative z-10">
-            <!-- App Header (Mobile Only / Context) -->
-            <div class="h-16 md:h-20 flex items-center justify-between px-6 border-b border-kBorder dark:border-nightBorder bg-white/50 dark:bg-nightBg/50 backdrop-blur-sm">
-                <h2 class="text-xl font-bold dark:text-white flex items-center gap-2">
-                    <i class="ph-fill ph-sparkle text-kPurple"></i> Generera PRD
-                </h2>
-                <!-- Theme Toggle (App) -->
-                <button id="app-theme-toggle" class="p-2 rounded-full hover:bg-kBorder/50 text-kTextMedium dark:text-white transition-colors">
-                    <i class="ph-fill ph-moon text-xl"></i>
-                </button>
-            </div>
-
-            <!-- Chat Area -->
-            <div id="chat-container" class="flex-grow overflow-y-auto p-6 space-y-6 scroll-smooth">
-                <!-- Welcome Message -->
-                <div class="flex gap-4 max-w-3xl mx-auto">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
-                        <!-- Waving Fox -->
-                        <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/FoxPRDvinkar.svg?alt=media&token=f98a5d70-29ea-4303-b002-3bc4fade6599" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
-                    </div>
-                    <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder">
-                        <p class="text-kTextDark dark:text-gray-200 leading-relaxed">
-                            Hej! Jag är GenPRD. 👋 <br><br>
-                            Berätta vad du vill bygga så skapar jag en detaljerad, teknisk specifikation (PRD) redo för implementering.
-                        </p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Input Area -->
-            <div class="p-6 pb-8 bg-gradient-to-t from-kBg to-transparent dark:from-nightBg">
-                <div class="max-w-3xl mx-auto relative group">
-                    <div class="absolute -inset-0.5 bg-gradient-to-r from-kBlue to-kPurple rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-500"></div>
-                    <div class="relative bg-white dark:bg-nightSurface rounded-2xl shadow-lg border border-kBorder dark:border-nightBorder flex items-end p-2">
-                        <textarea 
-                            id="app-input" 
-                            rows="1" 
-                            class="w-full max-h-40 p-3 bg-transparent border-0 focus:ring-0 resize-none text-kTextDark dark:text-white placeholder-kTextMedium/50" 
-                            placeholder="Beskriv din app..."
-                            oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'"
-                        ></textarea>
-                        <button onclick="window.sendMessage()" class="p-3 bg-kBlue hover:bg-kPurple text-white rounded-xl transition-colors shadow-button mb-0.5 mr-0.5 flex-shrink-0">
-                            <i class="ph-bold ph-paper-plane-right"></i>
-                        </button>
-                    </div>
-                    <p class="text-center text-xs text-kTextMedium/50 mt-2">GenPRD Pro v1.0.2</p>
-                </div>
-            </div>
-        </main>
-    </div>
-
     <!-- JS Logic -->
     <script>
         const SUPABASE_URL = 'https://hqkoeyclixjyyewqmjam.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_7owY_2HUh201ZAdgPK1ohw_4Q9xyd8x';
 
+        // --- STRIPE INIT ---
+        const stripe = Stripe('pk_live_51Rez3XRtJYK3aJTqlI0XurAMwKr2KdiYjNCG9DGvMgDKKuCodflefm74P7CtK4brbTbFQTSbmoWbA57B5quMPIK500e88MdzEQ');
+
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- UI HELPERS FOR MODALS ---
+            window.toggleAuthModal = function(show) {
+                const modal = document.getElementById('auth-modal');
+                const content = document.getElementById('auth-modal-content');
+                if (show) { modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); content.classList.remove('scale-95'); content.classList.add('scale-100'); }); } 
+                else { modal.classList.add('opacity-0'); content.classList.remove('scale-100'); content.classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); }, 300); }
+            };
+
+            window.togglePaymentModal = function(show) {
+                const modal = document.getElementById('payment-modal');
+                if (show) { modal.classList.remove('hidden'); requestAnimationFrame(() => { modal.classList.remove('opacity-0'); modal.children[0].classList.remove('scale-95'); modal.children[0].classList.add('scale-100'); }); }
+                else { modal.classList.add('opacity-0'); modal.children[0].classList.remove('scale-100'); modal.children[0].classList.add('scale-95'); setTimeout(() => { modal.classList.add('hidden'); }, 300); }
+            };
+
+            // --- STRIPE UPGRADE LOGIC ---
+            window.handleUpgrade = async function(priceId) {
+                // Ensure logged in
+                if (!currentUser) {
+                    togglePaymentModal(false);
+                    toggleAuthModal(true);
+                    return;
+                }
+
+                const { error } = await stripe.redirectToCheckout({
+                    lineItems: [{ price: priceId, quantity: 1 }],
+                    mode: 'subscription',
+                    successUrl: 'https://nordsym.github.io/genPRD/?success=true',
+                    cancelUrl: 'https://nordsym.github.io/genPRD/?canceled=true',
+                    customerEmail: currentUser.email
+                });
+
+                if (error) {
+                    console.error('Stripe error:', error);
+                    alert('Något gick fel vid omdirigering till betalning.');
+                }
+            };
+
+            // Check for success URL param
+            const urlParams = new URLSearchParams(window.location.search);
+            if (urlParams.get('success') === 'true') {
+                alert("Betalning genomförd! 🚀\n\nDina credits uppdateras inom kort. Välkommen till PRO!");
+                // Clean URL
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+
             // --- PRICING LOGIC ---
             const monthlyBtn = document.getElementById('monthly-btn');
             const yearlyBtn = document.getElementById('yearly-btn');
@@ -1128,15 +1429,29 @@
             function updateCreditsDisplay() {
                 const display = document.getElementById('credits-display');
                 if (display && currentUser) {
+                    // Hantera PRO (Unlimited)
+                    if (userCredits.status === 'pro' || userCredits.status === 'active') {
+                        display.textContent = '∞ genereringar (PRO)';
+                        display.classList.remove('text-red-400', 'text-kMint');
+                        display.classList.add('text-kPurple');
+                        return;
+                    }
+
                     const remaining = userCredits.limit - userCredits.used;
                     display.textContent = `${remaining} genereringar kvar`;
                     
                     if (remaining === 0) {
-                        display.classList.remove('text-kMint');
+                        display.classList.remove('text-kMint', 'text-orange-400');
                         display.classList.add('text-red-400');
+                        // Optional: Disable input text
+                        if (appInput) appInput.placeholder = "Slut på credits. Uppgradera för att fortsätta.";
+                    } else if (remaining < 10) {
+                        display.textContent += ' (Snart slut!)';
+                        display.classList.remove('text-kMint');
+                        display.classList.add('text-orange-400');
                     } else {
                         display.classList.add('text-kMint');
-                        display.classList.remove('text-red-400');
+                        display.classList.remove('text-red-400', 'text-orange-400');
                     }
                 }
             }
@@ -1391,28 +1706,6 @@
 
             // --- UI HELPERS ---
 
-            window.toggleAuthModal = function(show) {
-                const modal = document.getElementById('auth-modal');
-                const content = document.getElementById('auth-modal-content');
-                
-                if (show) {
-                    modal.classList.remove('hidden');
-                    // Small delay to allow transition
-                    requestAnimationFrame(() => {
-                        modal.classList.remove('opacity-0');
-                        content.classList.remove('scale-95');
-                        content.classList.add('scale-100');
-                    });
-                } else {
-                    modal.classList.add('opacity-0');
-                    content.classList.remove('scale-100');
-                    content.classList.add('scale-95');
-                    setTimeout(() => {
-                        modal.classList.add('hidden');
-                    }, 300);
-                }
-            };
-
             window.switchAuthMode = function(mode) {
                 const loginView = document.getElementById('login-view');
                 const signupView = document.getElementById('signup-view');
@@ -1423,6 +1716,29 @@
                 } else {
                     signupView.classList.add('hidden');
                     loginView.classList.remove('hidden');
+                }
+            };
+
+            // --- Spec Expander Logic ---
+            window.toggleSpec = function() {
+                const el = document.getElementById('spec-content');
+                if (el.classList.contains('hidden')) {
+                    el.classList.remove('hidden');
+                    // Force reflow for transition
+                    void el.offsetWidth;
+                    el.classList.remove('max-h-0', 'opacity-0');
+                    el.classList.add('max-h-[5000px]', 'opacity-100'); // Increased max-height for large content
+                    
+                    setTimeout(() => {
+                        el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 100);
+                } else {
+                    el.classList.add('max-h-0', 'opacity-0');
+                    el.classList.remove('max-h-[5000px]', 'opacity-100');
+                    
+                    setTimeout(() => {
+                        el.classList.add('hidden');
+                    }, 700);
                 }
             };
 
@@ -1445,10 +1761,13 @@
                     btnWithout.classList.remove('active-good');
                     btnWith.classList.remove('active-good', 'active-bad');
                     
-                    visualWithout.style.opacity = '1'; visualWithout.style.zIndex = '10';
-                    visualWith.style.opacity = '0'; visualWith.style.zIndex = '0';
-                    contentWithout.style.opacity = '1'; contentWithout.style.transform = 'translateX(0)'; contentWithout.style.zIndex = '10';
-                    contentWith.style.opacity = '0'; contentWith.style.transform = 'translateX(8px)'; contentWith.style.zIndex = '0';
+                    // Update visuals
+                    visualWithout.style.opacity = '1'; visualWithout.style.zIndex = '10'; visualWithout.style.pointerEvents = 'auto';
+                    visualWith.style.opacity = '0'; visualWith.style.zIndex = '0'; visualWith.style.pointerEvents = 'none';
+                    
+                    // Update content
+                    contentWithout.style.opacity = '1'; contentWithout.style.transform = 'translateX(0)'; contentWithout.style.zIndex = '10'; contentWithout.style.pointerEvents = 'auto';
+                    contentWith.style.opacity = '0'; contentWith.style.transform = 'translateX(8px)'; contentWith.style.zIndex = '0'; contentWith.style.pointerEvents = 'none';
                     
                 } else if (state === 'with') {
                     indicator.style.left = '148px';
@@ -1458,10 +1777,13 @@
                     btnWith.classList.remove('active-bad');
                     btnWithout.classList.remove('active-good', 'active-bad');
                     
-                    visualWith.style.opacity = '1'; visualWith.style.zIndex = '10';
-                    visualWithout.style.opacity = '0'; visualWithout.style.zIndex = '0';
-                    contentWith.style.opacity = '1'; contentWith.style.transform = 'translateX(0)'; contentWith.style.zIndex = '10';
-                    contentWithout.style.opacity = '0'; contentWithout.style.transform = 'translateX(-8px)'; contentWithout.style.zIndex = '0';
+                    // Update visuals
+                    visualWith.style.opacity = '1'; visualWith.style.zIndex = '10'; visualWith.style.pointerEvents = 'auto';
+                    visualWithout.style.opacity = '0'; visualWithout.style.zIndex = '0'; visualWithout.style.pointerEvents = 'none';
+                    
+                    // Update content - ÄNDRAT: Nu aktiveras pointerEvents så knappen går att klicka på!
+                    contentWith.style.opacity = '1'; contentWith.style.transform = 'translateX(0)'; contentWith.style.zIndex = '10'; contentWith.style.pointerEvents = 'auto';
+                    contentWithout.style.opacity = '0'; contentWithout.style.transform = 'translateX(-8px)'; contentWithout.style.zIndex = '0'; contentWithout.style.pointerEvents = 'none';
                 }
             };
 
@@ -1619,6 +1941,8 @@
                         </p>
                     </div>
                 </div>`;
+                // Reset placeholder
+                if(appInput) appInput.placeholder = "Beskriv din app...";
             };
 
             window.sendMessage = async function() {
@@ -1627,8 +1951,10 @@
                 
                 // CHECK CREDITS
                 if (currentUser) {
-                    if (userCredits.used >= userCredits.limit) {
-                        alert(`Du har använt ${userCredits.used}/${userCredits.limit} genereringar. Uppgradera till PRO för 200/månad!`);
+                    const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
+                    if (!isPro && userCredits.used >= userCredits.limit) {
+                        // ÄNDRAT: Öppna betalningsmodal istället för alert
+                        togglePaymentModal(true);
                         return;
                     }
                 }
@@ -1666,45 +1992,60 @@
                 setTimeout(async () => {
                     const loadingEl = document.getElementById(loadingId); if (loadingEl) loadingEl.remove();
 
+                    // Generate Dynamic Content (Markdown)
                     const productName = (text.split(' ')[0].length > 2 ? text.split(' ')[0] : 'App') + 'Spec';
-                    const prdContent = `# Product Requirements Document (PRD): ${productName}\n\n## 1. Executive Summary\n**Product:** ${productName}\n**Goal:** ${text}\n\n## 2. Core Features\n- **User Auth:** Secure login/signup via Supabase.\n- **Main Flow:** Optimized for high conversion.\n- **Admin Panel:** Data visualization and user management.\n\n## 3. Tech Stack\n- Frontend: React + Tailwind CSS\n- Backend: Supabase (PostgreSQL)\n- Deployment: Vercel\n\n*Generated by GenPRD*`;
+                    const prdMarkdown = `# Product Requirements Document (PRD): ${productName}\n\n## 1. Executive Summary\n**Product:** ${productName}\n**Goal:** ${text}\n\n## 2. Core Features\n- **User Auth:** Secure login/signup via Supabase.\n- **Main Flow:** Optimized for high conversion.\n- **Admin Panel:** Data visualization and user management.\n\n## 3. Tech Stack\n- Frontend: React + Tailwind CSS\n- Backend: Supabase (PostgreSQL)\n- Deployment: Vercel\n\n*Generated by GenPRD*`;
                     
+                    // Render Markdown to HTML using Marked.js
+                    const htmlContent = marked.parse(prdMarkdown);
+
                     // --- SAVE TO SUPABASE ---
-                    await saveToDb(productName, text, prdContent);
+                    await saveToDb(productName, text, prdMarkdown);
                     // ------------------------
 
-                    // INCREMENT CREDITS
+                    // INCREMENT CREDITS (Unless PRO)
                     if (currentUser) {
-                        userCredits.used += 1;
-                        await supabase
-                            .from('user_credits')
-                            .upsert({ 
-                                user_id: currentUser.id, 
-                                credits_used: userCredits.used 
-                            });
-                        updateCreditsDisplay();
+                        const isPro = userCredits.status === 'pro' || userCredits.status === 'active';
+                        if (!isPro) {
+                            userCredits.used += 1;
+                            await supabase
+                                .from('user_credits')
+                                .upsert({ 
+                                    user_id: currentUser.id, 
+                                    credits_used: userCredits.used 
+                                });
+                            updateCreditsDisplay();
+                        }
                     }
 
-                    const encodedContent = encodeURIComponent(prdContent);
+                    // ÄNDRAT: Uppdatera placeholder för iteration
+                    if(appInput) appInput.placeholder = "Vill du förfina något? T.ex. 'Lägg till OAuth login'";
+
+                    const encodedContent = encodeURIComponent(prdMarkdown);
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
                     aiMsg.innerHTML = `
                         <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
                             <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/foxPRDinhand.svg?alt=media&token=3665cc00-1523-4614-9a21-fece3f034020" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
                         </div>
-                        <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full">
-                            <p class="text-kTextDark dark:text-gray-200 leading-relaxed font-bold mb-2">PRD Genererad! 🚀</p>
-                            <p class="text-kTextMedium dark:text-gray-400 mb-4">Sparad i historiken. Här är ett utkast:</p>
-                            <div class="bg-kBg dark:bg-nightBg p-4 rounded-xl border border-kBorder dark:border-nightBorder font-mono text-sm overflow-x-auto max-h-60 overflow-y-auto mb-4">
-                                <span class="text-kBlue"># Executive Summary</span><br><strong>Product:</strong> ${productName}<br><strong>Goal:</strong> ${text.substring(0, 60)}...
+                        <div class="bg-white dark:bg-nightSurface p-6 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full overflow-hidden">
+                            <div class="flex justify-between items-center mb-4 border-b border-kBorder dark:border-nightBorder pb-3">
+                                <div>
+                                    <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">PRD Genererad! 🚀</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
+                                        <i class="ph-bold ph-file-pdf"></i>
+                                    </button>
+                                    <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
+                                        <i class="ph-bold ph-copy"></i>
+                                    </button>
+                                </div>
                             </div>
-                            <div class="flex gap-2">
-                                <button onclick="window.downloadMarkdown('${encodedContent}', '${productName}')" class="px-4 py-2 bg-kBlue/10 text-kBlue hover:bg-kBlue hover:text-white rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
-                                    <i class="ph-bold ph-download-simple"></i> Ladda ner .md
-                                </button>
-                                <button onclick="window.copyToClipboard('${encodedContent}', this)" class="px-4 py-2 bg-kBorder/50 text-kTextMedium hover:bg-kBorder hover:text-kTextDark rounded-lg transition-colors text-sm font-bold flex items-center gap-2">
-                                    <i class="ph-bold ph-copy"></i> Kopiera
-                                </button>
+                            
+                            <!-- Rendered Markdown Content -->
+                            <div class="prose dark:prose-invert max-w-none text-sm text-kTextDark dark:text-gray-300 prd-content font-sans leading-relaxed">
+                                ${htmlContent}
                             </div>
                         </div>
                     `;
@@ -1713,7 +2054,9 @@
             };
 
             // Enter on textarea
-            appInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendMessage(); }});
+            if (appInput) {
+                appInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendMessage(); }});
+            }
 
             // --- Theme Logic ---
             const themeToggleBtn = document.getElementById('theme-toggle');
