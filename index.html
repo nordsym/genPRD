@@ -1917,20 +1917,30 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 const upgradeBtn = document.getElementById('upgrade-btn'); // Hämta knappen
 
                 if (display && currentUser) {
-                    // Reset classes
+                    // Reset classes for display
                     display.className = 'hidden md:inline-block text-xs font-bold px-3 py-1 rounded-full border';
                     display.onclick = null; // Clear previous handlers
 
-                    // Hantera Upgrade Button Visibility
+                    // Hantera Upgrade Button Visibility & Style
                     if (upgradeBtn) {
+                        // Rensa tidigare styles först för att undvika klass-krockar
+                        upgradeBtn.className = "hidden text-xs font-bold px-4 py-2 rounded-full shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all";
+                        
                         if (userCredits.status === 'pro') {
-                            upgradeBtn.classList.add('hidden');
-                        } else {
+                            // PRO-LÄGE: Visa "Hantera"-knapp (Grå/Neutral)
                             upgradeBtn.classList.remove('hidden');
-                            // Om trial gått ut, gör knappen röd/uppmärksamhetssökande (optional)
+                            upgradeBtn.textContent = 'Hantera Plan ⚙️';
+                            upgradeBtn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-kTextDark', 'dark:text-white', 'border', 'border-kBorder', 'dark:border-nightBorder');
+                        } else {
+                            // GRATIS/EXPIRED: Visa "Uppgradera"-knapp (Färgglad)
+                            upgradeBtn.classList.remove('hidden');
+                            upgradeBtn.innerHTML = 'Uppgradera 🚀';
+                            upgradeBtn.classList.add('text-white');
+                            
                             if (userCredits.status === 'expired') {
-                                upgradeBtn.classList.remove('from-kBlue', 'to-kPurple');
-                                upgradeBtn.classList.add('from-red-500', 'to-red-600', 'animate-pulse');
+                                upgradeBtn.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-600', 'animate-pulse');
+                            } else {
+                                upgradeBtn.classList.add('bg-gradient-to-r', 'from-kBlue', 'to-kPurple');
                             }
                         }
                     }
