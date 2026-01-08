@@ -620,8 +620,9 @@
                     <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
                         <i class="ph-fill ph-heart-straight text-[#FF4F00]"></i> Lovable
                     </div>
+                    <!-- ÄNDRAT: Bytte ut ph-cursor-click mot SVG-loggan -->
                     <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
-                        <i class="ph-fill ph-cursor-click text-black dark:text-white"></i> Cursor
+                        <img src="https://raw.githubusercontent.com/nordsym/genPRD/refs/heads/main/cursor.svg" alt="Cursor Logo" class="w-4 h-4 object-contain"> Cursor
                     </div>
                     <div class="px-6 py-3 bg-white dark:bg-nightSurface rounded-full shadow-soft font-bold text-kTextDark dark:text-white flex items-center gap-2 border border-kBorder dark:border-nightBorder hover:scale-105 transition-transform cursor-default">
                         <i class="ph-fill ph-code text-[#D97757]"></i> Claude Code
@@ -2092,7 +2093,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         type: 'signup',
                         email: email,
                         options: {
-                            emailRedirectTo: 'https://nordsym.github.io/genPRD/'
+                            emailRedirectTo: 'https://genprd.se/'
                         }
                     });
                     
@@ -2124,7 +2125,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 
                 try {
                     const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                        redirectTo: 'https://nordsym.github.io/genPRD/?reset=true'
+                        redirectTo: 'https://genprd.se/?reset=true'
                     });
                     
                     if (error) throw error;
@@ -2151,7 +2152,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                         email, 
                         password,
                         options: {
-                            emailRedirectTo: 'https://nordsym.github.io/genPRD/'
+                            emailRedirectTo: 'https://genprd.se/'
                         }
                     });
                     
