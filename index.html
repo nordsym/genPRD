@@ -547,7 +547,7 @@
              <div class="max-w-6xl mx-auto px-6">
                 <div class="text-center mb-16">
                     <span class="inline-flex items-center gap-2 py-1 px-3 rounded-full bg-kBlue/10 text-kBlue text-sm font-bold uppercase tracking-wider mb-4">Varför GenPRD? <i class="ph-fill ph-star"></i></span>
-                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Ship-ready specs på sekunder</h2>
+                    <h2 class="text-3xl md:text-4xl font-bold mb-4">Byggklara PRDs på sekunder</h2>
                     <p class="text-kTextMedium dark:text-gray-400 max-w-2xl mx-auto">Inget PM-fluff. Bara vad du (och din AI) behöver för att bygga direkt.</p>
                 </div>
 
@@ -2261,6 +2261,16 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             };
 
+            // ÄNDRAT: Helper för att säkra strängar i HTML-attribut
+            function safeEscape(str) {
+                if (!str) return '';
+                return str
+                    .replace(/\\/g, '\\\\') // Escape backslashes first
+                    .replace(/\n/g, '\\n')  // Escape newlines
+                    .replace(/'/g, "\\'")   // Escape single quotes
+                    .replace(/"/g, '&quot;');// Escape double quotes
+            }
+
             // ÄNDRAT: Återställde den saknade saveToDb-funktionen
             async function saveToDb(title, prompt, content) {
                 if (!currentUser) return; 
@@ -2327,9 +2337,12 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     chatContainer.appendChild(userMsg);
 
                     // 2. AI Message (Content)
-                    const encodedContent = encodeURIComponent(data.content);
-                    // ÄNDRAT: Escape prompt för att kunna användas i JS-anrop
-                    const escapedPrompt = data.prompt.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                    // ÄNDRAT: Säkrare encoding för Copy-funktionen (hanterar ' korrekt)
+                    const encodedContent = encodeURIComponent(data.content).replace(/'/g, "%27");
+                    
+                    // ÄNDRAT: Använder safeEscape för prompten så regenerera-knappen inte kraschar
+                    const escapedPrompt = safeEscape(data.prompt);
+                    
                     const htmlContent = marked.parse(data.content); 
 
                     const aiMsg = document.createElement('div');
@@ -2365,6 +2378,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     chatContainer.appendChild(aiMsg);
 
                 } catch (err) {
+                    console.error(err);
                     chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Kunde inte ladda PRD.</p>';
                 }
             };
@@ -2757,9 +2771,11 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                     if(appInput) appInput.placeholder = "Vill du förfina något? T.ex. 'Lägg till OAuth login'";
 
-                    const encodedContent = encodeURIComponent(prdMarkdown);
-                    // ÄNDRAT: Escape prompt här också för regenerate-knappen i den nya chat-bubblan
-                    const escapedPrompt = text.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, '\\n');
+                    // ÄNDRAT: Säkrare encoding för Copy
+                    const encodedContent = encodeURIComponent(prdMarkdown).replace(/'/g, "%27");
+                    
+                    // ÄNDRAT: Säkrare escape för prompten för regenerate
+                    const escapedPrompt = safeEscape(text);
 
                     const aiMsg = document.createElement('div');
                     aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
@@ -2774,7 +2790,7 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                                 </div>
                                 <div class="flex gap-2">
                                     <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
-                                        <i class="ph-bold ph-arrows-clockwise"></i>
+                                        <i class="ph-bold ph-pencil-simple-slash"></i>
                                     </button>
                                     <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
                                         <i class="ph-bold ph-file-pdf"></i>
