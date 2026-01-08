@@ -2226,7 +2226,6 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                 let html = '';
                 prds.forEach(prd => {
-                    // ÄNDRAT: Lade till rename-knapp
                     html += `
                         <div class="group relative flex items-center w-full p-2 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors">
                             <button onclick="loadPrdFromDb('${prd.id}')" class="flex-grow text-left overflow-hidden mr-2">
@@ -2241,58 +2240,24 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 });
                 historyContent.innerHTML = html;
             }
-            
-            // --- HISTORY SEARCH ---
-            const historySearchInput = document.getElementById('history-search');
-            if (historySearchInput) {
-                historySearchInput.addEventListener('input', (e) => {
-                    const query = e.target.value.toLowerCase().trim();
-                    if (!query) {
-                        renderHistoryList(userPRDs);
-                        return;
-                    }
-                    const filtered = userPRDs.filter(prd => 
-                        (prd.title || '').toLowerCase().includes(query)
-                    );
-                    renderHistoryList(filtered);
-                });
-            }
 
-            async function saveToDb(title, prompt, content) {
-                if (!currentUser) return; 
-
-                try {
-                    const { error } = await supabase.from('prds').insert({
-                        user_id: currentUser.id,
-                        title: title,
-                        prompt: prompt,
-                        content: content,
-                        created_at: new Date().toISOString()
-                    });
-
-                    if (error) throw error;
-                    
-                    // Refresh history
-                    const { data } = await supabase
-                        .from('prds')
-                        .select('id, title, created_at')
-                        .order('created_at', { ascending: false });
-                    if (data) {
-                        userPRDs = data; 
-                        renderHistoryList(data);
-                    }
-
-                } catch (err) {
-                    console.error("Failed to save PRD:", err);
-                }
-            }
-
-            // ÄNDRAT: Ny funktion för Regenerate
+            // ÄNDRAT: Förbättrad Regenerate-funktion
             window.regeneratePrd = function(promptText) {
-                // Decode om det behövs, men här skickar vi råsträngen
                 if(appInput) {
-                    appInput.value = promptText; // Sätt input till ursprungliga prompten
-                    window.sendMessage(); // Kör
+                    // Avkoda texten för redigering
+                    const decodedText = promptText.replace(/\\'/g, "'").replace(/&quot;/g, '"').replace(/\\n/g, '\n');
+                    
+                    appInput.value = decodedText; 
+                    
+                    // Anpassa höjden direkt
+                    appInput.style.height = 'auto';
+                    appInput.style.height = appInput.scrollHeight + 'px';
+                    
+                    // Fokusera så användaren kan skriva direkt
+                    appInput.focus();
+                    
+                    // VIKTIGT: Vi skickar INTE automatiskt (window.sendMessage). 
+                    // Nu kan användaren ändra prompten (t.ex. "En kvitto-scanner... med Swish") och sen klicka skicka.
                 }
             };
 
@@ -2349,9 +2314,9 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                                     <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">Sparad PRD 📂</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <!-- ÄNDRAT: Regenerera-knapp tillagd -->
-                                    <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
-                                        <i class="ph-bold ph-arrows-clockwise"></i>
+                                    <!-- ÄNDRAT: Bytte ikon och titel för att indikera "Redigera/Iterera" -->
+                                    <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Iterera på denna prompt">
+                                        <i class="ph-bold ph-pencil-simple-slash"></i>
                                     </button>
                                     <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
                                         <i class="ph-bold ph-file-pdf"></i>
@@ -2734,7 +2699,13 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                     // Process Data
                     // N8N returnerar { prd_content: "..." }
                     const prdMarkdown = data.prd_content || "Kunde inte generera innehåll. Försök igen."; 
-                    const productName = (text.split(' ')[0].length > 2 ? text.split(' ')[0] : 'App') + 'Spec';
+                    
+                    // ÄNDRAT: Bättre logik för att skapa titel (första 4-5 orden)
+                    let titleWords = text.split(' ');
+                    if (titleWords.length > 5) {
+                        titleWords = titleWords.slice(0, 5);
+                    }
+                    const productName = titleWords.join(' ').replace(/[^\w\såäöÅÄÖ]/g, '') + '...';
                     
                     const htmlContent = marked.parse(prdMarkdown);
 
