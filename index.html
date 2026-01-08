@@ -1512,20 +1512,31 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             window.toggleAuthModal = function(show) {
                 const modal = document.getElementById('auth-modal');
                 const content = document.getElementById('auth-modal-content');
-                if (!modal || !content) return; // Safety check
+                if (!modal || !content) {
+                    console.error("Auth modal elements not found");
+                    return; 
+                }
 
                 if (show) { 
+                    // 1. Ta bort hidden direkt så den finns i DOMen
                     modal.classList.remove('hidden'); 
-                    requestAnimationFrame(() => { 
+                    
+                    // 2. Vänta en mikrosekund så webbläsaren fattar att den är synlig
+                    setTimeout(() => {
                         modal.classList.remove('opacity-0'); 
                         content.classList.remove('scale-95'); 
                         content.classList.add('scale-100'); 
-                    }); 
+                    }, 10); // Liten delay för att trigga CSS-transition korrekt
                 } else { 
+                    // Stängningsanimation
                     modal.classList.add('opacity-0'); 
                     content.classList.remove('scale-100'); 
                     content.classList.add('scale-95'); 
-                    setTimeout(() => { modal.classList.add('hidden'); }, 300); 
+                    
+                    // Vänta tills animationen är klar innan vi gömmer den helt
+                    setTimeout(() => { 
+                        modal.classList.add('hidden'); 
+                    }, 300); 
                 }
             };
 
@@ -1548,11 +1559,11 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
                 if (show) { 
                     modal.classList.remove('hidden'); 
-                    requestAnimationFrame(() => { 
+                    setTimeout(() => { 
                         modal.classList.remove('opacity-0'); 
                         modalContent.classList.remove('scale-95'); 
                         modalContent.classList.add('scale-100'); 
-                    }); 
+                    }, 10);
                 } else { 
                     modal.classList.add('opacity-0'); 
                     modalContent.classList.remove('scale-100'); 
