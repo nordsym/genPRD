@@ -2261,6 +2261,36 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 }
             };
 
+            // ÄNDRAT: Återställde den saknade saveToDb-funktionen
+            async function saveToDb(title, prompt, content) {
+                if (!currentUser) return; 
+
+                try {
+                    const { error } = await supabase.from('prds').insert({
+                        user_id: currentUser.id,
+                        title: title,
+                        prompt: prompt,
+                        content: content,
+                        created_at: new Date().toISOString()
+                    });
+
+                    if (error) throw error;
+                    
+                    // Refresh history
+                    const { data } = await supabase
+                        .from('prds')
+                        .select('id, title, created_at')
+                        .order('created_at', { ascending: false });
+                    if (data) {
+                        userPRDs = data; 
+                        renderHistoryList(data);
+                    }
+
+                } catch (err) {
+                    console.error("Failed to save PRD:", err);
+                }
+            }
+
             window.loadPrdFromDb = async (id) => {
                 const chatContainer = document.getElementById('chat-container');
                 if(!chatContainer) return;
