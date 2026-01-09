@@ -2258,12 +2258,9 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                                     <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">Sparad PRD 📂</p>
                                 </div>
                                 <div class="flex gap-2">
-                                    <!-- ÄNDRAT: Bytte ikon och titel för att indikera "Redigera/Iterera" -->
+                                    <!-- ÄNDRAT: Tog bort PDF-knappen -->
                                     <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Iterera på denna prompt">
                                         <i class="ph-bold ph-pencil-simple-slash"></i>
-                                    </button>
-                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
-                                        <i class="ph-bold ph-file-pdf"></i>
                                     </button>
                                     <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
                                         <i class="ph-bold ph-copy"></i>
@@ -2515,14 +2512,13 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                                     <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Iterera på denna prompt">
                                         <i class="ph-bold ph-pencil-simple-slash"></i>
                                     </button>
-                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
-                                        <i class="ph-bold ph-file-pdf"></i>
-                                    </button>
+                                    <!-- ÄNDRAT: PDF-knappen helt borttagen härifrån -->
                                     <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
                                         <i class="ph-bold ph-copy"></i>
                                     </button>
                                 </div>
                             </div>
+                            
                             <div class="prose dark:prose-invert max-w-none text-sm text-kTextDark dark:text-gray-300 prd-content font-sans leading-relaxed">
                                 ${htmlContent}
                             </div>
@@ -2785,9 +2781,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                                     <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
                                         <i class="ph-bold ph-pencil-simple-slash"></i>
                                     </button>
-                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
-                                        <i class="ph-bold ph-file-pdf"></i>
-                                    </button>
+                                    <!-- ÄNDRAT: PDF-knappen helt borttagen härifrån också -->
                                     <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
                                         <i class="ph-bold ph-copy"></i>
                                     </button>
