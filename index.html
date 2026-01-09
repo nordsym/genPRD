@@ -2793,6 +2793,69 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
             if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => toggleMenu(false));
             if (menuLinks.length > 0) menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
 
+            // --- Typewriter Effect (Ny & Bättre) ---
+            const inputField = document.getElementById('prd-input');
+            const placeholderTexts = [
+                "Bygg en marknadsplats för vintagekläder med chatt och betalning...",
+                "En AI-driven CRM för fastighetsmäklare med automatiska mail...",
+                "Skapa en utbildningsplattform med quiz och certifikat...",
+                "Ett verktyg för att spåra kryptovalutor med realtids-larm...",
+                "En app för bokning av tvättstuga med kalender och notiser..."
+            ];
+            
+            let textIndex = 0;
+            let charIndex = 0;
+            let isDeleting = false;
+            let typeSpeed = 50;
+            let typewriterTimeout;
+            let typewriterActive = true;
+            
+            function typeWriter() {
+                if (!inputField || !typewriterActive) return;
+                const currentText = placeholderTexts[textIndex];
+                
+                if (isDeleting) {
+                    inputField.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
+                    charIndex--; 
+                    typeSpeed = 30; // Snabbare radering
+                } else {
+                    inputField.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
+                    charIndex++; 
+                    typeSpeed = 50 + Math.random() * 50; // Lite slumpmässig "mänsklig" skrivtakt
+                }
+
+                if (!isDeleting && charIndex === currentText.length) { 
+                    isDeleting = true; 
+                    typeSpeed = 2000; // Vänta 2 sekunder innan radering börjar
+                } else if (isDeleting && charIndex === 0) { 
+                    isDeleting = false; 
+                    textIndex = (textIndex + 1) % placeholderTexts.length; 
+                    typeSpeed = 500; // Vänta lite innan nästa text börjar skrivas
+                }
+                
+                typewriterTimeout = setTimeout(typeWriter, typeSpeed);
+            }
+            
+            // Starta om fältet finns
+            if (inputField) {
+                typeWriter();
+                
+                // Stoppa animationen när användaren klickar i fältet
+                inputField.addEventListener('focus', () => {
+                    typewriterActive = false;
+                    clearTimeout(typewriterTimeout);
+                    inputField.placeholder = "Beskriv vad du vill bygga...";
+                });
+
+                // Starta igen om användaren lämnar fältet tomt
+                inputField.addEventListener('blur', () => {
+                    if (!inputField.value) {
+                        typewriterActive = true;
+                        typeWriter();
+                    }
+                });
+            }
+
             // --- MOCK DATA (Fallback) ---
             const mockChatHistory = {
                 'chat-1': [
