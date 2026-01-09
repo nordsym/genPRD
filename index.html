@@ -296,26 +296,35 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="nextOnboardStep(3)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">Nästa →</button>
+                <button onclick="nextOnboardStep(3)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl">Nästa →</button>
             </div>
 
-            <!-- Step 3: Tips (ÄNDRAD) -->
+            <!-- Step 3: Tips (ÄNDRAD för att betona enkelhet) -->
             <div id="onboard-step-3" class="hidden">
-                <h3 class="text-2xl font-bold mb-4 dark:text-white flex items-center gap-2">Tips för bästa resultat 💡</h3>
-                <p class="text-kTextMedium mb-6 dark:text-gray-400">För att få en PRD som genererar perfekt kod direkt:</p>
+                <h3 class="text-2xl font-bold mb-4 dark:text-white flex items-center gap-2">Krångla inte till det ✨</h3>
+                <p class="text-kTextMedium mb-6 dark:text-gray-400">GenPRD är smart nog att fylla i luckorna åt dig.</p>
                 
                 <div class="space-y-4 mb-8">
-                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
-                        <p class="font-bold text-kTextDark dark:text-white mb-1">🎯 Var specifik med mål</p>
-                        <p class="text-sm text-kTextMedium">Istället för "en app", skriv "ett internt verktyg för lagerhantering".</p>
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
+                        <div class="text-2xl">✨</div>
+                        <div>
+                            <p class="font-bold text-kTextDark dark:text-white mb-1">En mening räcker</p>
+                            <p class="text-sm text-kTextMedium">Skriv bara "En app för hundägare". Vi fixar databas, funktioner och design.</p>
+                        </div>
                     </div>
-                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
-                        <p class="font-bold text-kTextDark dark:text-white mb-1">👤 Nämn målgruppen</p>
-                        <p class="text-sm text-kTextMedium">Vem ska använda appen? (Admin, kunder, säljare?)</p>
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
+                        <div class="text-2xl">🧠</div>
+                        <div>
+                            <p class="font-bold text-kTextDark dark:text-white mb-1">Vi sköter tekniken</p>
+                            <p class="text-sm text-kTextMedium">Osäker på tech stack? Vi väljer det bästa för ditt projekt (ofta Supabase + React).</p>
+                        </div>
                     </div>
-                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
-                        <p class="font-bold text-kTextDark dark:text-white mb-1">🛠️ Preferenser</p>
-                        <p class="text-sm text-kTextMedium">Vill du använda Supabase? Tailwind? React? Nämn det!</p>
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
+                        <div class="text-2xl">💬</div>
+                        <div>
+                            <p class="font-bold text-kTextDark dark:text-white mb-1">Prata naturligt</p>
+                            <p class="text-sm text-kTextMedium">Börja enkelt. Sen kan du be GenPRD justera detaljerna i chatten efteråt.</p>
+                        </div>
                     </div>
                 </div>
 
@@ -2075,7 +2084,11 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     window.showToast('Inloggad! Välkommen tillbaka.', 'success');
                     window.enterApp(); 
                 } catch (error) {
-                    console.error("Catch block error:", error);
+                    // ÄNDRAT: Logga inte "expected" errors som console.error för att undvika skrämsel i konsolen
+                    if (!error.message.includes('Invalid login credentials') && !error.message.includes('Email not confirmed')) {
+                        console.error("Login Error:", error);
+                    }
+                    
                     let msg = "";
                     if (error.message.includes('Email not confirmed')) {
                         msg = '⚠️ Email ej bekräftad.<br><br>Du måste klicka på länken i mailet vi skickade innan du kan logga in.<br><br><button onclick="window.resendConfirmation()" class="underline font-bold hover:text-red-800">Skicka nytt mail</button>';
