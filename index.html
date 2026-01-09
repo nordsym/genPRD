@@ -1700,6 +1700,23 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 }
             };
 
+            // --- APP SIDEBAR LOGIC (RESTORED) ---
+            window.toggleAppSidebar = function(show) {
+                const sidebar = document.getElementById('app-sidebar');
+                const overlay = document.getElementById('app-sidebar-overlay');
+                if (!sidebar || !overlay) return;
+
+                if (show) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('opacity-0');
+                    setTimeout(() => overlay.classList.add('hidden'), 300);
+                }
+            };
+
             // --- STRIPE UPGRADE LOGIC ---
             window.handleUpgrade = async function(priceId) {
                 if (!currentUser) {
@@ -2517,13 +2534,14 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                                 <div class="text-xs text-kTextMedium dark:text-gray-500 mt-0.5">${new Date(prd.created_at).toLocaleDateString()}</div>
                             </button>
                             
-                            <!-- Hover Tooltip -->
-                            <div class="absolute left-full ml-2 top-0 hidden group-hover:block bg-white dark:bg-nightSurface border border-kBorder dark:border-nightBorder rounded-xl shadow-glow p-4 w-64 z-50 pointer-events-none">
+                            <!-- Hover Tooltip (Desktop Only - hidden on mobile to prevent layout bugs) -->
+                            <div class="absolute left-full ml-2 top-0 hidden md:group-hover:block bg-white dark:bg-nightSurface border border-kBorder dark:border-nightBorder rounded-xl shadow-glow p-4 w-64 z-50 pointer-events-none">
                                 <p class="text-xs text-kTextMedium dark:text-gray-400 line-clamp-3">${(prd.content || '').substring(0, 150)}...</p>
                                 <span class="text-[10px] text-kTextMedium/50 mt-2 block">Klicka för att öppna</span>
                             </div>
 
-                            <button onclick="renamePrd(event, '${prd.id}', '${prd.title || ''}')" class="p-1.5 text-kTextMedium hover:text-kBlue opacity-0 group-hover:opacity-100 transition-opacity" title="Byt namn">
+                            <!-- Rename Button (Always visible on mobile, hover on desktop) -->
+                            <button onclick="renamePrd(event, '${prd.id}', '${prd.title || ''}')" class="p-1.5 text-kTextMedium hover:text-kBlue opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity" title="Byt namn">
                                 <i class="ph-bold ph-pencil-simple"></i>
                             </button>
                         </div>
@@ -2583,6 +2601,11 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
             window.loadPrdFromDb = async (id) => {
                 const chatContainer = document.getElementById('chat-container');
                 if(!chatContainer) return;
+
+                // NYTT: Stäng mobil-menyn automatiskt vid val
+                if (window.innerWidth < 768) {
+                    window.toggleAppSidebar(false);
+                }
 
                 chatContainer.innerHTML = '<div class="flex items-center justify-center h-full"><i class="ph-bold ph-spinner animate-spin text-3xl text-kBlue"></i></div>';
                 
