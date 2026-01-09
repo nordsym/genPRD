@@ -303,13 +303,15 @@
                 <ul class="list-disc pl-5 space-y-1">
                     <li><strong>Konto-information:</strong> Din e-postadress och inloggningsuppgifter (hanteras säkert via Supabase).</li>
                     <li><strong>Användargenererat innehåll:</strong> De prompts du skriver och de PRDs som genereras.</li>
+                    <!-- ÄNDRAT: specifikationer -> PRDs -->
                     <li><strong>Användningsdata:</strong> Information om hur du använder tjänsten, t.ex. antal genereringar (för kvothantering).</li>
                 </ul>
 
                 <h4 class="font-bold text-base text-kTextDark dark:text-white mt-4">2. Hur vi använder din data</h4>
                 <p>Vi använder din data uteslutande för att:</p>
                 <ul class="list-disc pl-5 space-y-1">
-                    <li>Leverera tjänsten (skapa och spara dina specifikationer).</li>
+                    <!-- ÄNDRAT: specifikationer -> PRDs -->
+                    <li>Leverera tjänsten (skapa och spara dina PRDs).</li>
                     <li>Hantera ditt konto och dina betalningar.</li>
                     <li>Förbättra tjänstens prestanda och säkerhet.</li>
                 </ul>
@@ -347,15 +349,18 @@
                 <p class="font-medium">Välkommen till GenPRD. Genom att använda vår tjänst godkänner du följande villkor.</p>
 
                 <h4 class="font-bold text-base text-kTextDark dark:text-white mt-4">1. Tjänstens syfte</h4>
-                <p>GenPRD är ett AI-baserat verktyg som hjälper användare att skapa tekniska specifikationer (Product Requirements Documents). Tjänsten tillhandahålls "i befintligt skick".</p>
+                <!-- ÄNDRAT: specifikationer -> PRDs -->
+                <p>GenPRD är ett AI-baserat verktyg som hjälper användare att skapa tekniska PRDs (Product Requirements Documents). Tjänsten tillhandahålls "i befintligt skick".</p>
 
                 <h4 class="font-bold text-base text-kTextDark dark:text-white mt-4">2. AI-ansvarsfriskrivning</h4>
                 <div class="bg-kBlue/5 border border-kBlue/20 p-3 rounded-lg text-kTextDark dark:text-white">
-                    <strong>Viktigt:</strong> Du förstår och accepterar att innehåll som genereras av AI (Artificiell Intelligens) kan innehålla felaktigheter, hallucinationer eller logiska luckor. Du är ensamt ansvarig för att granska, verifiera och godkänna alla specifikationer innan du använder dem för utveckling eller affärsbeslut. NordSym AB tar inget ansvar för kodfel eller projektförseningar som uppstår baserat på genererat material.
+                    <!-- ÄNDRAT: specifikationer -> PRDs -->
+                    <strong>Viktigt:</strong> Du förstår och accepterar att innehåll som genereras av AI (Artificiell Intelligens) kan innehålla felaktigheter, hallucinationer eller logiska luckor. Du är ensamt ansvarig för att granska, verifiera och godkänna alla PRDs innan du använder dem för utveckling eller affärsbeslut. NordSym AB tar inget ansvar för kodfel eller projektförseningar som uppstår baserat på genererat material.
                 </div>
 
                 <h4 class="font-bold text-base text-kTextDark dark:text-white mt-4">3. Immateriella rättigheter</h4>
-                <p><strong>Dina specifikationer:</strong> Du äger fulla rättigheter till de texter och dokument du genererar med tjänsten.</p>
+                <!-- ÄNDRAT: specifikationer -> PRDs -->
+                <p><strong>Dina PRDs:</strong> Du äger fulla rättigheter till de texter och dokument du genererar med tjänsten.</p>
                 <p><strong>Vår tjänst:</strong> GenPRD:s kod, design och varumärke tillhör NordSym AB.</p>
 
                 <h4 class="font-bold text-base text-kTextDark dark:text-white mt-4">4. Betalning och Prenumeration</h4>
@@ -517,7 +522,7 @@
                     <span class="gradient-text flex items-center justify-center gap-3">på sekunder <i class="ph-fill ph-shooting-star text-kPurple"></i></span>
                 </h1>
                 <p class="text-xl text-kTextMedium dark:text-gray-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Skriv din produktidé. Få en fokuserad spec som AI-agenter <span class="font-bold text-kTextDark dark:text-white bg-kPink/20 px-2 rounded-md">FAKTISKT</span> kan använda för att bygga din app.
+                    Skriv din produktidé. Få en fokuserad PRD som AI-agenter <span class="font-bold text-kTextDark dark:text-white bg-kPink/20 px-2 rounded-md">FAKTISKT</span> kan använda för att bygga din app.
                 </p>
 
                 <!-- Input Card -->
@@ -649,7 +654,8 @@
                         </div>
                         <h3 class="text-xl font-bold mb-3">Inga tidslinjer, inget fluff</h3>
                         <p class="text-kTextMedium dark:text-gray-400 leading-relaxed">
-                            Skippa "Fas 1"-tramset. AI bygger på timmar, så vi fokuserar på det som spelar roll: exakta specifikationer.
+                            <!-- ÄNDRAT: specifikationer -> PRDs -->
+                            Skippa "Fas 1"-tramset. AI bygger på timmar, så vi fokuserar på det som spelar roll: exakta PRDs.
                         </p>
                     </div>
     
@@ -691,7 +697,8 @@
                 <!-- The Prompt -->
                 <div class="max-w-2xl mx-auto bg-white dark:bg-nightSurface border-2 border-kBlue/20 dark:border-kBlue/10 rounded-2xl p-6 text-center mb-12 shadow-lg relative">
                     <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-kBlue text-white text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wide">Prompten</div>
-                    <p class="text-xl font-medium">"En kvitto-scanner som delar räkningar med vänner"</p>
+                    <!-- ÄNDRAT: Ny prompttext -->
+                    <p class="text-xl font-medium">"Bygg ett projektledningsverktyg för små team"</p>
                 </div>
     
                 <!-- Apple-Style Toggle -->
@@ -791,13 +798,13 @@
                                 </div>
                                 <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
                                     <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                    <!-- Uppdaterad punkt 3 -->
-                                    <span>Hårdkodad testdata istället för OCR</span>
+                                    <!-- ÄNDRAT: Från "Hårdkodad testdata..." till relevant copy -->
+                                    <span>Enkel lista utan projektstruktur</span>
                                 </div>
                                 <div class="flex items-center gap-3 text-gray-500 dark:text-gray-400">
                                     <i class="ph-bold ph-x text-red-400 text-lg"></i>
-                                    <!-- Uppdaterad punkt 4 -->
-                                    <span>Ingen historik eller sparade kvitton</span>
+                                    <!-- ÄNDRAT: Från "Ingen historik..." till relevant copy -->
+                                    <span>Inget stöd för team-samarbete</span>
                                 </div>
                             </div>
                         </div>
@@ -839,8 +846,9 @@
                             </div>
 
                             <div class="mt-auto">
+                                <!-- ÄNDRAT: GenPRD-specen -> PRDn -->
                                 <button onclick="window.toggleSpec()" class="text-xs font-bold text-kBlue hover:text-white hover:bg-kBlue transition-colors flex items-center justify-center gap-2 w-full py-3 px-2 bg-kBlue/10 rounded-xl h-auto min-h-[44px] whitespace-normal text-center">
-                                    Se GenPRD-specen som gjorde detta möjligt <i class="ph-bold ph-arrow-down flex-shrink-0"></i>
+                                    Se PRDn som gjorde detta möjligt <i class="ph-bold ph-arrow-down flex-shrink-0"></i>
                                 </button>
                             </div>
                         </div>
@@ -861,8 +869,9 @@
                             <div class="absolute -top-3 left-6 bg-gradient-to-r from-kBlue to-kPurple text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider shadow-sm">
                                 <i class="ph-bold ph-lightbulb"></i> Input: Din Idé
                             </div>
+                            <!-- ÄNDRAT: Ny prompttext -->
                             <p class="text-xl font-medium text-kTextDark dark:text-white leading-relaxed">
-                                "En kvitto-scanner som delar räkningar med vänner"
+                                "Bygg ett projektledningsverktyg för små team"
                             </p>
                         </div>
                         
@@ -889,268 +898,136 @@
                                 <div class="w-3 h-3 rounded-full bg-[#ffbd2e] border border-black/10"></div>
                                 <div class="w-3 h-3 rounded-full bg-[#27c93f] border border-black/10"></div>
                             </div>
+                            <!-- ÄNDRAT: Nytt filnamn -->
                             <div class="text-xs text-kTextMedium dark:text-gray-500 font-medium font-sans flex items-center gap-2">
-                                <i class="ph-fill ph-file-text text-kBlue"></i> ReceiptSplit_PRD.md
+                                <i class="ph-fill ph-file-text text-kBlue"></i> ProjectPulse_PRD.md
                             </div>
                             <div class="w-10"></div>
                         </div>
                         
                         <!-- Content -->
                         <div class="p-8 h-[600px] overflow-y-auto custom-scrollbar bg-white dark:bg-[#1e1e1e] transition-colors duration-500">
+                            <!-- ÄNDRAT: Ny PRD-text (Engelska) -->
                             <pre class="whitespace-pre-wrap font-mono text-xs md:text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-ReceiptSplit — Product Requirements Document
+ProjectPulse — Product Requirements Document
 
-## 1) Summary
-ReceiptSplit is a web app for authenticated users to scan or upload receipts, automatically extract line items, and split costs among friends with precise shares. It targets friend groups, roommates, or colleagues who need an audited, editable split from photographed receipts. Core value: reduce manual entry by converting receipt images into editable items and shareable payment splits.
+## Section 0: Agent Brief
+Build a project management tool that becomes the heartbeat of small teams. Teams of 3-10 need to seamlessly coordinate, share updates, and track progress without getting bogged down in meetings or emails. Your mission: create an intuitive, real-time platform where tasks are effortlessly managed, progress is visible, and collaboration is second nature. Priority: fluid real-time collaboration > intuitive task management > sleek, minimal design.
 
-## 2) Tech Stack
-- Framework: Next.js 15 App Router (React)
-- Database: Supabase PostgreSQL
-- Auth: Supabase Auth (email + magic link)
-- Styling: Tailwind CSS + shadcn/ui
-- Key libs: Tesseract.js (OCR), Zod (validation), React Hook Form (forms), dayjs (dates)
-- Deployment: Vercel
+## Section 1: Overview
+**What:** A real-time project management tool tailored for small teams.
+**Who:** Small teams, especially in startups and small businesses.
+**Why:** To facilitate seamless coordination and ensure everyone is on the same page without constant meetings.
+**How:** By enabling users to create projects, add tasks, assign team members, and track progress through a real-time, collaborative interface.
+**Success:** A team of 6 can launch a new marketing campaign by creating a project, assigning tasks, and tracking each task's progress in real time, culminating in a successful launch with every team member aware of the project status at every step.
 
-## 3) User Roles
-- Authenticated User
-  - Permissions: create receipts, upload images, edit extracted items, create groups, invite friends (by email), assign shares, finalize splits, generate share links (read-only).
-- No anonymous access. All actions require login.
+## Section 2: Core Features
 
-## 4) Data Model
+### Feature: Project Creation and Management
+**What user does:**
+- Creates new projects with titles and descriptions.
+- Adds tasks to projects, including titles, descriptions, due dates, and assignees.
+- Views a dashboard of all projects and their status.
 
-Entities:
+**What user sees:**
+- A "Create New Project" button.
+- Form fields for project title and description.
+- A dashboard or list view of all projects, showing titles, status, and a summary of tasks.
 
-1) User
-- id: uuid (primary)
-- email: string (unique, required)
-- display_name: string (nullable, default = user's email local part)
-- avatar_url: string (nullable)
-- created_at: timestamp (default now)
+**Must work:**
+- Easy navigation between project creation and project dashboard.
+- Projects must be editable by the project creator or assigned administrators.
 
-2) Group
-- id: uuid (primary)
-- name: string (required)
-- owner_user_id: uuid (foreign -> User.id)
-- created_at: timestamp (default now)
-- is_private: boolean (default true)
+**Edge cases:**
+- Empty: "No projects found. Start by creating a new one!"
+- Loading: Spinner or skeleton screens during data fetch.
+- Error: "Failed to load projects. Try again?" with a retry button.
 
-Relationships: User 1—* Group via membership
+### Feature: Task Management within Projects
+**What user does:**
+- Adds tasks with details: title, description, due date, and assignee.
+- Updates task status (e.g., To Do, In Progress, Completed).
+- Comments on tasks for updates or questions.
 
-3) GroupMember
-- id: uuid (primary)
-- group_id: uuid (foreign -> Group.id)
-- user_id: uuid (foreign -> User.id)
-- role: enum('member','admin') (default 'member')
-- created_at: timestamp (default now)
+**What user sees:**
+- A task creation interface within each project.
+- A kanban board or list view for managing task statuses.
+- A comment section within each task for team discussions.
 
-Relationships: Group 1—* GroupMember; User 1—* GroupMember
+**Must work:**
+- Real-time updates without needing to refresh the page.
+- Notifications for task updates or comments.
 
-4) Receipt
-- id: uuid (primary)
-- user_id: uuid (foreign -> User.id) — creator/uploader
-- group_id: uuid (foreign -> Group.id) nullable
-- original_image_url: string (required)
-- merchant: string (nullable)
-- total_amount_cents: integer (nullable)
-- currency: string (3-letter ISO, default 'USD')
-- date: date (nullable)
-- ocr_status: enum('pending','complete','failed') (default 'pending')
-- created_at: timestamp (default now)
+**Edge cases:**
+- Empty tasks: "No tasks yet. Add a new task to get started."
+- Error in task operation: "Couldn't update the task. Please try again."
 
-Relationships: Receipt 1—* Item; Receipt 1—* Share
+### Feature: Team Collaboration and Notifications
+**What user does:**
+- Views who is currently working on what tasks in real-time.
+- Receives notifications for new tasks, task completions, and comments.
 
-5) Item
-- id: uuid (primary)
-- receipt_id: uuid (foreign -> Receipt.id)
-- description: string (required)
-- quantity: integer (default 1)
-- unit_price_cents: integer (required)
-- total_price_cents: integer (computed: quantity * unit_price_cents)
-- tag: string (nullable)
-- position_index: integer (order on receipt; default 0)
+**What user sees:**
+- Real-time presence indicators showing who's online.
+- A notification center aggregating all updates related to the user.
 
-Relationships: Receipt 1—* Item
+**Must work:**
+- Instant notification on any task updates or comments directed at the user.
+- An accurate, real-time view of team members' activity.
 
-6) Share
-- id: uuid (primary)
-- receipt_id: uuid (foreign -> Receipt.id)
-- item_id: uuid (foreign -> Item.id) nullable — if null, row-level share for receipt-level fee/tax
-- payer_user_id: uuid (foreign -> User.id) — who paid at checkout
-- participant_user_id: uuid (foreign -> User.id) — who owes
-- share_type: enum('percentage','fixed_cents','equal') (required)
-- share_value: integer (if percentage -> 0-100; if fixed_cents -> cents; if equal -> integer count)
-- amount_cents: integer (computed) — final owed cents after calculation and rounding
-- settled: boolean (default false)
+**Edge cases:**
+- No notifications: "All caught up! No new updates."
+- Connection issues: "Having trouble connecting. Check your network."
 
-Relationships: Receipt 1—* Share; Item 1—* Share (optional)
+## Section 3: Data & State
 
-7) Adjustment
-- id: uuid (primary)
-- receipt_id: uuid (foreign -> Receipt.id)
-- description: string (e.g., 'Tax', 'Tip')
-- amount_cents: integer (can be positive or negative)
-- split_method: enum('by_share','per_person_equal') (default 'by_share')
+**Projects:**
+- Represents: Collections of tasks under a common goal.
+- Fields: id, title, description, created_by (user_id), created_at, updated_at.
+- Relationships: One-to-many with Tasks.
+- Rules: Only project members can view or edit.
 
-Notes:
-- All monetary fields stored in integer cents. No floating points.
-- Computed fields are computed on write and stored for audit; recomputed on edits.
+**Tasks:**
+- Represents: Individual actionable items within a project.
+- Fields: id, project_id, title, description, assignee_id, status, due_date, created_at, updated_at, comments (array of comment ids).
+- Relationships: Many-to-one with Projects, one-to-many with Comments.
+- Rules: Assignee can be changed only by project members.
 
-## 5) Core Features
+**Users:**
+- Represents: Team members with access to the tool.
+- Fields: id, name, email, team_id, online_status, last_active_at.
+- Relationships: Many-to-many with Projects (through tasks).
+- Rules: Must be part of a team to participate in projects.
 
-Feature A: Upload & OCR Receipt
-- User Flow:
-  1. User clicks "Upload receipt" button on dashboard.
-  2. File chooser appears; user selects image or PDF (single page).
-  3. UI shows image preview and "Run OCR" primary button.
-  4. User clicks "Run OCR".
-  5. App sends image to server; server persists Receipt with ocr_status='pending' and returns receipt id.
-  6. Server processes OCR via Tesseract.js headless worker; extracts merchant, date, total, and line items.
-  7. On success, server sets ocr_status='complete' and returns parsed items; frontend displays editable list.
-  8. On OCR fail, server sets ocr_status='failed' and frontend shows error state with manual entry option.
+**Comments:**
+- Represents: Discussions or updates related to tasks.
+- Fields: id, task_id, author_id, content, created_at.
+- Relationships: Many-to-one with Tasks.
+- Rules: Visible to all project members.
 
-- UI Copy & Colors:
-  - Upload CTA: "Upload receipt" (button background #0A84FF, text #FFFFFF)
-  - Run OCR CTA: "Run OCR" (button background #0A84FF, text #FFFFFF)
-  - OCR progress: "Scanning receipt…" (text #1F2937)
-  - OCR success headline: "Receipt scanned — edit items" (#111827)
-  - Manual entry CTA: "Manually add item" (button border #0A84FF, text #0A84FF)
-- Error & Empty States:
-  - OCR fail message: "We couldn't read this receipt. Tap 'Manually add item' to enter items yourself." (error text #B00020)
-  - Upload invalid file type: "Unsupported file type. Upload JPG, PNG, or PDF." (error text #B00020)
-- Acceptance Checks:
-  - ✓ Uploading a valid image creates a Receipt with ocr_status pending.
-  - ✓ Successful OCR updates receipt.ocr_status to 'complete' and returns at least merchant or total or items.
-  - ✓ Failed OCR sets ocr_status to 'failed' and shows manual entry CTA.
+## Section 4: Technical Approach
+Real-time collaboration is crucial for keeping team members aligned. Opt for a technology stack that supports WebSocket for instant data updates across clients. Consider using a service like Pusher or a real-time database like Firebase to simplify development.
+For conflict resolution, employ a last-write-wins strategy for most fields but consider a more nuanced approach for critical fields like due dates and assignees, possibly prompting users when their actions might overwrite recent changes.
 
-Feature B: Edit Items & Adjustments
-- User Flow:
-  1. After OCR complete or manual receipt creation, user sees a list: each row shows description, quantity, unit price, total.
-  2. User clicks an item field to edit inline; edits validated on blur.
-  3. User can click "Add item" to append a new row.
-  4. User can add adjustments via "Add adjustment" with description and amount.
-  5. User clicks "Save items" to persist edits.
+## Section 5: Visual Design
+- **Style:** Clean and minimalistic, geared towards enhancing focus and reducing visual clutter.
+- **Colors:** Use a calm and neutral color palette with color-coded task statuses for quick identification.
+- **Layout:** Desktop-first approach with a responsive design for tablet and mobile use. Prioritize ease of navigation between different projects and tasks.
+- **Real-time indicators:** Use subtle animations for indicating live updates and presence of team members.
 
-- UI Copy & Colors:
-  - Headline: "Edit items" (#111827)
-  - Table headers: "Item", "Qty", "Unit price", "Total" (#6B7280)
-  - Add item button: "+ Add item" (text #0A84FF, outline #0A84FF)
-  - Save button: "Save items" (button background #0066CC, text #FFFFFF)
-  - Adjustment label: "Add adjustment" (text #111827)
-- Error & Empty States:
-  - Empty items: "No items found. Add items to split this bill." with "+ Add item" CTA (#6B7280)
-  - Validation: "Quantity must be at least 1." (error #B00020)
-  - Validation: "Unit price must be greater than 0." (error #B00020)
-- Acceptance Checks:
-  - ✓ Adding an item persists one Item record with correct computed total_price_cents.
-  - ✓ Invalid quantity or price shows validation error and blocks save.
-  - ✓ Adjustments persist as Adjustment rows linked to receipt.
-
-Feature C: Create Split & Assign Shares
-- User Flow:
-  1. From receipt page, user clicks "Split with friends".
-  2. Modal opens with two tabs: "By item" and "By person".
-  3. User selects participants by typing friend email (autocomplete from Group members or users) and clicking "Add".
-  4. For "By item": for each item row, user clicks participant checkboxes or selects percentages per participant. For equal split, click "Split equally".
-  5. For "By person": user can add fixed amounts or percentages per person for entire receipt.
-  6. User clicks "Preview split".
-  7. Preview shows each participant's amount in dollars and cents and rounding adjustments.
-  8. User clicks "Finalize split" which creates Share rows with computed amount_cents.
-  9. App marks payer as the uploader by default; user can change payer via dropdown labeled "Who paid?" (options: participant list).
-  10. After finalizing, shareable read-only link button appears: "Copy share link".
-
-- UI Copy & Colors:
-  - CTA: "Split with friends" (button background #0A84FF, text #FFFFFF)
-  - Modal title: "Split receipt" (#111827)
-  - Tab labels: "By item", "By person" (#6B7280)
-  - Participant add placeholder: "Enter email to add" (input border #D1D5DB)
-  - Buttons: "Preview split" (background #FFD60A, text #111827), "Finalize split" (background #0066CC, text #FFFFFF)
-  - Copy link button: "Copy share link" (background #F3F4F6, text #111827)
-- Error & Empty States:
-  - No participants: "Add at least one person to split this receipt." (error #B00020)
-  - Share rounding conflict: "Rounding caused a 1-cent mismatch. Verify participant amounts." (warning #FF8C00)
-- Acceptance Checks:
-  - ✓ Adding participants and choosing split method computes total of all share.amount_cents equal to receipt total + adjustments.
-  - ✓ Preview displays per-participant cents with rounding detail.
-  - ✓ Finalize creates Share rows with correct payer and settled=false.
-
-Feature D: Share & Accept
-- User Flow:
-  1. After finalize, user copies share link and sends to participants.
-  2. Recipient opens link; if not logged in, must log in. After login, they see a read-only page with "Your amount" and an "Accept" button.
-  3. Recipient clicks "Accept" to mark their share as acknowledged; this sets share.accepted = true (additional boolean stored).
-  4. Payer can mark individual shares as "Settled" after confirming payment (button "Mark settled").
-
-- UI Copy & Colors:
-  - Read-only CTA: "Accept" (button background #10B981, text #FFFFFF)
-  - Payer settle CTA: "Mark settled" (button background #0A84FF, text #FFFFFF)
-  - Share page headline: "You owe $X.XX" (#111827)
-- Error & Empty States:
-  - If user opens link for a share that does not exist: "This split link is invalid or expired." (error #B00020)
-  - If user not authorized to view group: "You must be a member to view this split. Request access from the payer." (error #B00020)
-- Acceptance Checks:
-  - ✓ Share link resolves to correct receipt and participant amount for logged-in user.
-  - ✓ Clicking "Accept" sets share.accepted=true and updates UI to "Accepted".
-
-Feature E: Receipt & Share History
-- User Flow:
-  1. Dashboard lists receipts created by user with merchant, date, total, and split status.
-  2. Clicking a receipt opens details with items, adjustments, participants and settled status.
-  3. User filters by "Unsettled" or "All".
-
-- UI Copy & Colors:
-  - Dashboard heading: "Your receipts" (#111827)
-  - Filters: "All", "Unsettled" (button active background #0A84FF, inactive #F3F4F6)
-  - Empty dashboard: "No receipts yet. Upload your first receipt." CTA: "Upload receipt" (#0A84FF)
-- Error & Empty States:
-  - Dashboard load fail: "Couldn't load your receipts. Tap 'Retry' to try again." with "Retry" button (#0A84FF)
-- Acceptance Checks:
-  - ✓ Dashboard lists created receipts sorted by created_at descending.
-  - ✓ Filters change list accordingly without console errors.
-
-## 6) UI/UX
-
-Color palette (use all):
-- Primary blue: #0A84FF — primary buttons, links
-- Accent blue: #0066CC — prominent actions like "Save items" and "Finalize"
-- Success green: #10B981 — accept/positive confirmations
-- Danger red: #B00020 — errors, validation messages
-- Warning amber: #FF8C00 — rounding or non-fatal warnings
-- Neutral dark text: #111827 — primary headings
-- Neutral mid text: #6B7280 — secondary text
-- Background: #F8FAFC — page background
-- Surface: #FFFFFF — cards and modals
-- Muted: #F3F4F6 — inactive controls
-
-Typography:
-- Inter, 16px base, 20px H3, 24px H2, 32px H1. Line-height 1.4. Use 500 weight for headings, 400 for body.
-
-Layout notes:
-- Mobile-first single column; dashboard shows list cards full width.
-- Desktop: receipts list left column 360px, detail pane right column flexible.
-- Modals centered with max-width 720px, background overlay #00000080.
-
-## 7) Out of Scope (V1)
-- Automatic payment collection or wallets (no payment processing).
-- Multi-currency split conversions (all receipts use single currency per receipt; no FX).
-- Shared group permissions beyond member/admin (no role hierarchy changes).
-- Recurring receipts/subscriptions.
-- Mobile native apps; only web app supported.
-- OCR human review queue and paid verification service.
-- Automatic merchant categorization beyond merchant name extraction.
-- Receipt merging/duplicate detection.
-- Bank integrations or direct bill pay links.
-
-## 8) Success Criteria (Testable Checklist)
-- ✓ A logged-in user can upload an image and create a Receipt record with ocr_status 'pending'.
-- ✓ OCR process sets ocr_status to 'complete' and returns editable Item records OR sets 'failed' and shows manual entry CTA.
-- ✓ User can add/edit/delete items and adjustments; totals update and persist with cents accuracy.
-- ✓ User can add participants, preview split with cents-level breakdown, and finalize creating Share rows whose summed amount_cents equals receipt total + adjustments.
-- ✓ Share link opens to authenticated recipient showing correct amount and enabling "Accept" which sets accepted=true.
-- ✓ Dashboard lists receipts and filters without console errors; empty dashboard shows "No receipts yet. Upload your first receipt." with CTA.
-- ✓ All validation errors show specified messages in #B00020 and block invalid saves.
-- ✓ UI uses specified colors for corresponding elements (primary buttons #0A84FF, success #10B981, danger #B00020, background #F8FAFC, text #111827).
-
-TBD: OCR fallback behavior for multi-page PDFs — should the app process only first page or all pages? Please confirm desired behavior.
+## Section 6: Success Checklist
+- ✓ Projects can be created, edited, and viewed seamlessly.
+- ✓ Tasks within projects support detailed management and real-time status updates.
+- ✓ Collaboration features like comments and presence indicators work in real time without manual refresh.
+- ✓ Notifications keep team members informed of relevant activity.
+- ✓ Mobile-responsive design maintains functionality across devices.
+- ✓ Performance: Real-time interactions are smooth with sub-2-second updates.
+- ✓ Access controls ensure users can only see and edit projects they are part of.
+- ✓ Error handling gracefully manages loading, empty, and error states.
+- ✓ Data integrity is maintained, with clear conflict resolution steps where necessary.
+- ✓ The user interface is intuitive, reducing the need for training or extensive documentation.
+- ✓ Users can effectively collaborate on multiple projects without losing track of tasks.
+- ✓ Teams report increased coordination and reduced need for status meetings after adopting the tool.
                             </pre>
                         </div>
                     </div>
@@ -1391,7 +1268,12 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
         
         <!-- App Header -->
         <header class="w-full bg-white/80 dark:bg-nightSurface/80 backdrop-blur-md border-b border-kBorder dark:border-nightBorder z-50 h-16 flex-shrink-0 flex items-center justify-between px-4 md:px-6">
-            <div class="flex items-center gap-4">
+            <div class="flex items-center gap-3 md:gap-4">
+                <!-- NYTT: Hamburgermeny för mobil historik -->
+                <button onclick="toggleAppSidebar(true)" class="md:hidden w-10 h-10 rounded-full bg-kBg dark:bg-nightBg hover:bg-kBorder transition-colors flex items-center justify-center text-kTextDark dark:text-white shadow-sm border border-kBorder dark:border-nightBorder">
+                    <i class="ph-bold ph-list text-xl"></i>
+                </button>
+
                 <button onclick="window.exitApp()" class="w-10 h-10 rounded-full bg-kBg dark:bg-nightBg hover:bg-kBorder transition-colors flex items-center justify-center text-kTextDark dark:text-white shadow-sm border border-kBorder dark:border-nightBorder" title="Tillbaka till start">
                     <i class="ph-bold ph-arrow-left text-xl"></i>
                 </button>
@@ -1431,8 +1313,20 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
         <!-- App Container -->
         <div class="flex flex-1 overflow-hidden relative">
             
-            <!-- Sidebar: History (Desktop) -->
-            <aside class="hidden md:flex w-72 bg-white/50 dark:bg-nightSurface/50 border-r border-kBorder dark:border-nightBorder flex-col backdrop-blur-sm">
+            <!-- NYTT: Overlay för mobil sidebar -->
+            <div id="app-sidebar-overlay" onclick="toggleAppSidebar(false)" class="fixed inset-0 bg-black/50 z-[55] hidden opacity-0 transition-opacity duration-300 md:hidden backdrop-blur-sm"></div>
+
+            <!-- Sidebar: History (Uppdaterad för mobil responsivitet) -->
+            <aside id="app-sidebar" class="fixed inset-y-0 left-0 z-[60] w-72 transform -translate-x-full md:translate-x-0 transition-transform duration-300 md:relative flex flex-col bg-white/95 md:bg-white/50 dark:bg-nightSurface/95 md:dark:bg-nightSurface/50 border-r border-kBorder dark:border-nightBorder backdrop-blur-xl md:backdrop-blur-sm shadow-2xl md:shadow-none h-full">
+                
+                <!-- NYTT: Header inuti sidebaren för mobil -->
+                <div class="md:hidden flex items-center justify-between p-4 border-b border-kBorder dark:border-nightBorder bg-white dark:bg-nightSurface">
+                    <span class="font-bold text-lg dark:text-white flex items-center gap-2"><i class="ph-bold ph-clock-counter-clockwise text-kBlue"></i> Historik</span>
+                    <button onclick="toggleAppSidebar(false)" class="p-2 text-kTextMedium hover:text-kTextDark dark:hover:text-white bg-kBg dark:bg-nightBg rounded-full">
+                        <i class="ph-bold ph-x text-lg"></i>
+                    </button>
+                </div>
+
                 <div class="p-4 border-b border-kBorder dark:border-nightBorder bg-white/50 dark:bg-nightSurface/80">
                     <button onclick="window.newChat()" class="w-full py-3 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                         <i class="ph-bold ph-plus"></i> Ny PRD
@@ -2413,9 +2307,10 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
             // --- UI HELPERS ---
 
             window.switchAuthMode = function(mode) {
+                // ... (existerande kod)
                 const loginView = document.getElementById('login-view');
                 const signupView = document.getElementById('signup-view');
-                if(!loginView || !signupView) return; // Safety
+                if(!loginView || !signupView) return; 
 
                 if (mode === 'signup') {
                     loginView.classList.add('hidden');
@@ -2423,6 +2318,23 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 } else {
                     signupView.classList.add('hidden');
                     loginView.classList.remove('hidden');
+                }
+            };
+
+            // NYTT: Toggle funktion för mobil-sidebar
+            window.toggleAppSidebar = function(show) {
+                const sidebar = document.getElementById('app-sidebar');
+                const overlay = document.getElementById('app-sidebar-overlay');
+                if (!sidebar || !overlay) return;
+
+                if (show) {
+                    sidebar.classList.remove('-translate-x-full');
+                    overlay.classList.remove('hidden');
+                    setTimeout(() => overlay.classList.remove('opacity-0'), 10);
+                } else {
+                    sidebar.classList.add('-translate-x-full');
+                    overlay.classList.add('opacity-0');
+                    setTimeout(() => overlay.classList.add('hidden'), 300);
                 }
             };
 
@@ -2565,15 +2477,83 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
                 });
             };
 
-            // --- DOWNLOAD & COPY LOGIC (Preserved) ---
-            window.downloadMarkdown = function(encodedContent, filename) {
+            window.loadPrdFromDb = async (id) => {
+                const chatContainer = document.getElementById('chat-container');
+                if(!chatContainer) return;
+                
+                // NYTT: Stäng mobil-menyn om den är öppen
+                if (window.innerWidth < 768) {
+                    window.toggleAppSidebar(false);
+                }
+
+                chatContainer.innerHTML = '<div class="flex items-center justify-center h-full"><i class="ph-bold ph-spinner animate-spin text-3xl text-kBlue"></i></div>';
+                
                 try {
-                    const text = decodeURIComponent(encodedContent);
-                    const blob = new Blob([text], { type: 'text/markdown' });
-                    const url = URL.createObjectURL(blob);
-                    const a = document.createElement('a'); a.href = url; a.download = (filename || 'GenPRD-Spec') + '.md';
-                    document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-                } catch (e) { alert("Kunde inte ladda ner filen."); }
+                    const { data, error } = await supabase
+                        .from('prds')
+                        .select('*')
+                        .eq('id', id)
+                        .single();
+
+                    if (error) throw error;
+                    
+                    // Reconstruct Chat
+                    chatContainer.innerHTML = '';
+                    
+                    // 1. User Message (Prompt)
+                    const userMsg = document.createElement('div');
+                    userMsg.className = 'flex gap-4 max-w-3xl mx-auto flex-row-reverse';
+                    userMsg.innerHTML = `
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kPink to-kPurple p-[2px] flex-shrink-0">
+                            <div class="w-full h-full rounded-full bg-white dark:bg-nightSurface flex items-center justify-center text-kPurple">
+                                <i class="ph-fill ph-user text-2xl"></i>
+                            </div>
+                        </div>
+                        <div class="bg-kBlue text-white p-5 rounded-2xl rounded-tr-none shadow-soft">
+                            <p class="leading-relaxed">${data.prompt.replace(/\n/g, '<br>')}</p>
+                        </div>
+                    `;
+                    chatContainer.appendChild(userMsg);
+
+                    // 2. AI Message (Content)
+                    const encodedContent = encodeURIComponent(data.content).replace(/'/g, "%27");
+                    const escapedPrompt = safeEscape(data.prompt);
+                    const htmlContent = marked.parse(data.content); 
+
+                    const aiMsg = document.createElement('div');
+                    aiMsg.className = 'flex gap-4 max-w-3xl mx-auto';
+                    aiMsg.innerHTML = `
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
+                            <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/foxPRDinhand.svg?alt=media&token=3665cc00-1523-4614-9a21-fece3f034020" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
+                        </div>
+                        <div class="bg-white dark:bg-nightSurface p-6 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full overflow-hidden">
+                            <div class="flex justify-between items-center mb-4 border-b border-kBorder dark:border-nightBorder pb-3">
+                                <div>
+                                    <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">Sparad PRD 📂</p>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Iterera på denna prompt">
+                                        <i class="ph-bold ph-pencil-simple-slash"></i>
+                                    </button>
+                                    <button onclick="window.print()" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Spara som PDF">
+                                        <i class="ph-bold ph-file-pdf"></i>
+                                    </button>
+                                    <button onclick="window.copyToClipboard('${encodedContent}', this)" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Kopiera Markdown">
+                                        <i class="ph-bold ph-copy"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="prose dark:prose-invert max-w-none text-sm text-kTextDark dark:text-gray-300 prd-content font-sans leading-relaxed">
+                                ${htmlContent}
+                            </div>
+                        </div>
+                    `;
+                    chatContainer.appendChild(aiMsg);
+
+                } catch (err) {
+                    console.error(err);
+                    chatContainer.innerHTML = '<p class="text-center text-red-500 mt-10">Kunde inte ladda PRD.</p>';
+                }
             };
 
             window.copyToClipboard = function(encodedContent, btnElement) {
@@ -2672,6 +2652,12 @@ TBD: OCR fallback behavior for multi-page PDFs — should the app process only f
 
             window.newChat = function() {
                 if(!chatContainer) return;
+                
+                // NYTT: Stäng mobil-menyn om den är öppen
+                if (window.innerWidth < 768) {
+                    window.toggleAppSidebar(false);
+                }
+
                 chatContainer.innerHTML = `
                 <div class="flex gap-4 max-w-3xl mx-auto">
                     <div class="w-12 h-12 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[2px] flex-shrink-0">
