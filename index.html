@@ -904,7 +904,7 @@
                         
                         <!-- Content -->
                         <div class="p-8 h-[600px] overflow-y-auto custom-scrollbar bg-white dark:bg-[#1e1e1e] transition-colors duration-500">
-                            <!-- ÄNDRAT: ProjectPulse -> TeamSync i rubriken -->
+                            <!-- ÄNDRAT: Uppdaterad struktur för att matcha n8n-prompten exakt -->
                             <pre class="whitespace-pre-wrap font-mono text-xs md:text-sm leading-relaxed text-gray-600 dark:text-gray-300">
 TeamSync — Product Requirements Document
 
@@ -915,116 +915,99 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
 **What:** A real-time project management tool tailored for small teams.
 **Who:** Small teams, especially in startups and small businesses.
 **Why:** To facilitate seamless coordination and ensure everyone is on the same page without constant meetings.
-**How:** By enabling users to create projects, add tasks, assign team members, and track progress through a real-time, collaborative interface.
-**Success:** A team of 6 can launch a new marketing campaign by creating a project, assigning tasks, and tracking each task's progress in real time, culminating in a successful launch with every team member aware of the project status at every step.
+**Success:** A team of 6 can launch a new campaign by creating a project, assigning tasks, and tracking progress in real time.
 
-## Section 2: Core Features
+## Section 2: Pages & Navigation
+**Pages:**
+- `/login` - Email/password entry (public)
+- `/signup` - Account creation flow (public)
+- `/dashboard` - Overview of active projects and personal tasks (auth required)
+- `/projects` - List view of all team projects (auth required)
+- `/projects/:id` - Kanban board and task details (auth required)
+- `/team` - Member management and presence view (auth required)
+- `/settings` - User profile and notifications (auth required)
 
-### Feature: Project Creation and Management
+**Navigation:**
+- Sidebar (desktop): Dashboard, Projects, My Tasks, Team, Settings
+- Mobile: Bottom tab bar for key views
+- Auth gate: Redirect to `/login` if unauthenticated
+
+## Section 3: Core Features
+
+### Feature: Project & Task Management
 **What user does:**
-- Creates new projects with titles and descriptions.
-- Adds tasks to projects, including titles, descriptions, due dates, and assignees.
-- Views a dashboard of all projects and their status.
+- Creates projects with title/description.
+- Adds tasks with assignee, due date, and priority.
+- Drags tasks between "To Do", "In Progress", "Done".
 
 **What user sees:**
-- A "Create New Project" button.
-- Form fields for project title and description.
-- A dashboard or list view of all projects, showing titles, status, and a summary of tasks.
+- Kanban board with drag-and-drop columns.
+- "Create Task" modal with rich text description.
 
 **Must work:**
-- Easy navigation between project creation and project dashboard.
-- Projects must be editable by the project creator or assigned administrators.
+- Dragging a task updates status instantly for all online users.
+- Task counts update in real-time on dashboard.
 
-**Edge cases:**
-- Empty: "No projects found. Start by creating a new one!"
-- Loading: Spinner or skeleton screens during data fetch.
-- Error: "Failed to load projects. Try again?" with a retry button.
-
-### Feature: Task Management within Projects
+### Feature: Real-time Collaboration
 **What user does:**
-- Adds tasks with details: title, description, due date, and assignee.
-- Updates task status (e.g., To Do, In Progress, Completed).
-- Comments on tasks for updates or questions.
+- Sees who is viewing the same project.
+- Receives toast notifications when assigned a task.
 
 **What user sees:**
-- A task creation interface within each project.
-- A kanban board or list view for managing task statuses.
-- A comment section within each task for team discussions.
-
-**Must work:**
-- Real-time updates without needing to refresh the page.
-- Notifications for task updates or comments.
+- Avatar pile (facepile) showing online members.
+- Live typing indicators in comments.
 
 **Edge cases:**
-- Empty tasks: "No tasks yet. Add a new task to get started."
-- Error in task operation: "Couldn't update the task. Please try again."
+- Offline: Show "Reconnecting..." badge.
+- Conflict: Last-write-wins strategy for task descriptions.
 
-### Feature: Team Collaboration and Notifications
-**What user does:**
-- Views who is currently working on what tasks in real-time.
-- Receives notifications for new tasks, task completions, and comments.
+## Section 4: Data Architecture
 
-**What user sees:**
-- Real-time presence indicators showing who's online.
-- A notification center aggregating all updates related to the user.
+**Table: users**
+- `id`: uuid PRIMARY KEY
+- `email`: text UNIQUE NOT NULL
+- `name`: text
+- `avatar_url`: text
+- `last_seen_at`: timestamp
 
-**Must work:**
-- Instant notification on any task updates or comments directed at the user.
-- An accurate, real-time view of team members' activity.
+**Table: projects**
+- `id`: uuid PRIMARY KEY
+- `team_id`: uuid REFERENCES teams(id)
+- `title`: text NOT NULL
+- `status`: text DEFAULT 'active'
+- `created_at`: timestamp DEFAULT now()
 
-**Edge cases:**
-- No notifications: "All caught up! No new updates."
-- Connection issues: "Having trouble connecting. Check your network."
+**Table: tasks**
+- `id`: uuid PRIMARY KEY
+- `project_id`: uuid REFERENCES projects(id) ON DELETE CASCADE
+- `assignee_id`: uuid REFERENCES users(id)
+- `status`: text DEFAULT 'todo' (todo, in_progress, done)
+- `position`: integer (for sorting)
+- `due_date`: timestamp
 
-## Section 3: Data & State
+**RLS Policies:**
+- `projects`: Users can view/edit projects belonging to their `team_id`.
+- `tasks`: Inherit permissions from the parent project.
 
-**Projects:**
-- Represents: Collections of tasks under a common goal.
-- Fields: id, title, description, created_by (user_id), created_at, updated_at.
-- Relationships: One-to-many with Tasks.
-- Rules: Only project members can view or edit.
+## Section 5: Technical Approach
+- **Real-time:** Use Supabase Realtime (Postgres Changes) to listen for task updates and cursor positions.
+- **State Management:** Use optimistic UI updates for drag-and-drop to ensure 60fps smoothness even with latency.
+- **Auth:** Standard email/password flow with persistent sessions.
 
-**Tasks:**
-- Represents: Individual actionable items within a project.
-- Fields: id, project_id, title, description, assignee_id, status, due_date, created_at, updated_at, comments (array of comment ids).
-- Relationships: Many-to-one with Projects, one-to-many with Comments.
-- Rules: Assignee can be changed only by project members.
+## Section 6: Visual Design
+- **Style:** Clean and minimalistic (think Linear or Notion).
+- **Colors:**
+  - Primary: Deep Indigo (#4F46E5)
+  - Statuses: Todo (Gray), In Progress (Blue), Done (Green)
+- **Layout:** Desktop-first, collapsible sidebar to maximize board space.
 
-**Users:**
-- Represents: Team members with access to the tool.
-- Fields: id, name, email, team_id, online_status, last_active_at.
-- Relationships: Many-to-many with Projects (through tasks).
-- Rules: Must be part of a team to participate in projects.
-
-**Comments:**
-- Represents: Discussions or updates related to tasks.
-- Fields: id, task_id, author_id, content, created_at.
-- Relationships: Many-to-one with Tasks.
-- Rules: Visible to all project members.
-
-## Section 4: Technical Approach
-Real-time collaboration is crucial for keeping team members aligned. Opt for a technology stack that supports WebSocket for instant data updates across clients. Consider using a service like Pusher or a real-time database like Firebase to simplify development.
-For conflict resolution, employ a last-write-wins strategy for most fields but consider a more nuanced approach for critical fields like due dates and assignees, possibly prompting users when their actions might overwrite recent changes.
-
-## Section 5: Visual Design
-- **Style:** Clean and minimalistic, geared towards enhancing focus and reducing visual clutter.
-- **Colors:** Use a calm and neutral color palette with color-coded task statuses for quick identification.
-- **Layout:** Desktop-first approach with a responsive design for tablet and mobile use. Prioritize ease of navigation between different projects and tasks.
-- **Real-time indicators:** Use subtle animations for indicating live updates and presence of team members.
-
-## Section 6: Success Checklist
-- ✓ Projects can be created, edited, and viewed seamlessly.
-- ✓ Tasks within projects support detailed management and real-time status updates.
-- ✓ Collaboration features like comments and presence indicators work in real time without manual refresh.
-- ✓ Notifications keep team members informed of relevant activity.
-- ✓ Mobile-responsive design maintains functionality across devices.
-- ✓ Performance: Real-time interactions are smooth with sub-2-second updates.
-- ✓ Access controls ensure users can only see and edit projects they are part of.
-- ✓ Error handling gracefully manages loading, empty, and error states.
-- ✓ Data integrity is maintained, with clear conflict resolution steps where necessary.
-- ✓ The user interface is intuitive, reducing the need for training or extensive documentation.
-- ✓ Users can effectively collaborate on multiple projects without losing track of tasks.
-- ✓ Teams report increased coordination and reduced need for status meetings after adopting the tool.
+## Section 7: Success Checklist
+- ✓ User can create a project and add 5 tasks in under 1 minute.
+- ✓ Dragging a task on Client A updates Client B within 200ms.
+- ✓ Auth gates prevent access to `/dashboard` without login.
+- ✓ RLS policies successfully block access to other teams' projects.
+- ✓ Mobile view collapses sidebar and shows list view instead of kanban.
+- ✓ Data persists correctly after page reload.
                             </pre>
                         </div>
                     </div>
