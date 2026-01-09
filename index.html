@@ -1832,6 +1832,67 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 }
             };
 
+            // --- SHOWCASE TOGGLE LOGIC (RESTORED) ---
+            window.switchShowcase = function(state) {
+                const indicator = document.getElementById('segment-indicator');
+                const btnWithout = document.querySelector('.segment-btn:nth-child(2)'); 
+                const btnWith = document.querySelector('.segment-btn:nth-child(3)');
+                const visualWithout = document.getElementById('visual-without');
+                const visualWith = document.getElementById('visual-with');
+                const contentWithout = document.getElementById('content-without');
+                const contentWith = document.getElementById('content-with');
+                
+                if(!indicator || !btnWithout || !btnWith || !visualWithout || !visualWith || !contentWithout || !contentWith) return;
+
+                if (state === 'without') {
+                    indicator.style.left = '4px';
+                    indicator.classList.remove('state-good');
+                    indicator.classList.add('state-bad');
+                    btnWithout.classList.add('active-bad');
+                    btnWithout.classList.remove('active-good');
+                    btnWith.classList.remove('active-good', 'active-bad');
+                    
+                    visualWithout.style.opacity = '1'; visualWithout.style.zIndex = '10'; visualWithout.style.pointerEvents = 'auto';
+                    visualWith.style.opacity = '0'; visualWith.style.zIndex = '0'; visualWith.style.pointerEvents = 'none';
+                    
+                    contentWithout.style.opacity = '1'; contentWithout.style.transform = 'translateX(0)'; contentWithout.style.zIndex = '10'; contentWithout.style.pointerEvents = 'auto';
+                    contentWith.style.opacity = '0'; contentWith.style.transform = 'translateX(8px)'; contentWith.style.zIndex = '0'; contentWith.style.pointerEvents = 'none';
+                    
+                } else if (state === 'with') {
+                    indicator.style.left = '148px';
+                    indicator.classList.remove('state-bad');
+                    indicator.classList.add('state-good');
+                    btnWith.classList.add('active-good');
+                    btnWith.classList.remove('active-bad');
+                    btnWithout.classList.remove('active-good', 'active-bad');
+                    
+                    visualWith.style.opacity = '1'; visualWith.style.zIndex = '10'; visualWith.style.pointerEvents = 'auto';
+                    visualWithout.style.opacity = '0'; visualWithout.style.zIndex = '0'; visualWithout.style.pointerEvents = 'none';
+                    
+                    contentWith.style.opacity = '1'; contentWith.style.transform = 'translateX(0)'; contentWith.style.zIndex = '10'; contentWith.style.pointerEvents = 'auto';
+                    contentWithout.style.opacity = '0'; contentWithout.style.transform = 'translateX(-8px)'; contentWithout.style.zIndex = '0'; contentWithout.style.pointerEvents = 'none';
+                }
+            };
+
+            // --- SPEC EXPANDER LOGIC (RESTORED) ---
+            window.toggleSpec = function() {
+                const el = document.getElementById('spec-content');
+                if(!el) return;
+
+                if (el.classList.contains('hidden')) {
+                    el.classList.remove('hidden');
+                    // Force reflow
+                    void el.offsetWidth;
+                    el.classList.remove('max-h-0', 'opacity-0');
+                    el.classList.add('max-h-[5000px]', 'opacity-100'); 
+                    setTimeout(() => { el.scrollIntoView({ behavior: 'smooth', block: 'center' }); }, 100);
+                } else {
+                    el.classList.add('max-h-0', 'opacity-0');
+                    el.classList.remove('max-h-[5000px]', 'opacity-100');
+                    setTimeout(() => { el.classList.add('hidden'); }, 700);
+                }
+            };
+
             // --- SUPABASE INIT ---
             let supabase;
             let currentUser = null;
