@@ -264,10 +264,12 @@
                     <div class="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-kBlue to-kPurple p-[3px]">
                         <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=d22b3524-f29c-4313-bebb-2863f8c30b91" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-2 object-contain">
                     </div>
-                    <h2 class="text-3xl font-bold mb-3 dark:text-white">Välkommen till GenPRD! 🚀</h2>
+                    <h2 class="text-3xl font-bold mb-3 dark:text-white flex items-center justify-center gap-2">Välkommen till GenPRD! <i class="ph-fill ph-rocket-launch text-kPurple"></i></h2>
                     <p class="text-kTextMedium dark:text-gray-400 text-lg">Låt oss visa dig hur du går från idé till produktionskod på 3 minuter.</p>
                 </div>
-                <button onclick="nextOnboardStep(2)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">Sätt igång →</button>
+                <button onclick="nextOnboardStep(2)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                    Sätt igång <i class="ph-bold ph-arrow-right"></i>
+                </button>
             </div>
 
             <!-- Step 2: Hur det fungerar -->
@@ -296,31 +298,33 @@
                         </div>
                     </div>
                 </div>
-                <button onclick="nextOnboardStep(3)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl">Nästa →</button>
+                <button onclick="nextOnboardStep(3)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl flex items-center justify-center gap-2">
+                    Nästa <i class="ph-bold ph-arrow-right"></i>
+                </button>
             </div>
 
             <!-- Step 3: Tips (ÄNDRAD för att betona enkelhet) -->
             <div id="onboard-step-3" class="hidden">
-                <h3 class="text-2xl font-bold mb-4 dark:text-white flex items-center gap-2">Krångla inte till det ✨</h3>
+                <h3 class="text-2xl font-bold mb-4 dark:text-white flex items-center gap-2">Krångla inte till det <i class="ph-fill ph-sparkle text-kBlue"></i></h3>
                 <p class="text-kTextMedium mb-6 dark:text-gray-400">GenPRD är smart nog att fylla i luckorna åt dig.</p>
                 
                 <div class="space-y-4 mb-8">
                     <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
-                        <div class="text-2xl">✨</div>
+                        <div class="text-2xl text-kBlue flex items-center justify-center"><i class="ph-duotone ph-magic-wand"></i></div>
                         <div>
                             <p class="font-bold text-kTextDark dark:text-white mb-1">En mening räcker</p>
                             <p class="text-sm text-kTextMedium">Skriv bara "En app för hundägare". Vi fixar databas, funktioner och design.</p>
                         </div>
                     </div>
                     <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
-                        <div class="text-2xl">🧠</div>
+                        <div class="text-2xl text-kPurple flex items-center justify-center"><i class="ph-duotone ph-brain"></i></div>
                         <div>
                             <p class="font-bold text-kTextDark dark:text-white mb-1">Vi sköter tekniken</p>
                             <p class="text-sm text-kTextMedium">Osäker på tech stack? Vi väljer det bästa för ditt projekt (ofta Supabase + React).</p>
                         </div>
                     </div>
                     <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder flex gap-4 items-start">
-                        <div class="text-2xl">💬</div>
+                        <div class="text-2xl text-kPink flex items-center justify-center"><i class="ph-duotone ph-chat-circle-dots"></i></div>
                         <div>
                             <p class="font-bold text-kTextDark dark:text-white mb-1">Prata naturligt</p>
                             <p class="text-sm text-kTextMedium">Börja enkelt. Sen kan du be GenPRD justera detaljerna i chatten efteråt.</p>
@@ -328,8 +332,8 @@
                     </div>
                 </div>
 
-                <button onclick="completeOnboarding()" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">
-                    Jag fattar, kör igång! 🚀
+                <button onclick="completeOnboarding()" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                    Jag fattar, kör igång! <i class="ph-fill ph-rocket-launch"></i>
                 </button>
             </div>
         </div>
@@ -344,7 +348,7 @@
                 <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-kBlue/10 text-kBlue mb-4">
                     <i class="ph-fill ph-rocket-launch text-3xl"></i>
                 </div>
-                <h3 class="text-2xl font-bold dark:text-white mb-2">Uppgradera till Pro 🚀</h3>
+                <h3 class="text-2xl font-bold dark:text-white mb-2 flex items-center justify-center gap-2">Uppgradera till Pro <i class="ph-fill ph-crown text-kPurple"></i></h3>
                 <p class="text-kTextMedium dark:text-gray-400">Få 200 genereringar i månaden och bygg snabbare.</p>
             </div>
 
@@ -520,7 +524,7 @@
             <!-- Signup View -->
             <div id="signup-view" class="hidden space-y-6">
                 <div class="text-center">
-                    <h3 class="text-2xl font-bold dark:text-white">Skapa konto ✨</h3>
+                    <h3 class="text-2xl font-bold dark:text-white flex items-center justify-center gap-2">Skapa konto <i class="ph-fill ph-sparkle text-kBlue"></i></h3>
                     <p class="text-kTextMedium dark:text-gray-400 text-sm">Kom igång med GenPRD gratis</p>
                 </div>
 
@@ -1364,8 +1368,8 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
             
             <div class="flex items-center gap-3 md:gap-4">
                 <!-- NY UPGRADE CTA -->
-                <button id="upgrade-btn" onclick="togglePaymentModal(true)" class="hidden text-xs font-bold text-white bg-gradient-to-r from-kBlue to-kPurple px-4 py-2 rounded-full shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">
-                    Uppgradera 🚀
+                <button id="upgrade-btn" onclick="togglePaymentModal(true)" class="hidden text-xs font-bold text-white bg-gradient-to-r from-kBlue to-kPurple px-4 py-2 rounded-full shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center gap-1">
+                    Uppgradera <i class="ph-bold ph-rocket-launch"></i>
                 </button>
 
                 <span id="credits-display" class="hidden md:inline-block text-xs font-bold text-kMint bg-kMint/10 px-3 py-1 rounded-full border border-kMint/20">
@@ -1450,8 +1454,8 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     <!-- NEW: Credits Banner (Hidden by default) -->
                     <div id="credits-banner" class="hidden absolute -top-8 left-1/2 -translate-x-1/2 w-full max-w-3xl px-4 z-0 pointer-events-none">
                         <button onclick="togglePaymentModal(true)" class="pointer-events-auto w-full bg-gradient-to-r from-orange-500 to-red-500 text-white py-2 px-4 rounded-t-xl text-xs font-bold shadow-md flex justify-between items-center hover:opacity-95 transition-opacity">
-                            <span id="credits-banner-text">⚠️ Bara X credits kvar!</span>
-                            <span>Uppgradera nu →</span>
+                            <span id="credits-banner-text" class="flex items-center gap-1"><i class="ph-fill ph-warning-circle"></i> Bara X credits kvar!</span>
+                            <span class="flex items-center gap-1">Uppgradera nu <i class="ph-bold ph-arrow-right"></i></span>
                         </button>
                     </div>
 
@@ -1486,6 +1490,50 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
 
         document.addEventListener('DOMContentLoaded', () => {
             
+            // --- THEME LOGIC (CRITICAL FIX) ---
+            const themeKey = 'genprd-theme';
+            const html = document.documentElement;
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const appThemeToggle = document.getElementById('app-theme-toggle');
+
+            function setTheme(isDark) {
+                if (isDark) {
+                    html.classList.add('dark');
+                    localStorage.setItem(themeKey, 'dark');
+                    if (themeToggleBtn) {
+                        const icon = themeToggleBtn.querySelector('#theme-icon');
+                        if (icon) {
+                            icon.classList.remove('ph-moon');
+                            icon.classList.add('ph-sun');
+                        }
+                    }
+                    if (appThemeToggle) {
+                        const icon = appThemeToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('ph-moon');
+                            icon.classList.add('ph-sun');
+                        }
+                    }
+                } else {
+                    html.classList.remove('dark');
+                    localStorage.setItem(themeKey, 'light');
+                    if (themeToggleBtn) {
+                        const icon = themeToggleBtn.querySelector('#theme-icon');
+                        if (icon) {
+                            icon.classList.remove('ph-sun');
+                            icon.classList.add('ph-moon');
+                        }
+                    }
+                    if (appThemeToggle) {
+                        const icon = appThemeToggle.querySelector('i');
+                        if (icon) {
+                            icon.classList.remove('ph-sun');
+                            icon.classList.add('ph-moon');
+                        }
+                    }
+                }
+            }
+
             // --- GLOBAL UI ELEMENTS (Moved Up for Safety) ---
             const landingView = document.getElementById('landing-view');
             const appView = document.getElementById('app-view');
@@ -2217,7 +2265,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 const historyContent = document.getElementById('history-content');
                 if(!historyContent) return; 
 
-                historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic">Laddar...</p>';
+                historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic flex items-center justify-center gap-1"><i class="ph-bold ph-spinner animate-spin"></i> Laddar...</p>';
 
                 if (!currentUser) {
                     renderMockHistory();
@@ -2238,6 +2286,110 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 } catch (err) {
                     console.error("Error fetching history:", err);
                     historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-red-400 italic">Kunde inte ladda historik.</p>';
+                }
+            }
+
+            function updateCreditsDisplay() {
+                const display = document.getElementById('credits-display');
+                const upgradeBtn = document.getElementById('upgrade-btn');
+                const banner = document.getElementById('credits-banner');
+                const bannerText = document.getElementById('credits-banner-text');
+                const sidebarProgress = document.getElementById('sidebar-progress-container');
+
+                if (display && currentUser) {
+                    // Reset defaults
+                    display.className = 'hidden md:inline-block text-xs font-bold px-3 py-1 rounded-full border';
+                    display.onclick = null; 
+
+                    // Upgrade Button Logic
+                    if (upgradeBtn) {
+                        upgradeBtn.className = "hidden text-xs font-bold px-4 py-2 rounded-full shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all flex items-center gap-1";
+                        
+                        if (userCredits.status === 'pro') {
+                            upgradeBtn.classList.remove('hidden');
+                            // ÄNDRAT: Använder innerHTML för att rendera ikonen
+                            upgradeBtn.innerHTML = 'Hantera Plan <i class="ph-bold ph-gear"></i>';
+                            upgradeBtn.classList.add('bg-gray-100', 'dark:bg-gray-700', 'text-kTextDark', 'dark:text-white', 'border', 'border-kBorder', 'dark:border-nightBorder');
+                        } else {
+                            upgradeBtn.classList.remove('hidden');
+                            // ÄNDRAT: Använder innerHTML för att rendera ikonen
+                            upgradeBtn.innerHTML = 'Uppgradera <i class="ph-bold ph-rocket-launch"></i>';
+                            upgradeBtn.classList.add('text-white');
+                            if (userCredits.status === 'expired') {
+                                upgradeBtn.classList.add('bg-gradient-to-r', 'from-red-500', 'to-red-600', 'animate-pulse');
+                            } else {
+                                upgradeBtn.classList.add('bg-gradient-to-r', 'from-kBlue', 'to-kPurple');
+                            }
+                        }
+                    }
+
+                    // Credits Display Logic
+                    const remaining = userCredits.limit - userCredits.used;
+                    
+                    if (userCredits.status === 'pro') {
+                        display.textContent = '∞ genereringar (PRO)';
+                        display.classList.add('text-kPurple', 'bg-kPurple/10', 'border-kPurple/20');
+                        // Hide banners for PRO
+                        if(banner) banner.classList.add('hidden');
+                        if(sidebarProgress) sidebarProgress.classList.add('hidden');
+                    } else {
+                        // Trial / Free
+                        let daysLeft = 0;
+                        if (userCredits.trial_expires_at) {
+                            const diffTime = userCredits.trial_expires_at - new Date();
+                            daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                            if (daysLeft < 0) daysLeft = 0;
+                        }
+
+                        if (userCredits.status === 'expired') {
+                             display.textContent = 'Trial slut – Uppgradera';
+                             display.classList.add('text-red-500', 'bg-red-100', 'border-red-200', 'cursor-pointer', 'hover:bg-red-200');
+                             display.onclick = () => togglePaymentModal(true);
+                             // Hide progress bar on expired to avoid clutter
+                             if(sidebarProgress) sidebarProgress.classList.add('hidden');
+                        } else {
+                             display.textContent = `${remaining} kvar • ${daysLeft}d trial`;
+                             if (remaining <= 0) {
+                                display.classList.add('text-red-500', 'bg-red-100', 'border-red-200', 'cursor-pointer');
+                                display.onclick = () => togglePaymentModal(true);
+                             } else {
+                                display.classList.add('text-kMint', 'bg-kMint/10', 'border-kMint/20');
+                             }
+                             
+                             // 1. UPDATE BANNER VISIBILITY
+                             if (banner && remaining <= 10) {
+                                 // ÄNDRAT: innerHTML för att inkludera ikon
+                                 bannerText.innerHTML = `<i class="ph-fill ph-warning-circle"></i> Bara ${remaining} credits kvar!`;
+                                 banner.classList.remove('hidden');
+                             } else if (banner) {
+                                 banner.classList.add('hidden');
+                             }
+
+                             // 2. UPDATE SIDEBAR PROGRESS
+                             if (sidebarProgress) {
+                                 const used = userCredits.used;
+                                 const limit = userCredits.limit;
+                                 const percentage = Math.min(100, Math.max(0, (used / limit) * 100));
+                                 // Remaining percent
+                                 const remainingPct = 100 - percentage;
+                                 
+                                 let gradientClass = 'from-kMint to-kBlue';
+                                 if (remainingPct < 25) gradientClass = 'from-orange-500 to-red-500';
+                                 else if (remainingPct < 50) gradientClass = 'from-kBlue to-kPurple';
+
+                                 sidebarProgress.innerHTML = `
+                                    <div class="flex justify-between text-xs mb-1">
+                                      <span class="text-kTextMedium dark:text-gray-400">Credits</span>
+                                      <span class="font-bold text-kTextDark dark:text-white">${used}/${limit}</span>
+                                    </div>
+                                    <div class="h-2 bg-kBg dark:bg-nightBg rounded-full overflow-hidden border border-kBorder dark:border-nightBorder">
+                                      <div class="h-full bg-gradient-to-r ${gradientClass} transition-all duration-500" style="width: ${percentage}%"></div>
+                                    </div>
+                                 `;
+                                 sidebarProgress.classList.remove('hidden');
+                             }
+                        }
+                    }
                 }
             }
 
@@ -2281,14 +2433,14 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 const historyContent = document.getElementById('history-content');
                 if(!historyContent) return;
 
-                // Empty State Copy (UPDATED: Removed habit link)
+                // Empty State Copy (UPDATED: Removed habit link, added icon)
                 if (prds.length === 0) {
                     historyContent.innerHTML = `
                       <div class="px-4 py-8 text-center">
                         <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-kBlue/10 flex items-center justify-center">
-                          <i class="ph-duotone ph-rocket-launch text-3xl text-kBlue"></i>
+                          <i class="ph-duotone ph-lightbulb text-3xl text-kBlue"></i>
                         </div>
-                        <p class="font-bold text-kTextDark dark:text-white mb-2">Din första PRD väntar! 💡</p>
+                        <p class="font-bold text-kTextDark dark:text-white mb-2">Din första PRD väntar! <i class="ph-fill ph-sparkle text-kPurple align-middle"></i></p>
                         <p class="text-xs text-kTextMedium dark:text-gray-500 mb-4">Skriv din idé i rutan till höger för att börja.</p>
                       </div>
                     `;
@@ -2335,7 +2487,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
             }
 
             async function saveToDb(title, prompt, content) {
-                if (!currentUser) return; 
+                if (!currentUser) return false; // Return false if no user
 
                 try {
                     const { error } = await supabase.from('prds').insert({
@@ -2358,10 +2510,12 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                         renderHistoryList(data);
                     }
                     window.showToast('PRD sparad! ✓', 'success');
+                    return true; // SUCCESS
 
                 } catch (err) {
                     console.error("Failed to save PRD:", err);
-                    window.showToast("Kunde inte spara PRD", 'error');
+                    window.showToast("Kunde inte spara PRD (inga credits drogs)", 'error');
+                    return false; // FAIL
                 }
             }
 
@@ -2539,8 +2693,8 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                         <img src="https://firebasestorage.googleapis.com/v0/b/nordsym-funnel.firebasestorage.app/o/genPRDfox.svg?alt=media&token=f98a5d70-29ea-4303-b002-3bc4fade6599" class="w-full h-full rounded-full bg-white dark:bg-nightSurface p-1 object-contain">
                     </div>
                     <div class="bg-white dark:bg-nightSurface p-5 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder">
-                        <p class="text-kTextDark dark:text-gray-200 leading-relaxed">
-                            Ny session startad. Vad bygger vi härnäst? ✨
+                        <p class="text-kTextDark dark:text-gray-200 leading-relaxed flex items-center gap-2">
+                            Ny session startad. Vad bygger vi härnäst? <i class="ph-fill ph-sparkle text-kBlue"></i>
                         </p>
                     </div>
                 </div>`;
@@ -2605,14 +2759,14 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 const aiLoading = document.createElement('div'); aiLoading.id = loadingId;
                 aiLoading.className = 'flex gap-4 max-w-3xl mx-auto';
                 
-                // Random Loading Tips
+                // Random Loading Tips (UPDATED with Icons)
                 const loadingTips = [
-                    "AI:n analyserar patterns... 🔍",
-                    "Strukturerar databas-schema... 🗄️",
-                    "Definierar user flows... 🎯",
-                    "Skapar design system... 🎨",
-                    "Skriver success checklist... ✅",
-                    "Optimerar för AI-kodare... 🤖"
+                    'AI:n analyserar mönster... <i class="ph-bold ph-magnifying-glass"></i>',
+                    'Strukturerar databas... <i class="ph-bold ph-database"></i>',
+                    'Definierar flöden... <i class="ph-bold ph-arrows-split"></i>',
+                    'Skapar designsystem... <i class="ph-bold ph-palette"></i>',
+                    'Skriver checklista... <i class="ph-bold ph-check-square"></i>',
+                    'Optimerar för AI... <i class="ph-bold ph-robot"></i>'
                 ];
                 const randomTip = loadingTips[Math.floor(Math.random() * loadingTips.length)];
 
@@ -2626,7 +2780,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                             <div class="w-2 h-2 bg-kPurple rounded-full animate-bounce delay-100"></div> 
                             <div class="w-2 h-2 bg-kPink rounded-full animate-bounce delay-200"></div>
                         </div>
-                         <p class="text-xs text-kTextMedium dark:text-gray-400 italic">${randomTip}</p>
+                         <p class="text-xs text-kTextMedium dark:text-gray-400 italic flex items-center gap-1">${randomTip}</p>
                     </div>`;
                 chatContainer.appendChild(aiLoading); chatContainer.scrollTop = chatContainer.scrollHeight;
 
@@ -2661,9 +2815,10 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     
                     const htmlContent = marked.parse(prdMarkdown);
 
-                    await saveToDb(productName, text, prdMarkdown);
+                    // ÄNDRAT: Kolla om sparandet lyckades innan vi drar credits
+                    const saveSuccess = await saveToDb(productName, text, prdMarkdown);
 
-                    if (currentUser) {
+                    if (currentUser && saveSuccess) {
                         const isPro = userCredits.status === 'pro';
                         if (!isPro) {
                             userCredits.used += 1;
@@ -2691,7 +2846,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                         <div class="bg-white dark:bg-nightSurface p-6 rounded-2xl rounded-tl-none shadow-soft border border-kBorder dark:border-nightBorder w-full overflow-hidden">
                             <div class="flex justify-between items-center mb-4 border-b border-kBorder dark:border-nightBorder pb-3">
                                 <div>
-                                    <p class="text-kTextDark dark:text-gray-200 font-bold text-lg">PRD Genererad! 🚀</p>
+                                    <p class="text-kTextDark dark:text-gray-200 font-bold text-lg flex items-center gap-2">PRD Genererad! <i class="ph-fill ph-rocket-launch text-kMint"></i></p>
                                 </div>
                                 <div class="flex gap-2">
                                     <button onclick="window.regeneratePrd('${escapedPrompt}')" class="p-2 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-lg text-kTextMedium transition-colors" title="Regenerera">
@@ -2714,24 +2869,24 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     const loadingEl = document.getElementById(loadingId); 
                     if (loadingEl) loadingEl.remove();
                     
-                    let errorTitle = "Hoppsan! 🤔";
+                    let errorTitle = "Hoppsan! <i class='ph-bold ph-question'></i>";
                     let errorMsgText = "";
                     let retryAction = "window.sendMessage()";
                     
                     if (error.message.includes('Failed to fetch') || !navigator.onLine) {
-                        errorTitle = "Ingen uppkoppling 📡";
+                        errorTitle = "Ingen uppkoppling <i class='ph-bold ph-wifi-slash'></i>";
                         errorMsgText = "Kolla din internetanslutning och försök igen.";
                     } else if (error.status === 429) {
-                        errorTitle = "För många förfrågningar ⏳";
+                        errorTitle = "För många förfrågningar <i class='ph-bold ph-hourglass'></i>";
                         errorMsgText = "AI:n är överbelastad just nu. Vänta 30 sekunder och försök igen.";
                         retryAction = "setTimeout(() => window.sendMessage(), 30000)";
                     } else if (error.status === 500) {
-                        errorTitle = "AI:n hackade 🤖";
+                        errorTitle = "AI:n hackade <i class='ph-bold ph-robot'></i>";
                         errorMsgText = "Något gick fel på servern. Försök igen om ett ögonblick.";
                     } else {
                         errorMsgText = "Något oväntat hände. Kontrollera din prompt och försök igen.";
                     }
-
+                    
                     const errorMsg = document.createElement('div');
                     errorMsg.className = 'flex gap-4 max-w-3xl mx-auto';
                     errorMsg.innerHTML = `
@@ -2744,34 +2899,40 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                         <button onclick="${retryAction}" class="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-bold rounded-lg transition-colors flex items-center gap-2">
                           <i class="ph-bold ph-arrow-clockwise"></i> Försök igen
                         </button>
-                      </div>
-                    `;
+                      </div>`;
+                    
                     chatContainer.appendChild(errorMsg);
                     chatContainer.scrollTop = chatContainer.scrollHeight;
                 }
             };
 
-            if (appInput) {
-                appInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); window.sendMessage(); }});
-            }
+            async function fetchHistory() {
+                const historyContent = document.getElementById('history-content');
+                if(!historyContent) return; 
 
-            // --- Theme Logic ---
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const themeIcon = document.getElementById('theme-icon');
-            const appThemeToggle = document.getElementById('app-theme-toggle');
-            const html = document.documentElement;
-            const themeKey = 'genprd-theme-v1'; 
-            
-            function setTheme(isDark) {
-                const appIcon = appThemeToggle ? appThemeToggle.querySelector('i') : null;
-                if (isDark) {
-                    html.classList.add('dark'); localStorage.setItem(themeKey, 'dark');
-                    if(themeIcon) { themeIcon.classList.remove('ph-moon'); themeIcon.classList.add('ph-sun'); }
-                    if (appIcon) { appIcon.classList.remove('ph-moon'); appIcon.classList.add('ph-sun'); }
-                } else {
-                    html.classList.remove('dark'); localStorage.setItem(themeKey, 'light');
-                    if(themeIcon) { themeIcon.classList.remove('ph-sun'); themeIcon.classList.add('ph-moon'); }
-                    if (appIcon) { appIcon.classList.remove('ph-sun'); appIcon.classList.add('ph-moon'); }
+                historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-kTextMedium/50 italic flex items-center justify-center gap-1"><i class="ph-bold ph-spinner animate-spin"></i> Laddar...</p>';
+
+                if (!currentUser) {
+                    renderMockHistory();
+                    return;
+                }
+
+                try {
+                    // ÄNDRAT: Lade till explicit .eq('user_id') för extra säkerhet
+                    const { data, error } = await supabase
+                        .from('prds')
+                        .select('id, title, created_at, content')
+                        .eq('user_id', currentUser.id)
+                        .order('created_at', { ascending: false });
+
+                    if (error) throw error;
+
+                    userPRDs = data || [];
+                    renderHistoryList(userPRDs);
+
+                } catch (err) {
+                    console.error("Error fetching history:", err);
+                    historyContent.innerHTML = '<p class="px-2 py-2 text-xs text-center text-red-400 italic">Kunde inte ladda historik.</p>';
                 }
             }
             
