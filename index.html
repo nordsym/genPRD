@@ -255,7 +255,7 @@
     <!-- Toast Container (NEW) -->
     <div id="toast-container" class="fixed top-20 right-4 z-[100] flex flex-col gap-2 pointer-events-none"></div>
 
-    <!-- ======================== ONBOARDING MODAL (New) ======================== -->
+    <!-- ======================== ONBOARDING MODAL ======================== -->
     <div id="onboarding-modal" class="fixed inset-0 z-[90] hidden flex items-center justify-center bg-black/60 backdrop-blur-sm transition-opacity duration-300">
         <div class="bg-white dark:bg-nightSurface p-10 rounded-3xl max-w-2xl mx-4 shadow-card border border-kBorder dark:border-nightBorder relative w-full">
              <!-- Step 1: Welcome -->
@@ -299,25 +299,29 @@
                 <button onclick="nextOnboardStep(3)" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">Nästa →</button>
             </div>
 
-            <!-- Step 3: Exempel-prompter -->
+            <!-- Step 3: Tips (ÄNDRAD) -->
             <div id="onboard-step-3" class="hidden">
-                <h3 class="text-2xl font-bold mb-4 dark:text-white">Prova en av dessa prompts</h3>
-                <p class="text-kTextMedium mb-6 dark:text-gray-400">Klicka för att fylla i input-fältet och generera din första PRD:</p>
-                <div class="space-y-3 mb-8">
-                    <button onclick="fillPromptAndStart('En app för att spåra vanor med daily streaks och påminnelser')" class="w-full text-left p-4 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-xl transition-colors border border-kBorder dark:border-nightBorder">
-                        <span class="font-bold text-kTextDark dark:text-white">💪 Habit Tracker</span>
-                        <p class="text-sm text-kTextMedium mt-1">Med streaks, påminnelser och progress charts</p>
-                    </button>
-                    <button onclick="fillPromptAndStart('Ett internt verktyg för lagerhantering och orderläggning för små butiker')" class="w-full text-left p-4 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-xl transition-colors border border-kBorder dark:border-nightBorder">
-                        <span class="font-bold text-kTextDark dark:text-white">📦 Inventory System</span>
-                        <p class="text-sm text-kTextMedium mt-1">För små butiker med auto-påfyllning</p>
-                    </button>
-                    <button onclick="fillPromptAndStart('En landningssida för en ny SaaS-produkt med prissättning och testimonials')" class="w-full text-left p-4 bg-kBg dark:bg-nightBg hover:bg-kBorder rounded-xl transition-colors border border-kBorder dark:border-nightBorder">
-                        <span class="font-bold text-kTextDark dark:text-white">🌐 SaaS Landing Page</span>
-                        <p class="text-sm text-kTextMedium mt-1">Med hero, features, pricing, FAQ</p>
-                    </button>
+                <h3 class="text-2xl font-bold mb-4 dark:text-white flex items-center gap-2">Tips för bästa resultat 💡</h3>
+                <p class="text-kTextMedium mb-6 dark:text-gray-400">För att få en PRD som genererar perfekt kod direkt:</p>
+                
+                <div class="space-y-4 mb-8">
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
+                        <p class="font-bold text-kTextDark dark:text-white mb-1">🎯 Var specifik med mål</p>
+                        <p class="text-sm text-kTextMedium">Istället för "en app", skriv "ett internt verktyg för lagerhantering".</p>
+                    </div>
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
+                        <p class="font-bold text-kTextDark dark:text-white mb-1">👤 Nämn målgruppen</p>
+                        <p class="text-sm text-kTextMedium">Vem ska använda appen? (Admin, kunder, säljare?)</p>
+                    </div>
+                    <div class="p-4 bg-kBg dark:bg-nightBg rounded-xl border border-kBorder dark:border-nightBorder">
+                        <p class="font-bold text-kTextDark dark:text-white mb-1">🛠️ Preferenser</p>
+                        <p class="text-sm text-kTextMedium">Vill du använda Supabase? Tailwind? React? Nämn det!</p>
+                    </div>
                 </div>
-                <button onclick="completeOnboarding()" class="w-full py-4 bg-kTextDark dark:bg-white text-white dark:text-nightBg font-bold rounded-xl hover:opacity-90 transition-opacity">Skippa, jag testar själv</button>
+
+                <button onclick="completeOnboarding()" class="w-full py-4 bg-gradient-to-r from-kBlue to-kPurple text-white font-bold rounded-xl shadow-button hover:shadow-glow hover:-translate-y-0.5 transition-all">
+                    Jag fattar, kör igång! 🚀
+                </button>
             </div>
         </div>
     </div>
@@ -2264,7 +2268,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 const historyContent = document.getElementById('history-content');
                 if(!historyContent) return;
 
-                // NEW: Empty State Copy
+                // Empty State Copy (UPDATED: Removed habit link)
                 if (prds.length === 0) {
                     historyContent.innerHTML = `
                       <div class="px-4 py-8 text-center">
@@ -2272,10 +2276,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                           <i class="ph-duotone ph-rocket-launch text-3xl text-kBlue"></i>
                         </div>
                         <p class="font-bold text-kTextDark dark:text-white mb-2">Din första PRD väntar! 💡</p>
-                        <p class="text-xs text-kTextMedium dark:text-gray-500 mb-4">Prova till exempel:</p>
-                        <button onclick="fillExamplePrompt('Ett habit tracker med daily streaks')" class="text-xs text-kBlue hover:text-kPurple font-medium underline">
-                          "Ett habit tracker med daily streaks"
-                        </button>
+                        <p class="text-xs text-kTextMedium dark:text-gray-500 mb-4">Skriv din idé i rutan till höger för att börja.</p>
                       </div>
                     `;
                     return;
@@ -2283,7 +2284,6 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
 
                 let html = '';
                 prds.forEach(prd => {
-                    // NEW: Preview Hover Tooltip
                     html += `
                         <div class="group relative flex items-center w-full p-2 rounded-xl hover:bg-white dark:hover:bg-nightBorder/50 transition-colors">
                             <button onclick="loadPrdFromDb('${prd.id}')" class="flex-grow text-left overflow-hidden mr-2">
@@ -2470,6 +2470,11 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     
                     // Trigger Onboarding Check
                     setTimeout(window.showOnboarding, 500);
+
+                    // Start APP Typewriter
+                    if(typeof window.startAppTypewriter === 'function') {
+                        window.startAppTypewriter();
+                    }
                 }, 500);
             };
 
@@ -2526,7 +2531,14 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                         </p>
                     </div>
                 </div>`;
-                if(appInput) appInput.placeholder = "Beskriv din app...";
+                if(appInput) {
+                    appInput.value = ""; // Clear input
+                    appInput.style.height = "auto";
+                    // Restart typewriter if needed
+                    if(typeof window.startAppTypewriter === 'function') {
+                        window.startAppTypewriter();
+                    }
+                }
             };
 
             window.sendMessage = async function() {
@@ -2580,7 +2592,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 const aiLoading = document.createElement('div'); aiLoading.id = loadingId;
                 aiLoading.className = 'flex gap-4 max-w-3xl mx-auto';
                 
-                // NEW: Random Loading Tips
+                // Random Loading Tips
                 const loadingTips = [
                     "AI:n analyserar patterns... 🔍",
                     "Strukturerar databas-schema... 🗄️",
@@ -2689,7 +2701,6 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                     const loadingEl = document.getElementById(loadingId); 
                     if (loadingEl) loadingEl.remove();
                     
-                    // NEW: Better Error States
                     let errorTitle = "Hoppsan! 🤔";
                     let errorMsgText = "";
                     let retryAction = "window.sendMessage()";
@@ -2793,7 +2804,7 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
             if (closeMenuBtn) closeMenuBtn.addEventListener('click', () => toggleMenu(false));
             if (menuLinks.length > 0) menuLinks.forEach(link => link.addEventListener('click', () => toggleMenu(false)));
 
-            // --- Typewriter Effect (Ny & Bättre) ---
+            // --- Typewriter Effect (LANDING PAGE) ---
             const inputField = document.getElementById('prd-input');
             const placeholderTexts = [
                 "Bygg en marknadsplats för vintagekläder med chatt och betalning...",
@@ -2817,41 +2828,98 @@ Build a project management tool that becomes the heartbeat of small teams. Teams
                 if (isDeleting) {
                     inputField.setAttribute('placeholder', currentText.substring(0, charIndex - 1));
                     charIndex--; 
-                    typeSpeed = 30; // Snabbare radering
+                    typeSpeed = 30; 
                 } else {
                     inputField.setAttribute('placeholder', currentText.substring(0, charIndex + 1));
                     charIndex++; 
-                    typeSpeed = 50 + Math.random() * 50; // Lite slumpmässig "mänsklig" skrivtakt
+                    typeSpeed = 50 + Math.random() * 50; 
                 }
 
                 if (!isDeleting && charIndex === currentText.length) { 
                     isDeleting = true; 
-                    typeSpeed = 2000; // Vänta 2 sekunder innan radering börjar
+                    typeSpeed = 2000; 
                 } else if (isDeleting && charIndex === 0) { 
                     isDeleting = false; 
                     textIndex = (textIndex + 1) % placeholderTexts.length; 
-                    typeSpeed = 500; // Vänta lite innan nästa text börjar skrivas
+                    typeSpeed = 500; 
                 }
                 
                 typewriterTimeout = setTimeout(typeWriter, typeSpeed);
             }
             
-            // Starta om fältet finns
             if (inputField) {
                 typeWriter();
-                
-                // Stoppa animationen när användaren klickar i fältet
                 inputField.addEventListener('focus', () => {
                     typewriterActive = false;
                     clearTimeout(typewriterTimeout);
                     inputField.placeholder = "Beskriv vad du vill bygga...";
                 });
-
-                // Starta igen om användaren lämnar fältet tomt
                 inputField.addEventListener('blur', () => {
                     if (!inputField.value) {
                         typewriterActive = true;
                         typeWriter();
+                    }
+                });
+            }
+
+            // --- Typewriter Effect (APP INPUT - NEW) ---
+            const appInputField = document.getElementById('app-input');
+            const appPlaceholderTexts = [
+                "En plattform för frilansare att hitta uppdrag...",
+                "Ett internt verktyg för lagerstatus...",
+                "En mobilapp för att spåra löprundor...",
+                "En sajt för att jämföra elpriser..."
+            ];
+            
+            let appTextIndex = 0;
+            let appCharIndex = 0;
+            let appIsDeleting = false;
+            let appTypeSpeed = 50;
+            let appTypewriterTimeout;
+            let appTypewriterActive = true;
+            
+            window.startAppTypewriter = function() {
+                if(!appInputField) return;
+                appTypewriterActive = true;
+                clearTimeout(appTypewriterTimeout);
+                appTypeWriterLoop();
+            }
+
+            function appTypeWriterLoop() {
+                if (!appInputField || !appTypewriterActive) return;
+                const currentText = appPlaceholderTexts[appTextIndex];
+                
+                if (appIsDeleting) {
+                    appInputField.setAttribute('placeholder', currentText.substring(0, appCharIndex - 1));
+                    appCharIndex--; 
+                    appTypeSpeed = 30;
+                } else {
+                    appInputField.setAttribute('placeholder', currentText.substring(0, appCharIndex + 1));
+                    appCharIndex++; 
+                    appTypeSpeed = 50 + Math.random() * 50;
+                }
+
+                if (!appIsDeleting && appCharIndex === currentText.length) { 
+                    appIsDeleting = true; 
+                    appTypeSpeed = 2000; 
+                } else if (appIsDeleting && appCharIndex === 0) { 
+                    appIsDeleting = false; 
+                    appTextIndex = (appTextIndex + 1) % appPlaceholderTexts.length; 
+                    appTypeSpeed = 500; 
+                }
+                
+                appTypewriterTimeout = setTimeout(appTypeWriterLoop, appTypeSpeed);
+            }
+
+            if (appInputField) {
+                appInputField.addEventListener('focus', () => {
+                    appTypewriterActive = false;
+                    clearTimeout(appTypewriterTimeout);
+                    appInputField.placeholder = "Beskriv din app...";
+                });
+                appInputField.addEventListener('blur', () => {
+                    if (!appInputField.value) {
+                        window.startAppTypewriter();
                     }
                 });
             }
